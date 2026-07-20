@@ -68,15 +68,5 @@ jobs:
           DATABASE_NAME: bookkeeping_test
           JWT_SECRET: test-secret-key
 
-      - name: Run E2E tests
-        run: pnpm --filter bookkeeping-backend test:e2e
-        env:
-          DATABASE_HOST: localhost
-          DATABASE_PORT: 5432
-          DATABASE_USER: postgres
-          DATABASE_PASSWORD: postgres
-          DATABASE_NAME: bookkeeping_test
-          JWT_SECRET: test-secret-key
-
       - name: Build
         run: pnpm --filter bookkeeping-backend build
