@@ -1,1 +1,4 @@
-pnpm test
+#!/bin/sh
+
+pnpm frontend:lint
+pnpm backend:lint

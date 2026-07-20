@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useAuth } from "../context/useAuth";
 
 export function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -15,12 +15,12 @@ export function Register() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error("Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
@@ -28,10 +28,11 @@ export function Register() {
 
     try {
       await register(email, password);
-      toast.success('Registration successful!');
-      navigate('/');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      toast.success("Registration successful!");
+      navigate("/");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? (error as { response?: { data?: { message?: string } } }).response?.data?.message || error.message : "Registration failed";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -47,7 +48,10 @@ export function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -62,7 +66,10 @@ export function Register() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -77,7 +84,10 @@ export function Register() {
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Confirm Password
             </label>
             <input
@@ -96,12 +106,12 @@ export function Register() {
             disabled={loading}
             className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
-            {loading ? 'Creating account...' : 'Register'}
+            {loading ? "Creating account..." : "Register"}
           </button>
         </form>
 
         <p className="text-center text-sm text-gray-600">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/login" className="text-blue-600 hover:underline">
             Sign In
           </Link>

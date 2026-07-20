@@ -1,21 +1,6 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService, AuthResponse } from '../services/auth.service';
-
-interface User {
-  id: string;
-  email: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<AuthResponse>;
-  register: (email: string, password: string) => Promise<AuthResponse>;
-  logout: () => void;
-  isAuthenticated: boolean;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { useState, useEffect, ReactNode } from 'react';
+import { authService } from '../services/auth.service';
+import { AuthContext, type User } from './useAuth';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -24,7 +9,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const token = authService.getToken();
     if (token) {
-      // Decode token to get user info (basic implementation)
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         setUser({ id: payload.sub, email: payload.email });
@@ -66,12 +50,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }

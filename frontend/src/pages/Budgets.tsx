@@ -47,7 +47,7 @@ export function Budgets() {
       setLoading(true);
       const response = await api.get<Budget[]>('/budgets');
       setBudgets(response.data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch budgets');
     } finally {
       setLoading(false);
@@ -56,10 +56,10 @@ export function Budgets() {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get<Category[]>('/categories/expense');
+      const response = await api.get<Category[]>('/categories/expenses');
       setCategories(response.data);
-    } catch (error) {
-      console.error('Failed to fetch categories:', error);
+    } catch {
+      console.error('Failed to fetch categories:');
     }
   };
 
@@ -70,7 +70,7 @@ export function Budgets() {
       await api.delete(`/budgets/${id}`);
       toast.success('Budget deleted');
       fetchBudgets();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete budget');
     }
   };
@@ -275,7 +275,7 @@ function BudgetDialog({
         toast.success('Budget created');
       }
       onSave();
-    } catch (error) {
+    } catch {
       toast.error(budget ? 'Failed to update budget' : 'Failed to create budget');
     } finally {
       setSaving(false);

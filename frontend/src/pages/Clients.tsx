@@ -21,7 +21,7 @@ export function Clients() {
       setLoading(true);
       const data = await clientsService.getAll();
       setClients(data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch clients');
     } finally {
       setLoading(false);
@@ -35,7 +35,7 @@ export function Clients() {
       await clientsService.delete(id);
       toast.success('Client deleted');
       fetchClients();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete client');
     }
   };
@@ -190,7 +190,7 @@ function ClientDialog({
         toast.success('Client created');
       }
       onSave();
-    } catch (error) {
+    } catch {
       toast.error(client ? 'Failed to update client' : 'Failed to create client');
     } finally {
       setSaving(false);

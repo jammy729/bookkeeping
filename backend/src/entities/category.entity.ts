@@ -7,25 +7,25 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
-} from 'typeorm';
-import { Expense } from './expense.entity';
-import { User } from './user.entity';
+} from "typeorm";
+import { Expense } from "./expense.entity";
+import { User } from "./user.entity";
 
 export enum CategoryType {
-  EXPENSE = 'expense',
-  INCOME = 'income',
+  EXPENSE = "expense",
+  INCOME = "income",
 }
 
-@Entity('categories')
+@Entity("categories")
 export class Category {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
   name: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: CategoryType,
     default: CategoryType.EXPENSE,
   })
@@ -38,10 +38,10 @@ export class Category {
   isActive: boolean;
 
   @ManyToOne(() => User, (user) => user.id)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: "userId" })
   user: User;
 
-  @Column({ name: 'userId' })
+  @Column({ name: "userId" })
   userId: string;
 
   @CreateDateColumn()

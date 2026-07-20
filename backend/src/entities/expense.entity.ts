@@ -7,38 +7,40 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
-} from 'typeorm';
-import { User } from './user.entity';
-import { Category } from './category.entity';
+} from "typeorm";
+import { User } from "./user.entity";
+import { Category } from "./category.entity";
 
-@Entity('expenses')
-@Index(['userId', 'date'])
+@Entity("expenses")
+@Index(["userId", "date"])
 export class Expense {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: "decimal", precision: 10, scale: 2 })
   amount: number;
 
   @Column()
   description: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: "date" })
   @Index()
   date: Date;
 
-  @ManyToOne(() => User, (user) => user.expenses, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @ManyToOne(() => User, (user) => user.expenses, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "userId" })
   user: User;
 
-  @Column({ name: 'userId' })
+  @Column({ name: "userId" })
   userId: string;
 
-  @ManyToOne(() => Category, (category) => category.expenses, { nullable: true })
-  @JoinColumn({ name: 'categoryId' })
+  @ManyToOne(() => Category, (category) => category.expenses, {
+    nullable: true,
+  })
+  @JoinColumn({ name: "categoryId" })
   category: Category;
 
-  @Column({ name: 'categoryId', nullable: true })
+  @Column({ name: "categoryId", nullable: true })
   categoryId: string;
 
   @Column({ nullable: true })

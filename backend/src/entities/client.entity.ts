@@ -7,13 +7,13 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
-} from 'typeorm';
-import { User } from './user.entity';
+} from "typeorm";
+import { User } from "./user.entity";
 
-@Entity('clients')
-@Index(['userId', 'name'])
+@Entity("clients")
+@Index(["userId", "name"])
 export class Client {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
@@ -34,11 +34,11 @@ export class Client {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToOne(() => User, (user) => user.clients, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @ManyToOne(() => User, (user) => user.clients, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "userId" })
   user: User;
 
-  @Column({ name: 'userId' })
+  @Column({ name: "userId" })
   userId: string;
 
   @CreateDateColumn()

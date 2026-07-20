@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Attachment } from '../../entities/attachment.entity';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as crypto from 'crypto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Attachment } from "../../entities/attachment.entity";
+import * as path from "path";
+import * as fs from "fs";
+import * as crypto from "crypto";
 
 export interface UploadFileDto {
   originalName: string;
@@ -31,7 +31,7 @@ export class UploadsService {
     @InjectRepository(Attachment)
     private attachmentRepository: Repository<Attachment>,
   ) {
-    this.uploadsDir = path.join(process.cwd(), 'uploads');
+    this.uploadsDir = path.join(process.cwd(), "uploads");
     this.ensureUploadsDir();
   }
 
@@ -43,12 +43,17 @@ export class UploadsService {
 
   private generateFileName(originalName: string): string {
     const ext = path.extname(originalName);
-    const uniqueId = crypto.randomBytes(16).toString('hex');
+    const uniqueId = crypto.randomBytes(16).toString("hex");
     const timestamp = Date.now();
     return `${timestamp}-${uniqueId}${ext}`;
   }
 
-  async uploadFile(file: Express.Multer.File, userId: string, entityType?: string, entityId?: string): Promise<Attachment> {
+  async uploadFile(
+    file: Express.Multer.File,
+    userId: string,
+    entityType?: string,
+    entityId?: string,
+  ): Promise<Attachment> {
     const fileName = this.generateFileName(file.originalname);
     const filePath = path.join(this.uploadsDir, fileName);
 
@@ -68,7 +73,11 @@ export class UploadsService {
     return this.attachmentRepository.save(attachment);
   }
 
-  async findAll(userId: string, entityType?: string, entityId?: string): Promise<Attachment[]> {
+  async findAll(
+    userId: string,
+    entityType?: string,
+    entityId?: string,
+  ): Promise<Attachment[]> {
     const where: any = { userId };
     if (entityType) {
       where.entityType = entityType;
@@ -79,7 +88,7 @@ export class UploadsService {
 
     return this.attachmentRepository.find({
       where,
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
     });
   }
 
@@ -89,18 +98,21 @@ export class UploadsService {
     });
 
     if (!attachment) {
-      throw new NotFoundException('Attachment not found');
+      throw new NotFoundException("Attachment not found");
     }
 
     return attachment;
   }
 
-  async getFile(id: string, userId: string): Promise<{ attachment: Attachment; filePath: string }> {
+  async getFile(
+    id: string,
+    userId: string,
+  ): Promise<{ attachment: Attachment; filePath: string }> {
     const attachment = await this.findOne(id, userId);
     const filePath = path.join(this.uploadsDir, attachment.fileName);
 
     if (!fs.existsSync(filePath)) {
-      throw new NotFoundException('File not found on disk');
+      throw new NotFoundException("File not found on disk");
     }
 
     return { attachment, filePath };
@@ -118,7 +130,11 @@ export class UploadsService {
     await this.attachmentRepository.remove(attachment);
   }
 
-  async updateDescription(id: string, userId: string, description: string): Promise<Attachment> {
+  async updateDescription(
+    id: string,
+    userId: string,
+    description: string,
+  ): Promise<Attachment> {
     const attachment = await this.findOne(id, userId);
     attachment.description = description;
     return this.attachmentRepository.save(attachment);

@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Client } from '../../entities/client.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Client } from "../../entities/client.entity";
 
 export interface CreateClientDto {
   name: string;
@@ -28,7 +28,10 @@ export class ClientsService {
     private clientRepository: Repository<Client>,
   ) {}
 
-  async create(userId: string, createClientDto: CreateClientDto): Promise<Client> {
+  async create(
+    userId: string,
+    createClientDto: CreateClientDto,
+  ): Promise<Client> {
     const client = this.clientRepository.create({
       ...createClientDto,
       userId,
@@ -43,7 +46,7 @@ export class ClientsService {
     }
     return this.clientRepository.find({
       where,
-      order: { name: 'ASC' },
+      order: { name: "ASC" },
     });
   }
 
@@ -53,13 +56,17 @@ export class ClientsService {
     });
 
     if (!client) {
-      throw new NotFoundException('Client not found');
+      throw new NotFoundException("Client not found");
     }
 
     return client;
   }
 
-  async update(userId: string, id: string, updateClientDto: UpdateClientDto): Promise<Client> {
+  async update(
+    userId: string,
+    id: string,
+    updateClientDto: UpdateClientDto,
+  ): Promise<Client> {
     const client = await this.findOne(userId, id);
     Object.assign(client, updateClientDto);
     return this.clientRepository.save(client);

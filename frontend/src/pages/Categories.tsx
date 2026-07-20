@@ -27,7 +27,7 @@ export function Categories() {
       ]);
       setExpenseCategories(expenses);
       setIncomeCategories(incomes);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch categories');
     } finally {
       setLoading(false);
@@ -41,7 +41,7 @@ export function Categories() {
       await categoriesService.delete(id);
       toast.success('Category deleted');
       fetchCategories();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete category');
     }
   };
@@ -227,7 +227,7 @@ function CategoryDialog({
         toast.success('Category created');
       }
       onSave();
-    } catch (error) {
+    } catch {
       toast.error(category ? 'Failed to update category' : 'Failed to create category');
     } finally {
       setSaving(false);

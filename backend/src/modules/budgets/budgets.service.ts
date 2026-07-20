@@ -1,15 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
-import { Budget } from '../../entities/budget.entity';
-import { Expense } from '../../entities/expense.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, Between } from "typeorm";
+import { Budget } from "../../entities/budget.entity";
+import { Expense } from "../../entities/expense.entity";
 
 export interface CreateBudgetDto {
   amount: number;
   startDate: string;
   endDate: string;
   name?: string;
-  period?: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
+  period?: "daily" | "weekly" | "monthly" | "quarterly" | "yearly";
   categoryId?: string;
   userId: string;
 }
@@ -19,7 +19,7 @@ export interface UpdateBudgetDto {
   startDate?: string;
   endDate?: string;
   name?: string;
-  period?: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
+  period?: "daily" | "weekly" | "monthly" | "quarterly" | "yearly";
   categoryId?: string;
 }
 
@@ -40,7 +40,12 @@ export class BudgetsService {
     });
 
     // Calculate initial spent amount
-    budget.spent = await this.calculateSpent(budget.userId, budget.categoryId, budget.startDate, budget.endDate);
+    budget.spent = await this.calculateSpent(
+      budget.userId,
+      budget.categoryId,
+      budget.startDate,
+      budget.endDate,
+    );
 
     return this.budgetRepository.save(budget);
   }
@@ -48,38 +53,57 @@ export class BudgetsService {
   async findAll(userId: string): Promise<Budget[]> {
     return this.budgetRepository.find({
       where: { userId },
-      relations: ['category'],
-      order: { createdAt: 'DESC' },
+      relations: ["category"],
+      order: { createdAt: "DESC" },
     });
   }
 
   async findOne(id: string, userId: string): Promise<Budget> {
     const budget = await this.budgetRepository.findOne({
       where: { id, userId },
-      relations: ['category'],
+      relations: ["category"],
     });
 
     if (!budget) {
-      throw new NotFoundException('Budget not found');
+      throw new NotFoundException("Budget not found");
     }
 
     // Update spent amount
-    budget.spent = await this.calculateSpent(budget.userId, budget.categoryId, budget.startDate, budget.endDate);
+    budget.spent = await this.calculateSpent(
+      budget.userId,
+      budget.categoryId,
+      budget.startDate,
+      budget.endDate,
+    );
 
     return budget;
   }
 
-  async update(id: string, userId: string, updateBudgetDto: UpdateBudgetDto): Promise<Budget> {
+  async update(
+    id: string,
+    userId: string,
+    updateBudgetDto: UpdateBudgetDto,
+  ): Promise<Budget> {
     const budget = await this.findOne(id, userId);
 
-    if (updateBudgetDto.amount !== undefined) budget.amount = updateBudgetDto.amount;
-    if (updateBudgetDto.startDate) budget.startDate = new Date(updateBudgetDto.startDate);
-    if (updateBudgetDto.endDate) budget.endDate = new Date(updateBudgetDto.endDate);
+    if (updateBudgetDto.amount !== undefined)
+      budget.amount = updateBudgetDto.amount;
+    if (updateBudgetDto.startDate)
+      budget.startDate = new Date(updateBudgetDto.startDate);
+    if (updateBudgetDto.endDate)
+      budget.endDate = new Date(updateBudgetDto.endDate);
     if (updateBudgetDto.name !== undefined) budget.name = updateBudgetDto.name;
-    if (updateBudgetDto.period !== undefined) budget.period = updateBudgetDto.period;
-    if (updateBudgetDto.categoryId !== undefined) budget.categoryId = updateBudgetDto.categoryId;
+    if (updateBudgetDto.period !== undefined)
+      budget.period = updateBudgetDto.period;
+    if (updateBudgetDto.categoryId !== undefined)
+      budget.categoryId = updateBudgetDto.categoryId;
 
-    budget.spent = await this.calculateSpent(budget.userId, budget.categoryId, budget.startDate, budget.endDate);
+    budget.spent = await this.calculateSpent(
+      budget.userId,
+      budget.categoryId,
+      budget.startDate,
+      budget.endDate,
+    );
 
     return this.budgetRepository.save(budget);
   }
@@ -89,7 +113,12 @@ export class BudgetsService {
     await this.budgetRepository.remove(budget);
   }
 
-  private async calculateSpent(userId: string, categoryId: string | null, startDate: Date, endDate: Date): Promise<number> {
+  private async calculateSpent(
+    userId: string,
+    categoryId: string | null,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<number> {
     const where: any = {
       userId,
       date: Between(startDate, endDate),
@@ -111,18 +140,24 @@ export class BudgetsService {
     percentageUsed: number;
   }> {
     const budgets = await this.findAll(userId);
-    
+
     let totalAmount = 0;
     let totalSpent = 0;
 
     for (const budget of budgets) {
       totalAmount += budget.amount;
-      const spent = await this.calculateSpent(budget.userId, budget.categoryId, budget.startDate, budget.endDate);
+      const spent = await this.calculateSpent(
+        budget.userId,
+        budget.categoryId,
+        budget.startDate,
+        budget.endDate,
+      );
       totalSpent += spent;
     }
 
     const remaining = totalAmount - totalSpent;
-    const percentageUsed = totalAmount > 0 ? (totalSpent / totalAmount) * 100 : 0;
+    const percentageUsed =
+      totalAmount > 0 ? (totalSpent / totalAmount) * 100 : 0;
 
     return {
       totalBudgets: budgets.length,

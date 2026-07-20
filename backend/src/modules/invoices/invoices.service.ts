@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, LessThan } from 'typeorm';
-import { Invoice, InvoiceStatus } from '../../entities/invoice.entity';
-import { InvoiceItem } from '../../entities/invoice-item.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, Like, LessThan } from "typeorm";
+import { Invoice, InvoiceStatus } from "../../entities/invoice.entity";
+import { InvoiceItem } from "../../entities/invoice-item.entity";
 
 export interface CreateInvoiceDto {
   clientId: string;
@@ -52,21 +52,21 @@ export class InvoicesService {
   async generateInvoiceNumber(): Promise<string> {
     const date = new Date();
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+
     const lastInvoice = await this.invoiceRepository.findOne({
       where: { invoiceNumber: Like(`INV-${year}${month}-%`) },
-      order: { invoiceNumber: 'DESC' },
+      order: { invoiceNumber: "DESC" },
     });
 
     let sequence = 1;
     if (lastInvoice) {
-      const parts = lastInvoice.invoiceNumber.split('-');
+      const parts = lastInvoice.invoiceNumber.split("-");
       const lastSeq = parseInt(parts[2], 10);
       sequence = lastSeq + 1;
     }
 
-    return `INV-${year}${month}-${String(sequence).padStart(4, '0')}`;
+    return `INV-${year}${month}-${String(sequence).padStart(4, "0")}`;
   }
 
   async create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
@@ -74,7 +74,7 @@ export class InvoicesService {
 
     // Calculate totals
     const subtotal = createInvoiceDto.items.reduce(
-      (sum, item) => sum + (item.quantity * item.unitPrice),
+      (sum, item) => sum + item.quantity * item.unitPrice,
       0,
     );
     const taxAmount = (subtotal * (createInvoiceDto.taxRate || 0)) / 100;
@@ -93,7 +93,9 @@ export class InvoicesService {
       total,
       status: InvoiceStatus.DRAFT,
       issueDate: new Date(createInvoiceDto.issueDate),
-      dueDate: createInvoiceDto.dueDate ? new Date(createInvoiceDto.dueDate) : null,
+      dueDate: createInvoiceDto.dueDate
+        ? new Date(createInvoiceDto.dueDate)
+        : null,
       notes: createInvoiceDto.notes,
       terms: createInvoiceDto.terms,
       userId: createInvoiceDto.userId,
@@ -118,36 +120,47 @@ export class InvoicesService {
 
     return this.invoiceRepository.find({
       where,
-      relations: ['items'],
-      order: { createdAt: 'DESC' },
+      relations: ["items"],
+      order: { createdAt: "DESC" },
     });
   }
 
   async findOne(id: string, userId: string): Promise<Invoice> {
     const invoice = await this.invoiceRepository.findOne({
       where: { id, userId },
-      relations: ['items'],
+      relations: ["items"],
     });
 
     if (!invoice) {
-      throw new NotFoundException('Invoice not found');
+      throw new NotFoundException("Invoice not found");
     }
 
     return invoice;
   }
 
-  async update(id: string, userId: string, updateInvoiceDto: UpdateInvoiceDto): Promise<Invoice> {
+  async update(
+    id: string,
+    userId: string,
+    updateInvoiceDto: UpdateInvoiceDto,
+  ): Promise<Invoice> {
     const invoice = await this.findOne(id, userId);
 
     // Update basic fields
     if (updateInvoiceDto.clientId) invoice.clientId = updateInvoiceDto.clientId;
-    if (updateInvoiceDto.clientName) invoice.clientName = updateInvoiceDto.clientName;
-    if (updateInvoiceDto.clientEmail) invoice.clientEmail = updateInvoiceDto.clientEmail;
-    if (updateInvoiceDto.clientAddress) invoice.clientAddress = updateInvoiceDto.clientAddress;
-    if (updateInvoiceDto.issueDate) invoice.issueDate = new Date(updateInvoiceDto.issueDate);
-    if (updateInvoiceDto.dueDate) invoice.dueDate = new Date(updateInvoiceDto.dueDate);
-    if (updateInvoiceDto.notes !== undefined) invoice.notes = updateInvoiceDto.notes;
-    if (updateInvoiceDto.terms !== undefined) invoice.terms = updateInvoiceDto.terms;
+    if (updateInvoiceDto.clientName)
+      invoice.clientName = updateInvoiceDto.clientName;
+    if (updateInvoiceDto.clientEmail)
+      invoice.clientEmail = updateInvoiceDto.clientEmail;
+    if (updateInvoiceDto.clientAddress)
+      invoice.clientAddress = updateInvoiceDto.clientAddress;
+    if (updateInvoiceDto.issueDate)
+      invoice.issueDate = new Date(updateInvoiceDto.issueDate);
+    if (updateInvoiceDto.dueDate)
+      invoice.dueDate = new Date(updateInvoiceDto.dueDate);
+    if (updateInvoiceDto.notes !== undefined)
+      invoice.notes = updateInvoiceDto.notes;
+    if (updateInvoiceDto.terms !== undefined)
+      invoice.terms = updateInvoiceDto.terms;
     if (updateInvoiceDto.status) invoice.status = updateInvoiceDto.status;
 
     // Update items and recalculate totals if provided
@@ -157,7 +170,7 @@ export class InvoicesService {
 
       // Create new items
       const subtotal = updateInvoiceDto.items.reduce(
-        (sum, item) => sum + (item.quantity * item.unitPrice),
+        (sum, item) => sum + item.quantity * item.unitPrice,
         0,
       );
       const taxAmount = (subtotal * (updateInvoiceDto.taxRate || 0)) / 100;

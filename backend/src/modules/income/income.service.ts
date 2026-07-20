@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
-import { Income, IncomeType } from '../../entities/income.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, Between } from "typeorm";
+import { Income, IncomeType } from "../../entities/income.entity";
 
 export interface CreateIncomeDto {
   amount: number;
@@ -42,7 +42,10 @@ export class IncomeService {
     private incomeRepository: Repository<Income>,
   ) {}
 
-  async create(userId: string, createIncomeDto: CreateIncomeDto): Promise<Income> {
+  async create(
+    userId: string,
+    createIncomeDto: CreateIncomeDto,
+  ): Promise<Income> {
     const income = this.incomeRepository.create({
       ...createIncomeDto,
       userId,
@@ -50,12 +53,15 @@ export class IncomeService {
     return this.incomeRepository.save(income);
   }
 
-  async findAll(userId: string, filters?: {
-    startDate?: Date;
-    endDate?: Date;
-    type?: IncomeType;
-    isPaid?: boolean;
-  }): Promise<Income[]> {
+  async findAll(
+    userId: string,
+    filters?: {
+      startDate?: Date;
+      endDate?: Date;
+      type?: IncomeType;
+      isPaid?: boolean;
+    },
+  ): Promise<Income[]> {
     const where: any = { userId };
 
     if (filters?.startDate && filters?.endDate) {
@@ -72,7 +78,7 @@ export class IncomeService {
 
     return this.incomeRepository.find({
       where,
-      order: { date: 'DESC' },
+      order: { date: "DESC" },
     });
   }
 
@@ -82,15 +88,19 @@ export class IncomeService {
     });
 
     if (!income) {
-      throw new NotFoundException('Income not found');
+      throw new NotFoundException("Income not found");
     }
 
     return income;
   }
 
-  async update(userId: string, id: string, updateIncomeDto: UpdateIncomeDto): Promise<Income> {
+  async update(
+    userId: string,
+    id: string,
+    updateIncomeDto: UpdateIncomeDto,
+  ): Promise<Income> {
     const income = await this.findOne(userId, id);
-    
+
     Object.assign(income, updateIncomeDto);
     return this.incomeRepository.save(income);
   }
@@ -100,46 +110,67 @@ export class IncomeService {
     await this.incomeRepository.remove(income);
   }
 
-  async getTotalByPeriod(userId: string, startDate: Date, endDate: Date): Promise<number> {
+  async getTotalByPeriod(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<number> {
     const result = await this.incomeRepository
-      .createQueryBuilder('income')
-      .select('SUM(income.amount)', 'total')
-      .where('income.userId = :userId', { userId })
-      .andWhere('income.date BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .createQueryBuilder("income")
+      .select("SUM(income.amount)", "total")
+      .where("income.userId = :userId", { userId })
+      .andWhere("income.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
       .getRawOne();
 
     return parseFloat(result.total) || 0;
   }
 
-  async getTotalByType(userId: string, startDate: Date, endDate: Date): Promise<{ type: string; total: number }[]> {
+  async getTotalByType(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<{ type: string; total: number }[]> {
     const results = await this.incomeRepository
-      .createQueryBuilder('income')
-      .select('income.type', 'type')
-      .addSelect('SUM(income.amount)', 'total')
-      .where('income.userId = :userId', { userId })
-      .andWhere('income.date BETWEEN :startDate AND :endDate', { startDate, endDate })
-      .groupBy('income.type')
+      .createQueryBuilder("income")
+      .select("income.type", "type")
+      .addSelect("SUM(income.amount)", "total")
+      .where("income.userId = :userId", { userId })
+      .andWhere("income.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .groupBy("income.type")
       .getRawMany();
 
-    return results.map(r => ({
+    return results.map((r) => ({
       type: r.type,
       total: parseFloat(r.total) || 0,
     }));
   }
 
-  async getTotalByClient(userId: string, startDate: Date, endDate: Date): Promise<{ clientName: string; total: number; count: number }[]> {
+  async getTotalByClient(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<{ clientName: string; total: number; count: number }[]> {
     const results = await this.incomeRepository
-      .createQueryBuilder('income')
-      .select('income.clientName', 'clientName')
-      .addSelect('SUM(income.amount)', 'total')
-      .addSelect('COUNT(income.id)', 'count')
-      .where('income.userId = :userId', { userId })
-      .andWhere('income.date BETWEEN :startDate AND :endDate', { startDate, endDate })
-      .groupBy('income.clientName')
+      .createQueryBuilder("income")
+      .select("income.clientName", "clientName")
+      .addSelect("SUM(income.amount)", "total")
+      .addSelect("COUNT(income.id)", "count")
+      .where("income.userId = :userId", { userId })
+      .andWhere("income.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .groupBy("income.clientName")
       .getRawMany();
 
-    return results.map(r => ({
-      clientName: r.clientName || 'No Client',
+    return results.map((r) => ({
+      clientName: r.clientName || "No Client",
       total: parseFloat(r.total) || 0,
       count: parseInt(r.count) || 0,
     }));

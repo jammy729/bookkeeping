@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Category, CategoryType } from '../../entities/category.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Category, CategoryType } from "../../entities/category.entity";
 
 export interface CreateCategoryDto {
   name: string;
@@ -23,7 +23,10 @@ export class CategoriesService {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  async create(userId: string, createCategoryDto: CreateCategoryDto): Promise<Category> {
+  async create(
+    userId: string,
+    createCategoryDto: CreateCategoryDto,
+  ): Promise<Category> {
     const category = this.categoryRepository.create({
       ...createCategoryDto,
       userId,
@@ -33,14 +36,14 @@ export class CategoriesService {
 
   async findAll(userId: string, type?: CategoryType): Promise<Category[]> {
     const where: any = { userId, isActive: true };
-    
+
     if (type) {
       where.type = type;
     }
 
     return this.categoryRepository.find({
       where,
-      order: { name: 'ASC' },
+      order: { name: "ASC" },
     });
   }
 
@@ -50,15 +53,19 @@ export class CategoriesService {
     });
 
     if (!category) {
-      throw new NotFoundException('Category not found');
+      throw new NotFoundException("Category not found");
     }
 
     return category;
   }
 
-  async update(userId: string, id: string, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+  async update(
+    userId: string,
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<Category> {
     const category = await this.findOne(userId, id);
-    
+
     Object.assign(category, updateCategoryDto);
     return this.categoryRepository.save(category);
   }

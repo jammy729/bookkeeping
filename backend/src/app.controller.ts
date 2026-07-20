@@ -1,19 +1,19 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from "@nestjs/common";
 
 @Controller()
 export class AppController {
   @Get()
   getHello(): { message: string; timestamp: string } {
     return {
-      message: 'Bookkeeping API is running',
+      message: "Bookkeeping API is running",
       timestamp: new Date().toISOString(),
     };
   }
 
-  @Get('health')
+  @Get("health")
   getHealth(): { status: string; timestamp: string } {
     return {
-      status: 'ok',
+      status: "ok",
       timestamp: new Date().toISOString(),
     };
   }

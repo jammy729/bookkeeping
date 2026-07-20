@@ -1,6 +1,9 @@
-import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
-import * as winston from 'winston';
-import * as path from 'path';
+import {
+  utilities as nestWinstonModuleUtilities,
+  WinstonModule,
+} from "nest-winston";
+import * as winston from "winston";
+import * as path from "path";
 
 export const AppLogger = WinstonModule.forRoot({
   transports: [
@@ -8,7 +11,7 @@ export const AppLogger = WinstonModule.forRoot({
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.timestamp(),
-        nestWinstonModuleUtilities.format.nestLike('Bookkeeping', {
+        nestWinstonModuleUtilities.format.nestLike("Bookkeeping", {
           prettyPrint: true,
           colors: true,
         }),
@@ -16,8 +19,8 @@ export const AppLogger = WinstonModule.forRoot({
     }),
     // Error logging to file
     new winston.transports.File({
-      filename: path.join(process.cwd(), 'logs', 'error.log'),
-      level: 'error',
+      filename: path.join(process.cwd(), "logs", "error.log"),
+      level: "error",
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.json(),
@@ -25,7 +28,7 @@ export const AppLogger = WinstonModule.forRoot({
     }),
     // All logging to file
     new winston.transports.File({
-      filename: path.join(process.cwd(), 'logs', 'combined.log'),
+      filename: path.join(process.cwd(), "logs", "combined.log"),
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.json(),

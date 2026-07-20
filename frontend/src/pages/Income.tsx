@@ -29,6 +29,7 @@ export function Income() {
 
   useEffect(() => {
     fetchIncomes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromYear, fromMonth, toYear, toMonth]);
 
   const getDateRange = () => {
@@ -59,7 +60,7 @@ export function Income() {
       const { startDate, endDate } = getDateRange();
       const data = await incomeService.getAll({ startDate, endDate });
       setIncomes(data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch income records');
     } finally {
       setLoading(false);
@@ -73,7 +74,7 @@ export function Income() {
       await incomeService.delete(id);
       toast.success('Income record deleted');
       fetchIncomes();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete income record');
     }
   };
@@ -296,7 +297,7 @@ function IncomeDialog({
         toast.success('Income record created');
       }
       onSave();
-    } catch (error) {
+    } catch {
       toast.error(income ? 'Failed to update income' : 'Failed to create income');
     } finally {
       setSaving(false);
@@ -363,7 +364,7 @@ function IncomeDialog({
               <label className="block text-sm font-medium mb-1">Type *</label>
               <select
                 value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as CreateIncomeDto['type'] })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               >
                 {INCOME_TYPES.map((type) => (

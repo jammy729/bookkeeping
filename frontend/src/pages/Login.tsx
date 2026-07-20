@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useAuth } from "../context/useAuth";
 
 export function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -16,10 +16,11 @@ export function Login() {
 
     try {
       await login(email, password);
-      toast.success('Login successful!');
-      navigate('/');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Login failed');
+      toast.success("Login successful!");
+      navigate("/");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? (error as { response?: { data?: { message?: string } } }).response?.data?.message || error.message : "Login failed";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -35,7 +36,10 @@ export function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -50,7 +54,10 @@ export function Login() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -69,12 +76,12 @@ export function Login() {
             disabled={loading}
             className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
         <p className="text-center text-sm text-gray-600">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <Link to="/register" className="text-blue-600 hover:underline">
             Register
           </Link>

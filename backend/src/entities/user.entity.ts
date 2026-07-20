@@ -5,17 +5,17 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-} from 'typeorm';
-import { Expense } from './expense.entity';
-import { Income } from './income.entity';
-import { Client } from './client.entity';
-import { Invoice } from './invoice.entity';
-import { Attachment } from './attachment.entity';
-import { Budget } from './budget.entity';
+} from "typeorm";
+import { Expense } from "./expense.entity";
+import { Income } from "./income.entity";
+import { Client } from "./client.entity";
+import { Invoice } from "./invoice.entity";
+import { Attachment } from "./attachment.entity";
+import { Budget } from "./budget.entity";
 
-@Entity('users')
+@Entity("users")
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column({ unique: true })

@@ -7,44 +7,44 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
-} from 'typeorm';
-import { User } from './user.entity';
+} from "typeorm";
+import { User } from "./user.entity";
 
 export enum IncomeType {
-  CONTRACTOR_PAYMENT = 'contractor_payment',
-  FREELANCE = 'freelance',
-  CONSULTING = 'consulting',
-  OTHER = 'other',
+  CONTRACTOR_PAYMENT = "contractor_payment",
+  FREELANCE = "freelance",
+  CONSULTING = "consulting",
+  OTHER = "other",
 }
 
-@Entity('incomes')
-@Index(['userId', 'date'])
+@Entity("incomes")
+@Index(["userId", "date"])
 export class Income {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: "decimal", precision: 10, scale: 2 })
   amount: number;
 
   @Column()
   description: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: IncomeType,
     default: IncomeType.CONTRACTOR_PAYMENT,
   })
   type: IncomeType;
 
-  @Column({ type: 'date' })
+  @Column({ type: "date" })
   @Index()
   date: Date;
 
-  @ManyToOne(() => User, (user) => user.incomes, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @ManyToOne(() => User, (user) => user.incomes, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "userId" })
   user: User;
 
-  @Column({ name: 'userId' })
+  @Column({ name: "userId" })
   userId: string;
 
   @Column({ nullable: true })
@@ -56,14 +56,14 @@ export class Income {
   @Column({ default: false })
   isPaid: boolean;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: "date", nullable: true })
   paidDate: Date;
 
   @Column({ nullable: true })
   notes: string;
 
   // HST support (13%)
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   hstAmount: number;
 
   @Column({ default: false })

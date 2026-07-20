@@ -56,6 +56,7 @@ export function Dashboard() {
 
   useEffect(() => {
     fetchDashboardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromYear, fromMonth, toYear, toMonth]);
 
   const getDateRange = () => {
@@ -175,8 +176,11 @@ export function Dashboard() {
         api.get('/income?limit=5'),
       ]);
 
+      interface ExpenseItem { id: string; description: string; amount: number; date: string; category?: { name: string } }
+      interface IncomeItem { id: string; description: string; amount: number; date: string; clientName?: string }
+
       const transactions: RecentTransaction[] = [
-        ...(expensesRes.data?.data || expensesRes.data || []).map((e: any) => ({
+        ...(expensesRes.data?.data || expensesRes.data || []).map((e: ExpenseItem) => ({
           id: e.id,
           type: 'expense' as const,
           description: e.description,
@@ -184,7 +188,7 @@ export function Dashboard() {
           date: e.date,
           category: e.category?.name,
         })),
-        ...(incomeRes.data?.data || incomeRes.data || []).map((i: any) => ({
+        ...(incomeRes.data?.data || incomeRes.data || []).map((i: IncomeItem) => ({
           id: i.id,
           type: 'income' as const,
           description: i.description,

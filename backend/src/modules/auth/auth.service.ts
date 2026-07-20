@@ -1,10 +1,15 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import * as crypto from 'crypto';
-import { User } from '../../entities/user.entity';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+  BadRequestException,
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import * as bcrypt from "bcrypt";
+import { JwtService } from "@nestjs/jwt";
+import * as crypto from "crypto";
+import { User } from "../../entities/user.entity";
 
 export interface RegisterDto {
   email: string;
@@ -33,17 +38,19 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<{ user: User; token: string }> {
+  async register(
+    registerDto: RegisterDto,
+  ): Promise<{ user: User; token: string }> {
     const existingUser = await this.userRepository.findOne({
       where: { email: registerDto.email },
     });
 
     if (existingUser) {
-      throw new ConflictException('Email already registered');
+      throw new ConflictException("Email already registered");
     }
 
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-    
+
     const user = this.userRepository.create({
       email: registerDto.email,
       password: hashedPassword,
@@ -62,13 +69,16 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const token = this.jwtService.sign({ sub: user.id, email: user.email });
@@ -83,18 +93,20 @@ export class AuthService {
     return user || null;
   }
 
-  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<{ message: string }> {
+  async forgotPassword(
+    forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<{ message: string }> {
     const user = await this.userRepository.findOne({
       where: { email: forgotPasswordDto.email },
     });
 
     if (!user) {
       // Don't reveal if email exists for security
-      return { message: 'If the email exists, a reset link will be sent' };
+      return { message: "If the email exists, a reset link will be sent" };
     }
 
     // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
     const resetTokenExpiresAt = new Date(Date.now() + 3600000); // 1 hour
 
     user.resetToken = resetToken;
@@ -104,22 +116,26 @@ export class AuthService {
     // TODO: Send email with reset link
     // For now, log the token (in production, send via email service)
     console.log(`Password reset token for ${user.email}: ${resetToken}`);
-    console.log(`Reset link: http://localhost:5173/reset-password?token=${resetToken}`);
+    console.log(
+      `Reset link: http://localhost:5173/reset-password?token=${resetToken}`,
+    );
 
-    return { message: 'If the email exists, a reset link will be sent' };
+    return { message: "If the email exists, a reset link will be sent" };
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<{ message: string; token?: string }> {
+  async resetPassword(
+    resetPasswordDto: ResetPasswordDto,
+  ): Promise<{ message: string; token?: string }> {
     const user = await this.userRepository.findOne({
       where: { resetToken: resetPasswordDto.token },
     });
 
     if (!user) {
-      throw new BadRequestException('Invalid reset token');
+      throw new BadRequestException("Invalid reset token");
     }
 
     if (!user.resetTokenExpiresAt || user.resetTokenExpiresAt < new Date()) {
-      throw new BadRequestException('Reset token has expired');
+      throw new BadRequestException("Reset token has expired");
     }
 
     // Hash new password
@@ -129,7 +145,7 @@ export class AuthService {
     user.resetTokenExpiresAt = null;
     await this.userRepository.save(user);
 
-    return { message: 'Password has been reset successfully' };
+    return { message: "Password has been reset successfully" };
   }
 
   async verifyEmail(token: string): Promise<{ message: string }> {
@@ -139,17 +155,17 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new BadRequestException('Invalid verification token');
+      throw new BadRequestException("Invalid verification token");
     }
 
     if (user.isEmailVerified) {
-      throw new BadRequestException('Email already verified');
+      throw new BadRequestException("Email already verified");
     }
 
     user.isEmailVerified = true;
     await this.userRepository.save(user);
 
-    return { message: 'Email verified successfully' };
+    return { message: "Email verified successfully" };
   }
 
   async resendVerificationEmail(email: string): Promise<{ message: string }> {
@@ -158,16 +174,20 @@ export class AuthService {
     });
 
     if (!user) {
-      return { message: 'If the email exists, a verification link will be sent' };
+      return {
+        message: "If the email exists, a verification link will be sent",
+      };
     }
 
     if (user.isEmailVerified) {
-      throw new BadRequestException('Email already verified');
+      throw new BadRequestException("Email already verified");
     }
 
     // TODO: Send verification email
-    console.log(`Verification link for ${email}: http://localhost:5173/verify-email?token=${user.id}`);
+    console.log(
+      `Verification link for ${email}: http://localhost:5173/verify-email?token=${user.id}`,
+    );
 
-    return { message: 'If the email exists, a verification link will be sent' };
+    return { message: "If the email exists, a verification link will be sent" };
   }
 }

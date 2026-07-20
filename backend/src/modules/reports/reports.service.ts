@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
-import { Income } from '../../entities/income.entity';
-import { Expense } from '../../entities/expense.entity';
-import { Invoice, InvoiceStatus } from '../../entities/invoice.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, Between } from "typeorm";
+import { Income } from "../../entities/income.entity";
+import { Expense } from "../../entities/expense.entity";
+import { Invoice, InvoiceStatus } from "../../entities/invoice.entity";
 
 export interface TaxReportDto {
   period: {
@@ -88,7 +88,11 @@ export class ReportsService {
     private invoiceRepository: Repository<Invoice>,
   ) {}
 
-  async getTaxReport(userId: string, startDate: string, endDate: string): Promise<TaxReportDto> {
+  async getTaxReport(
+    userId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<TaxReportDto> {
     // HST Collected (from income with HST)
     const hstIncomes = await this.incomeRepository.find({
       where: {
@@ -107,7 +111,10 @@ export class ReportsService {
     const hstPaid = 0;
     const totalExpenses = 0;
 
-    const totalSales = hstIncomes.reduce((sum, income) => sum + income.amount, 0);
+    const totalSales = hstIncomes.reduce(
+      (sum, income) => sum + income.amount,
+      0,
+    );
     const netHst = hstCollected - hstPaid;
 
     return {
@@ -123,13 +130,18 @@ export class ReportsService {
         count: 0,
       },
       netHst,
-      summary: netHst >= 0 
-        ? `Remit $${netHst.toFixed(2)} to CRA` 
-        : `Claim $${Math.abs(netHst).toFixed(2)} refund from CRA`,
+      summary:
+        netHst >= 0
+          ? `Remit $${netHst.toFixed(2)} to CRA`
+          : `Claim $${Math.abs(netHst).toFixed(2)} refund from CRA`,
     };
   }
 
-  async getProfitAndLoss(userId: string, startDate: string, endDate: string): Promise<ProfitLossDto> {
+  async getProfitAndLoss(
+    userId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<ProfitLossDto> {
     // Get all income
     const incomes = await this.incomeRepository.find({
       where: {
@@ -144,30 +156,40 @@ export class ReportsService {
         userId,
         date: Between(startDate, endDate) as any,
       },
-      relations: ['category'],
+      relations: ["category"],
     });
 
     // Separate owner distributions from regular expenses
-    const ownerDistributionExpenses = allExpenses.filter(e => e.category?.name === 'Owner Distribution');
-    const regularExpenses = allExpenses.filter(e => e.category?.name !== 'Owner Distribution');
+    const ownerDistributionExpenses = allExpenses.filter(
+      (e) => e.category?.name === "Owner Distribution",
+    );
+    const regularExpenses = allExpenses.filter(
+      (e) => e.category?.name !== "Owner Distribution",
+    );
 
     // Calculate totals
     const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
-    const totalExpenses = regularExpenses.reduce((sum, exp) => sum + +exp.amount, 0);
-    const ownerDistributions = ownerDistributionExpenses.reduce((sum, exp) => sum + +exp.amount, 0);
+    const totalExpenses = regularExpenses.reduce(
+      (sum, exp) => sum + +exp.amount,
+      0,
+    );
+    const ownerDistributions = ownerDistributionExpenses.reduce(
+      (sum, exp) => sum + +exp.amount,
+      0,
+    );
     const netProfit = totalIncome - totalExpenses;
     const margin = totalIncome > 0 ? (netProfit / totalIncome) * 100 : 0;
 
     // Group by category/type
     const incomeByCategory: Record<string, number> = {};
     incomes.forEach((inc) => {
-      const key = inc.type || 'Other';
+      const key = inc.type || "Other";
       incomeByCategory[key] = (incomeByCategory[key] || 0) + inc.amount;
     });
 
     const expensesByCategory: Record<string, number> = {};
     regularExpenses.forEach((exp) => {
-      const key = exp.category?.name || 'Uncategorized';
+      const key = exp.category?.name || "Uncategorized";
       expensesByCategory[key] = (expensesByCategory[key] || 0) + +exp.amount;
     });
 
@@ -189,7 +211,10 @@ export class ReportsService {
     };
   }
 
-  async getBalanceSheet(userId: string, asOfDate: string): Promise<BalanceSheetDto> {
+  async getBalanceSheet(
+    userId: string,
+    asOfDate: string,
+  ): Promise<BalanceSheetDto> {
     // Accounts Receivable (unpaid invoices - status SENT)
     const unpaidInvoices = await this.invoiceRepository.find({
       where: {
@@ -217,10 +242,15 @@ export class ReportsService {
 
     // Retained Earnings (all income - all expenses including owner distributions)
     const allIncomes = await this.incomeRepository.find({ where: { userId } });
-    const allExpenses = await this.expenseRepository.find({ where: { userId } });
+    const allExpenses = await this.expenseRepository.find({
+      where: { userId },
+    });
 
     const totalIncome = allIncomes.reduce((sum, inc) => sum + inc.amount, 0);
-    const totalExpenses = allExpenses.reduce((sum, exp) => sum + +exp.amount, 0);
+    const totalExpenses = allExpenses.reduce(
+      (sum, exp) => sum + +exp.amount,
+      0,
+    );
     const retainedEarnings = totalIncome - totalExpenses;
 
     const accountsPayable = 0;
@@ -246,7 +276,11 @@ export class ReportsService {
     };
   }
 
-  async getCashFlow(userId: string, startDate: string, endDate: string): Promise<CashFlowDto> {
+  async getCashFlow(
+    userId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<CashFlowDto> {
     // Cash from customers (paid income)
     const paidIncomes = await this.incomeRepository.find({
       where: {
@@ -267,11 +301,15 @@ export class ReportsService {
         userId,
         date: Between(startDate, endDate) as any,
       },
-      relations: ['category'],
+      relations: ["category"],
     });
 
-    const ownerDistributionExpenses = allExpenses.filter(e => e.category?.name === 'Owner Distribution');
-    const regularExpenses = allExpenses.filter(e => e.category?.name !== 'Owner Distribution');
+    const ownerDistributionExpenses = allExpenses.filter(
+      (e) => e.category?.name === "Owner Distribution",
+    );
+    const regularExpenses = allExpenses.filter(
+      (e) => e.category?.name !== "Owner Distribution",
+    );
 
     const cashToSuppliers = regularExpenses.reduce(
       (sum, exp) => sum + +exp.amount,

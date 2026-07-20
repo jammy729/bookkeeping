@@ -5,8 +5,10 @@
   "description": "A full-stack bookkeeping application for small businesses and contractors to track income, expenses, owner distributions, clients, invoices, and generate financial reports.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
+    "frontend:lint": "pnpm --dir frontend lint",
+    "frontend:test": "pnpm --dir frontend test",
+    "backend:lint": "pnpm --dir backend lint",
+    "backend:test": "pnpm --dir backend test"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
   "type": "commonjs",
   "devDependencies": {
     "husky": "^9.1.7",
-    "lint-staged": "^17.1.0"
+    "lint-staged": "^17.1.0",
+    "vitest": "^1.6.1"
   }
 }

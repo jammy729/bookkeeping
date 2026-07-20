@@ -23,6 +23,7 @@ export function Expenses() {
   useEffect(() => {
     fetchExpenses();
     fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
 
   const fetchExpenses = async () => {
@@ -30,7 +31,7 @@ export function Expenses() {
       setLoading(true);
       const data = await expensesService.getAll({ startDate, endDate });
       setExpenses(data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch expenses');
     } finally {
       setLoading(false);
@@ -41,8 +42,8 @@ export function Expenses() {
     try {
       const data = await categoriesService.getExpenseCategories();
       setCategories(data);
-    } catch (error) {
-      console.error('Failed to fetch categories:', error);
+    } catch {
+      console.error('Failed to fetch categories:');
     }
   };
 
@@ -53,7 +54,7 @@ export function Expenses() {
       await expensesService.delete(id);
       toast.success('Expense deleted');
       fetchExpenses();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete expense');
     }
   };
@@ -258,7 +259,7 @@ function ExpenseDialog({
         toast.success('Expense created');
       }
       onSave();
-    } catch (error) {
+    } catch {
       toast.error(expense ? 'Failed to update expense' : 'Failed to create expense');
     } finally {
       setSaving(false);

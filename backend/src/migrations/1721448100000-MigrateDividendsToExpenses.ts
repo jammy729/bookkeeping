@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm';
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class MigrateDividendsToExpenses1721448100000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -10,13 +10,16 @@ export class MigrateDividendsToExpenses1721448100000 implements MigrationInterfa
 
     for (const userRow of usersWithDividends) {
       const userId = userRow.userId;
-      
+
       // Create the Owner Distribution category for this user
-      await queryRunner.query(`
+      await queryRunner.query(
+        `
         INSERT INTO categories ("name", "type", "description", "isActive", "userId", "createdAt", "updatedAt")
         VALUES ('Owner Distribution', 'expense', 'Money taken out of the business by owner', true, $1, NOW(), NOW())
         ON CONFLICT DO NOTHING
-      `, [userId]);
+      `,
+        [userId],
+      );
     }
 
     // Step 2: Migrate dividend records to expenses
@@ -37,7 +40,7 @@ export class MigrateDividendsToExpenses1721448100000 implements MigrationInterfa
     `);
 
     // Step 3: Drop the dividends table
-    await queryRunner.dropTable('dividends');
+    await queryRunner.dropTable("dividends");
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
