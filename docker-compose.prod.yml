@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: bookkeeping-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-bookkeeping}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-}
+      POSTGRES_DB: ${DATABASE_NAME:-bookkeeping}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DATABASE_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-bookkeeping}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bookkeeping-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: bookkeeping-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${DATABASE_USER:-bookkeeping}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-}
+      DATABASE_NAME: ${DATABASE_NAME:-bookkeeping}
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-7d}
+      TYPEORM_SYNCHRONIZE: false
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/uploads:/app/uploads
+    networks:
+      - bookkeeping-network
+    command: >
+      sh -c "pnpm run migration:run && pnpm run start:prod"
+
+  # Frontend (served by nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: bookkeeping-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - backend
+    networks:
+      - bookkeeping-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  bookkeeping-network:
+    driver: bridge
