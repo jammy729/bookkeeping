@@ -19,50 +19,42 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [24.x]
+        node-version: [22.x]
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
-        working-directory: ./frontend
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run linter
-        working-directory: ./frontend
-        run: npm run lint
+        run: pnpm --filter bookkeeping-frontend lint
 
       - name: Run type check
         working-directory: ./frontend
         run: npx tsc --noEmit
 
       - name: Run tests
-        working-directory: ./frontend
-        run: npm run test
+        run: pnpm --filter bookkeeping-frontend test
 
       - name: Build
-        working-directory: ./frontend
-        run: npm run build
+        run: pnpm --filter bookkeeping-frontend build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist-frontend-${{ matrix.node-version }}
           path: frontend/dist
-          retention-days: 7
-
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-frontend-${{ matrix.node-version }}
-          path: frontend/coverage
           retention-days: 7
 
 
@@ -74,21 +66,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 24.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 24.x
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+          node-version: 22.x
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
-        working-directory: ./frontend
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build and check bundle size
         working-directory: ./frontend
         run: |
-          npm run build
+          npx vite build
 
           echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
