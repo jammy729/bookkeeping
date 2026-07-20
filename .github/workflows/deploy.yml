@@ -26,7 +26,19 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             cd ~/bookkeeping
+
+            # Ensure .env.prod exists with correct secrets
+            cat > .env.prod << 'ENVEOF'
+DATABASE_USER=${{ secrets.DATABASE_USER }}
+DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+JWT_SECRET=${{ secrets.JWT_SECRET }}
+DOMAIN=${{ secrets.DOMAIN }}
+VITE_API_URL=/api
+ENVEOF
+
             git fetch --all
             git checkout ${{ github.event.inputs.branch || 'main' }}
             git pull origin ${{ github.event.inputs.branch || 'main' }}
-            docker compose -f docker-compose.prod.yml up -d --build
+            docker compose -f docker-compose.prod.yml down
+            docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
