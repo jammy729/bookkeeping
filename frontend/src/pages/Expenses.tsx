@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
-import { expensesService, Expense, CreateExpenseDto, UpdateExpenseDto } from '../services/expenses.service';
-import { categoriesService, Category } from '../services/categories.service';
+import { useState } from 'react';
+import { useExpenses, useExpenseMutations } from '../hooks/useExpenses';
+import { useExpenseCategories } from '../hooks/useCategories';
+import { type Expense, type CreateExpenseDto, type UpdateExpenseDto } from '../services/expenses.service';
+import { type Category } from '../services/categories.service';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -8,9 +10,6 @@ import { toast } from 'sonner';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 
 export function Expenses() {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
     date.setDate(1);
@@ -20,40 +19,16 @@ export function Expenses() {
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  useEffect(() => {
-    fetchExpenses();
-    fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate]);
-
-  const fetchExpenses = async () => {
-    try {
-      setLoading(true);
-      const data = await expensesService.getAll({ startDate, endDate });
-      setExpenses(data);
-    } catch {
-      toast.error('Failed to fetch expenses');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const data = await categoriesService.getExpenseCategories();
-      setCategories(data);
-    } catch {
-      console.error('Failed to fetch categories:');
-    }
-  };
+  const { data: expenses = [], isLoading: loading } = useExpenses({ startDate, endDate });
+  const { data: categories = [] } = useExpenseCategories();
+  const { remove: removeExpense } = useExpenseMutations();
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this expense?')) return;
     
     try {
-      await expensesService.delete(id);
+      await removeExpense.mutateAsync(id);
       toast.success('Expense deleted');
-      fetchExpenses();
     } catch {
       toast.error('Failed to delete expense');
     }
@@ -214,10 +189,7 @@ export function Expenses() {
           expense={selectedExpense}
           categories={categories}
           onClose={handleFormClose}
-          onSave={() => {
-            fetchExpenses();
-            handleFormClose();
-          }}
+          onSave={handleFormClose}
         />
       )}
     </div>
@@ -236,6 +208,7 @@ function ExpenseDialog({
   onClose: () => void;
   onSave: () => void;
 }) {
+  const { create, update } = useExpenseMutations();
   const [formData, setFormData] = useState<CreateExpenseDto & UpdateExpenseDto>({
     amount: expense?.amount || 0,
     description: expense?.description || '',
@@ -244,25 +217,21 @@ function ExpenseDialog({
     notes: expense?.notes || '',
     isRecurring: expense?.isRecurring || false,
   });
-  const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
 
     try {
       if (expense) {
-        await expensesService.update(expense.id, formData);
+        await update.mutateAsync({ id: expense.id, data: formData });
         toast.success('Expense updated');
       } else {
-        await expensesService.create(formData as CreateExpenseDto);
+        await create.mutateAsync(formData as CreateExpenseDto);
         toast.success('Expense created');
       }
       onSave();
     } catch {
       toast.error(expense ? 'Failed to update expense' : 'Failed to create expense');
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -349,8 +318,8 @@ function ExpenseDialog({
               <Button type="button" variant="outline" onClick={onClose} className="flex-1">
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving} className="flex-1">
-                {saving ? 'Saving...' : expense ? 'Update' : 'Create'}
+              <Button type="submit" disabled={create.isPending || update.isPending} className="flex-1">
+                {create.isPending || update.isPending ? 'Saving...' : expense ? 'Update' : 'Create'}
               </Button>
             </div>
           </form>

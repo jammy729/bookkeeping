@@ -40,6 +40,8 @@ Thumbs.db
 
 # Docker
 docker-compose.override.yml
+.env.prod
+certbot/
 
 # Editor
 *.tsbuildinfo

@@ -1,5 +1,10 @@
-import { useState, useEffect } from 'react';
-import { categoriesService, Category, CreateCategoryDto, UpdateCategoryDto } from '../services/categories.service';
+import { useState } from 'react';
+import {
+  useExpenseCategories,
+  useIncomeCategories,
+  useCategoryMutations,
+} from '../hooks/useCategories';
+import { type Category, type CreateCategoryDto, type UpdateCategoryDto } from '../services/categories.service';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -7,40 +12,21 @@ import { toast } from 'sonner';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 
 export function Categories() {
-  const [expenseCategories, setExpenseCategories] = useState<Category[]>([]);
-  const [incomeCategories, setIncomeCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: expenseCategories = [], isLoading: loadingExpenses } = useExpenseCategories();
+  const { data: incomeCategories = [], isLoading: loadingIncomes } = useIncomeCategories();
+  const { remove: removeCategory } = useCategoryMutations();
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formType, setFormType] = useState<'expense' | 'income'>('expense');
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const [expenses, incomes] = await Promise.all([
-        categoriesService.getExpenseCategories(),
-        categoriesService.getIncomeCategories(),
-      ]);
-      setExpenseCategories(expenses);
-      setIncomeCategories(incomes);
-    } catch {
-      toast.error('Failed to fetch categories');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loading = loadingExpenses || loadingIncomes;
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this category?')) return;
     
     try {
-      await categoriesService.delete(id);
+      await removeCategory.mutateAsync(id);
       toast.success('Category deleted');
-      fetchCategories();
     } catch {
       toast.error('Failed to delete category');
     }
@@ -153,10 +139,7 @@ export function Categories() {
           category={selectedCategory}
           type={formType}
           onClose={handleFormClose}
-          onSave={() => {
-            fetchCategories();
-            handleFormClose();
-          }}
+          onSave={handleFormClose}
         />
       )}
     </div>
@@ -206,31 +189,28 @@ function CategoryDialog({
   onClose: () => void;
   onSave: () => void;
 }) {
+  const { create, update } = useCategoryMutations();
   const [formData, setFormData] = useState<CreateCategoryDto & UpdateCategoryDto>({
     name: category?.name || '',
     type: category?.type || type,
     description: category?.description || '',
     isActive: category?.isActive ?? true,
   });
-  const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
 
     try {
       if (category) {
-        await categoriesService.update(category.id, formData);
+        await update.mutateAsync({ id: category.id, data: formData });
         toast.success('Category updated');
       } else {
-        await categoriesService.create(formData as CreateCategoryDto);
+        await create.mutateAsync(formData as CreateCategoryDto);
         toast.success('Category created');
       }
       onSave();
     } catch {
       toast.error(category ? 'Failed to update category' : 'Failed to create category');
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -293,8 +273,8 @@ function CategoryDialog({
               <Button type="button" variant="outline" onClick={onClose} className="flex-1">
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving} className="flex-1">
-                {saving ? 'Saving...' : category ? 'Update' : 'Create'}
+              <Button type="submit" disabled={create.isPending || update.isPending} className="flex-1">
+                {create.isPending || update.isPending ? 'Saving...' : category ? 'Update' : 'Create'}
               </Button>
             </div>
           </form>

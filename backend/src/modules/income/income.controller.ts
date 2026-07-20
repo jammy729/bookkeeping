@@ -111,4 +111,18 @@ export class IncomeController {
       endDate,
     );
   }
+
+  @Get("summary/monthly")
+  @ApiOperation({ summary: "Get monthly income totals for a date range" })
+  getMonthly(
+    @Request() req,
+    @Query("startDate") startDate: Date,
+    @Query("endDate") endDate: Date,
+  ) {
+    return this.incomeService.getMonthlyTotals(
+      req.user.userId,
+      startDate,
+      endDate,
+    );
+  }
 }

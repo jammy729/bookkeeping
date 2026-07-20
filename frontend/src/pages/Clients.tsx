@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { clientsService, type Client, CreateClientDto, UpdateClientDto } from '../services/clients.service';
+import { useState } from 'react';
+import { useClients, useClientMutations } from '../hooks/useClients';
+import { type Client, type CreateClientDto, type UpdateClientDto } from '../services/clients.service';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -7,34 +8,17 @@ import { toast } from 'sonner';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 
 export function Clients() {
-  const [clients, setClients] = useState<Client[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: clients = [], isLoading: loading } = useClients();
+  const { remove: removeClient } = useClientMutations();
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-
-  useEffect(() => {
-    fetchClients();
-  }, []);
-
-  const fetchClients = async () => {
-    try {
-      setLoading(true);
-      const data = await clientsService.getAll();
-      setClients(data);
-    } catch {
-      toast.error('Failed to fetch clients');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this client?')) return;
     
     try {
-      await clientsService.delete(id);
+      await removeClient.mutateAsync(id);
       toast.success('Client deleted');
-      fetchClients();
     } catch {
       toast.error('Failed to delete client');
     }
@@ -147,10 +131,7 @@ export function Clients() {
         <ClientDialog
           client={selectedClient}
           onClose={handleFormClose}
-          onSave={() => {
-            fetchClients();
-            handleFormClose();
-          }}
+          onSave={handleFormClose}
         />
       )}
     </div>
@@ -167,6 +148,7 @@ function ClientDialog({
   onClose: () => void;
   onSave: () => void;
 }) {
+  const { create, update } = useClientMutations();
   const [formData, setFormData] = useState<CreateClientDto & UpdateClientDto>({
     name: client?.name || '',
     email: client?.email || '',
@@ -175,25 +157,21 @@ function ClientDialog({
     notes: client?.notes || '',
     isActive: client?.isActive ?? true,
   });
-  const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
 
     try {
       if (client) {
-        await clientsService.update(client.id, formData);
+        await update.mutateAsync({ id: client.id, data: formData });
         toast.success('Client updated');
       } else {
-        await clientsService.create(formData as CreateClientDto);
+        await create.mutateAsync(formData as CreateClientDto);
         toast.success('Client created');
       }
       onSave();
     } catch {
       toast.error(client ? 'Failed to update client' : 'Failed to create client');
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -276,8 +254,8 @@ function ClientDialog({
               <Button type="button" variant="outline" onClick={onClose} className="flex-1">
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving} className="flex-1">
-                {saving ? 'Saving...' : client ? 'Update' : 'Create'}
+              <Button type="submit" disabled={create.isPending || update.isPending} className="flex-1">
+                {create.isPending || update.isPending ? 'Saving...' : client ? 'Update' : 'Create'}
               </Button>
             </div>
           </form>

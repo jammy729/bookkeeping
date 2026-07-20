@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -14,9 +15,15 @@ interface ReportData {
   ownerDistributions: number;
   netIncome: number;
   profitMargin: number;
-  expensesByCategory: { category: string; amount: number; percentage: number }[];
-  incomeByType: { type: string; amount: number; percentage: number }[];
+  expensesByCategory: { category: string; amount: number; percentage: number | string }[];
+  incomeByType: { type: string; amount: number; percentage: number | string }[];
   monthlyData: { month: string; income: number; expenses: number }[];
+}
+
+interface MonthlyData {
+  month: string;
+  income: number;
+  expenses: number;
 }
 
 export function Reports() {
@@ -27,103 +34,108 @@ export function Reports() {
     return date.toISOString().split('T')[0];
   });
   const [endDate, setEndDate] = useState(() => new Date().toISOString().split('T')[0]);
-  const [reportData, setReportData] = useState<ReportData | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    generateReport();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate, reportType]);
+  const { data: totalExpenses = 0, isLoading: loadingExpenses } = useQuery({
+    queryKey: ['expenses', 'total', { startDate, endDate }],
+    queryFn: async () => {
+      const res = await api.get(`/expenses/summary/total?startDate=${startDate}&endDate=${endDate}`);
+      return res.data as number;
+    },
+  });
 
-  const generateReport = async () => {
-    try {
-      setLoading(true);
-      const [expensesRes, incomeRes, expensesByCatRes, incomeByTypeRes] = await Promise.all([
-        api.get(`/expenses/summary/total?startDate=${startDate}&endDate=${endDate}`),
-        api.get(`/income/summary/total?startDate=${startDate}&endDate=${endDate}`),
-        api.get(`/expenses/summary/by-category?startDate=${startDate}&endDate=${endDate}`),
-        api.get(`/income/summary/by-type?startDate=${startDate}&endDate=${endDate}`),
-      ]);
+  const { data: totalIncome = 0, isLoading: loadingIncome } = useQuery({
+    queryKey: ['income', 'total', { startDate, endDate }],
+    queryFn: async () => {
+      const res = await api.get(`/income/summary/total?startDate=${startDate}&endDate=${endDate}`);
+      return res.data as number;
+    },
+  });
 
-      const totalIncome = incomeRes.data || 0;
-      const totalExpenses = expensesRes.data || 0;
-      
-      // Extract owner distributions from category breakdown
-      const categories = expensesByCatRes.data || [];
-      const ownerDistCategory = categories.find((c: { categoryName: string }) => c.categoryName === 'Owner Distribution');
-      const ownerDistributions = ownerDistCategory?.total || 0;
-      
-      const netIncome = totalIncome - totalExpenses;
-      const profitMargin = totalIncome > 0 ? ((netIncome / totalIncome) * 100) : 0;
+  const { data: expenseCategories = [] } = useQuery({
+    queryKey: ['expenses', 'by-category', { startDate, endDate }],
+    queryFn: async () => {
+      const res = await api.get(`/expenses/summary/by-category?startDate=${startDate}&endDate=${endDate}`);
+      return res.data as { categoryName: string; total: number }[];
+    },
+  });
 
-      // Transform category data (exclude Owner Distribution from regular expenses)
-      const expensesByCategory = categories
-        .filter((item: { categoryName: string }) => item.categoryName !== 'Owner Distribution')
-        .map((item: { categoryName: string; total: number }) => ({
-          category: item.categoryName || 'Uncategorized',
-          amount: item.total,
-          percentage: totalExpenses > 0 ? ((item.total / totalExpenses) * 100).toFixed(1) : 0,
-        }));
+  const { data: incomeByType = [] } = useQuery({
+    queryKey: ['income', 'by-type', { startDate, endDate }],
+    queryFn: async () => {
+      const res = await api.get(`/income/summary/by-type?startDate=${startDate}&endDate=${endDate}`);
+      return res.data as { type: string; total: number }[];
+    },
+  });
 
-      // Transform income type data
-      const incomeByType = (incomeByTypeRes.data || []).map((item: { type: string; total: number }) => ({
-        type: formatTypeLabel(item.type),
-        amount: item.total,
-        percentage: totalIncome > 0 ? ((item.total / totalIncome) * 100).toFixed(1) : 0,
-      }));
+  const loading = loadingExpenses || loadingIncome;
 
-      // Generate monthly data
-      const monthlyData = await generateMonthlyData();
+  // Monthly comparison - parallel fetch instead of N+1
+  const { data: monthlyData = [] } = useQuery<MonthlyData[]>({
+    queryKey: ['reports', 'monthly', { startDate, endDate }],
+    queryFn: async () => {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const current = new Date(start);
+      const monthRanges: { label: string; start: string; end: string }[] = [];
 
-      setReportData({
-        title: getReportTitle(),
-        period: `${startDate} to ${endDate}`,
-        totalIncome,
-        totalExpenses,
-        ownerDistributions,
-        netIncome,
-        profitMargin,
-        expensesByCategory,
-        incomeByType,
-        monthlyData,
-      });
-    } catch (error) {
-      console.error('Failed to generate report:', error);
-      toast.error('Failed to generate report');
-    } finally {
-      setLoading(false);
-    }
+      while (current <= end) {
+        const monthStart = new Date(current.getFullYear(), current.getMonth(), 1);
+        const monthEnd = new Date(current.getFullYear(), current.getMonth() + 1, 0);
+        
+        const effectiveStart = monthStart < start ? start : monthStart;
+        const effectiveEnd = monthEnd > end ? end : monthEnd;
+
+        monthRanges.push({
+          label: current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+          start: effectiveStart.toISOString().split('T')[0],
+          end: effectiveEnd.toISOString().split('T')[0],
+        });
+
+        current.setMonth(current.getMonth() + 1);
+      }
+
+      const results = await Promise.all(
+        monthRanges.map(async (range) => {
+          const [incomeRes, expensesRes] = await Promise.all([
+            api.get(`/income/summary/total?startDate=${range.start}&endDate=${range.end}`),
+            api.get(`/expenses/summary/total?startDate=${range.start}&endDate=${range.end}`),
+          ]);
+          return {
+            month: range.label,
+            income: incomeRes.data || 0,
+            expenses: expensesRes.data || 0,
+          };
+        })
+      );
+
+      return results;
+    },
+    enabled: !loading,
+  });
+
+  // Derived data
+  const ownerDistCategory = expenseCategories.find((c) => c.categoryName === 'Owner Distribution');
+  const ownerDistributions = ownerDistCategory?.total || 0;
+  const netIncome = totalIncome - totalExpenses;
+  const profitMargin = totalIncome > 0 ? ((netIncome / totalIncome) * 100) : 0;
+
+  const formatTypeLabel = (type: string) => {
+    return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
 
-  const generateMonthlyData = async () => {
-    const months = [];
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const current = new Date(start);
+  const expensesByCategory = expenseCategories
+    .filter((item) => item.categoryName !== 'Owner Distribution')
+    .map((item) => ({
+      category: item.categoryName || 'Uncategorized',
+      amount: item.total,
+      percentage: totalExpenses > 0 ? ((item.total / totalExpenses) * 100).toFixed(1) : 0,
+    }));
 
-    while (current <= end) {
-      const monthStart = new Date(current.getFullYear(), current.getMonth(), 1);
-      const monthEnd = new Date(current.getFullYear(), current.getMonth() + 1, 0);
-      
-      const effectiveStart = monthStart < start ? start : monthStart;
-      const effectiveEnd = monthEnd > end ? end : monthEnd;
-
-      const [incomeRes, expensesRes] = await Promise.all([
-        api.get(`/income/summary/total?startDate=${effectiveStart.toISOString().split('T')[0]}&endDate=${effectiveEnd.toISOString().split('T')[0]}`),
-        api.get(`/expenses/summary/total?startDate=${effectiveStart.toISOString().split('T')[0]}&endDate=${effectiveEnd.toISOString().split('T')[0]}`),
-      ]);
-
-      months.push({
-        month: current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
-        income: incomeRes.data || 0,
-        expenses: expensesRes.data || 0,
-      });
-
-      current.setMonth(current.getMonth() + 1);
-    }
-
-    return months;
-  };
+  const formattedIncomeByType = incomeByType.map((item) => ({
+    type: formatTypeLabel(item.type),
+    amount: item.total,
+    percentage: totalIncome > 0 ? ((item.total / totalIncome) * 100).toFixed(1) : 0,
+  }));
 
   const getReportTitle = () => {
     if (reportType === 'monthly') return 'Monthly Financial Report';
@@ -131,8 +143,17 @@ export function Reports() {
     return 'Custom Period Report';
   };
 
-  const formatTypeLabel = (type: string) => {
-    return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  const reportData: ReportData | null = loading ? null : {
+    title: getReportTitle(),
+    period: `${startDate} to ${endDate}`,
+    totalIncome,
+    totalExpenses,
+    ownerDistributions,
+    netIncome,
+    profitMargin,
+    expensesByCategory,
+    incomeByType: formattedIncomeByType,
+    monthlyData,
   };
 
   const formatCurrency = (amount: number) => {

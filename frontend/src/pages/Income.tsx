@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
-import { incomeService, type Income, CreateIncomeDto, UpdateIncomeDto } from '../services/income.service';
-import { clientsService, type Client } from '../services/clients.service';
+import { useState } from 'react';
+import { useIncome, useIncomeMutations } from '../hooks/useIncome';
+import { useClients } from '../hooks/useClients';
+import { type Income, type CreateIncomeDto, type UpdateIncomeDto } from '../services/income.service';
+import { type Client } from '../services/clients.service';
+import { useDateRange } from '../hooks/useDateRange';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { DateRangeFilter } from '../components/DateRangeFilter';
@@ -16,64 +19,26 @@ const INCOME_TYPES = [
 ];
 
 export function Income() {
-  const [incomes, setIncomes] = useState<Income[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  
-  const now = new Date();
-  const [fromYear, setFromYear] = useState(now.getFullYear());
-  const [fromMonth, setFromMonth] = useState(0);
-  const [toYear, setToYear] = useState(now.getFullYear());
-  const [toMonth, setToMonth] = useState(0);
 
-  useEffect(() => {
-    fetchIncomes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromYear, fromMonth, toYear, toMonth]);
+  const {
+    fromYear, setFromYear,
+    fromMonth, setFromMonth,
+    toYear, setToYear,
+    toMonth, setToMonth,
+    dateRange,
+  } = useDateRange();
 
-  const getDateRange = () => {
-    let startDate: Date;
-    let endDate: Date;
-
-    if (fromMonth === 0) {
-      startDate = new Date(fromYear, 0, 1);
-    } else {
-      startDate = new Date(fromYear, fromMonth - 1, 1);
-    }
-
-    if (toMonth === 0) {
-      endDate = new Date(toYear, 11, 31);
-    } else {
-      endDate = new Date(toYear, toMonth, 0);
-    }
-
-    return {
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
-    };
-  };
-
-  const fetchIncomes = async () => {
-    try {
-      setLoading(true);
-      const { startDate, endDate } = getDateRange();
-      const data = await incomeService.getAll({ startDate, endDate });
-      setIncomes(data);
-    } catch {
-      toast.error('Failed to fetch income records');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: incomes = [], isLoading: loading } = useIncome(dateRange);
+  const { remove: removeIncome } = useIncomeMutations();
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this income record?')) return;
     
     try {
-      await incomeService.delete(id);
+      await removeIncome.mutateAsync(id);
       toast.success('Income record deleted');
-      fetchIncomes();
     } catch {
       toast.error('Failed to delete income record');
     }
@@ -236,10 +201,7 @@ export function Income() {
         <IncomeDialog
           income={selectedIncome}
           onClose={handleFormClose}
-          onSave={() => {
-            fetchIncomes();
-            handleFormClose();
-          }}
+          onSave={handleFormClose}
         />
       )}
     </>
@@ -256,7 +218,8 @@ function IncomeDialog({
   onClose: () => void;
   onSave: () => void;
 }) {
-  const [clients, setClients] = useState<Client[]>([]);
+  const { data: clients = [] } = useClients(true);
+  const { create, update } = useIncomeMutations();
   const [formData, setFormData] = useState<CreateIncomeDto & UpdateIncomeDto>({
     amount: income?.amount || 0,
     description: income?.description || '',
@@ -270,7 +233,6 @@ function IncomeDialog({
     hstAmount: income?.hstAmount || undefined,
     includesHst: income?.includesHst ?? false,
   });
-  const [saving, setSaving] = useState(false);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-CA', {
@@ -279,36 +241,26 @@ function IncomeDialog({
     }).format(amount);
   };
 
-  // Fetch clients on mount
-  useEffect(() => {
-    clientsService.getAll(true).then(setClients).catch(() => setClients([]));
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
 
     try {
       if (income) {
-        await incomeService.update(income.id, formData);
+        await update.mutateAsync({ id: income.id, data: formData });
         toast.success('Income record updated');
       } else {
-        await incomeService.create(formData as CreateIncomeDto);
+        await create.mutateAsync(formData as CreateIncomeDto);
         toast.success('Income record created');
       }
       onSave();
     } catch {
       toast.error(income ? 'Failed to update income' : 'Failed to create income');
-    } finally {
-      setSaving(false);
     }
   };
 
   const handleHstToggle = (checked: boolean) => {
     setFormData({ ...formData, includesHst: checked });
     if (checked) {
-      // Auto-calculate HST from total (amount includes HST)
-      // Formula: HST = Total - (Total / 1.13)
       const baseAmount = formData.amount / 1.13;
       const hst = formData.amount - baseAmount;
       setFormData(prev => ({ ...prev, hstAmount: Math.round(hst * 100) / 100 }));
@@ -320,7 +272,6 @@ function IncomeDialog({
   const handleAmountChange = (value: number) => {
     setFormData({ ...formData, amount: value });
     if (formData.includesHst) {
-      // Auto-update HST when amount changes (amount includes HST)
       const baseAmount = value / 1.13;
       const hst = value - baseAmount;
       setFormData(prev => ({ ...prev, hstAmount: Math.round(hst * 100) / 100 }));
@@ -395,7 +346,7 @@ function IncomeDialog({
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
                 >
                   <option value="">Select a client...</option>
-                  {clients.map((client) => (
+                  {(clients as Client[]).map((client) => (
                     <option key={client.id} value={client.name}>
                       {client.name}
                     </option>
@@ -492,8 +443,8 @@ function IncomeDialog({
               <Button type="button" variant="outline" onClick={onClose} className="flex-1">
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving} className="flex-1">
-                {saving ? 'Saving...' : income ? 'Update' : 'Create'}
+              <Button type="submit" disabled={create.isPending || update.isPending} className="flex-1">
+                {create.isPending || update.isPending ? 'Saving...' : income ? 'Update' : 'Create'}
               </Button>
             </div>
           </form>

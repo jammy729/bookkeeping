@@ -1,17 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { DateRangeFilter } from '../components/DateRangeFilter';
 import { ExpensesChart } from '../components/dashboard/ExpensesChart';
 import { CategoryBreakdown } from '../components/dashboard/CategoryBreakdown';
-import { toast } from 'sonner';
-
-interface DashboardSummary {
-  totalExpenses: number;
-  totalIncome: number;
-  ownerDistributions: number;
-  netProfit: number;
-}
+import { useDateRange } from '../hooks/useDateRange';
+import { useExpenseTotal, useExpenseByCategory } from '../hooks/useExpenses';
+import { useIncomeTotal, useIncomeByClient } from '../hooks/useIncome';
 
 interface CategoryData {
   name: string;
@@ -22,12 +17,6 @@ interface MonthlyData {
   month: string;
   income: number;
   expenses: number;
-}
-
-interface IncomeByClient {
-  clientName: string;
-  total: number;
-  count: number;
 }
 
 interface RecentTransaction {
@@ -41,97 +30,33 @@ interface RecentTransaction {
 }
 
 export function Dashboard() {
-  const [summary, setSummary] = useState<DashboardSummary | null>(null);
-  const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
-  const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
-  const [incomeByClient, setIncomeByClient] = useState<IncomeByClient[]>([]);
-  const [recentTransactions, setRecentTransactions] = useState<RecentTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
-  
-  const now = new Date();
-  const [fromYear, setFromYear] = useState(now.getFullYear());
-  const [fromMonth, setFromMonth] = useState(0);
-  const [toYear, setToYear] = useState(now.getFullYear());
-  const [toMonth, setToMonth] = useState(0);
+  const {
+    fromYear, setFromYear,
+    fromMonth, setFromMonth,
+    toYear, setToYear,
+    toMonth, setToMonth,
+    dateRange,
+  } = useDateRange();
 
-  useEffect(() => {
-    fetchDashboardData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromYear, fromMonth, toYear, toMonth]);
+  const { startDate, endDate } = dateRange;
 
-  const getDateRange = () => {
-    let startDate: Date;
-    let endDate: Date;
+  const { data: totalExpenses = 0, isLoading: loadingExpenses } = useExpenseTotal(startDate, endDate);
+  const { data: totalIncome = 0, isLoading: loadingIncome } = useIncomeTotal(startDate, endDate);
+  const { data: expenseCategories = [] } = useExpenseByCategory(startDate, endDate);
+  const { data: incomeByClient = [] } = useIncomeByClient(startDate, endDate);
 
-    if (fromMonth === 0) {
-      startDate = new Date(fromYear, 0, 1);
-    } else {
-      startDate = new Date(fromYear, fromMonth - 1, 1);
-    }
+  const loading = loadingExpenses || loadingIncome;
 
-    if (toMonth === 0) {
-      endDate = new Date(toYear, 11, 31);
-    } else {
-      endDate = new Date(toYear, toMonth, 0);
-    }
-
-    return {
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
-    };
-  };
-
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      const { startDate, endDate } = getDateRange();
-
-      const [expensesRes, incomeRes, categoryBreakdown] = await Promise.all([
-        api.get(`/expenses/summary/total?startDate=${startDate}&endDate=${endDate}`),
-        api.get(`/income/summary/total?startDate=${startDate}&endDate=${endDate}`),
-        api.get(`/expenses/summary/by-category?startDate=${startDate}&endDate=${endDate}`),
-      ]);
-
-      const totalExpenses = expensesRes.data || 0;
-      const totalIncome = incomeRes.data || 0;
-      
-      // Extract owner distributions from category breakdown
-      const categories = categoryBreakdown.data || [];
-      const ownerDistCategory = categories.find((c: { categoryName: string }) => c.categoryName === 'Owner Distribution');
-      const ownerDistributions = ownerDistCategory?.total || 0;
-      
-      // Net Profit = Income - All Expenses (including owner distributions)
-      setSummary({
-        totalExpenses,
-        totalIncome,
-        ownerDistributions,
-        netProfit: totalIncome - totalExpenses,
-      });
-
-      // Transform category data for pie chart
-      const catData = categories.map((item: { categoryName: string; total: number }) => ({
-        name: item.categoryName || 'Uncategorized',
-        value: item.total,
-      }));
-      setCategoryData(catData);
-
-      await fetchMonthlyComparison(startDate, endDate);
-      await fetchIncomeByClient(startDate, endDate);
-      await fetchRecentTransactions();
-    } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
-      toast.error('Failed to load dashboard data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchMonthlyComparison = async (startDate: string, endDate: string) => {
-    try {
+  // Monthly comparison - uses a single query instead of N+1
+  const { data: monthlyData = [] } = useQuery<MonthlyData[]>({
+    queryKey: ['dashboard', 'monthly', { startDate, endDate }],
+    queryFn: async () => {
       const start = new Date(startDate);
       const end = new Date(endDate);
       const months: MonthlyData[] = [];
       
+      // Build all month ranges first
+      const monthRanges: { label: string; start: string; end: string }[] = [];
       const current = new Date(start);
       while (current <= end) {
         const monthStart = new Date(current.getFullYear(), current.getMonth(), 1);
@@ -140,37 +65,40 @@ export function Dashboard() {
         const effectiveStart = monthStart < start ? start : monthStart;
         const effectiveEnd = monthEnd > end ? end : monthEnd;
         
-        const [incomeRes, expensesRes] = await Promise.all([
-          api.get(`/income/summary/total?startDate=${effectiveStart.toISOString().split('T')[0]}&endDate=${effectiveEnd.toISOString().split('T')[0]}`),
-          api.get(`/expenses/summary/total?startDate=${effectiveStart.toISOString().split('T')[0]}&endDate=${effectiveEnd.toISOString().split('T')[0]}`),
-        ]);
-        
-        months.push({
-          month: current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
-          income: incomeRes.data || 0,
-          expenses: expensesRes.data || 0,
+        monthRanges.push({
+          label: current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+          start: effectiveStart.toISOString().split('T')[0],
+          end: effectiveEnd.toISOString().split('T')[0],
         });
         
         current.setMonth(current.getMonth() + 1);
       }
-      
-      setMonthlyData(months);
-    } catch (error) {
-      console.error('Failed to fetch monthly comparison:', error);
-    }
-  };
 
-  const fetchIncomeByClient = async (startDate: string, endDate: string) => {
-    try {
-      const res = await api.get(`/income/summary/by-client?startDate=${startDate}&endDate=${endDate}`);
-      setIncomeByClient(res.data || []);
-    } catch (error) {
-      console.error('Failed to fetch income by client:', error);
-    }
-  };
+      // Fetch all months in parallel
+      const results = await Promise.all(
+        monthRanges.map(async (range) => {
+          const [incomeRes, expensesRes] = await Promise.all([
+            api.get(`/income/summary/total?startDate=${range.start}&endDate=${range.end}`),
+            api.get(`/expenses/summary/total?startDate=${range.start}&endDate=${range.end}`),
+          ]);
+          return {
+            month: range.label,
+            income: incomeRes.data || 0,
+            expenses: expensesRes.data || 0,
+          };
+        })
+      );
 
-  const fetchRecentTransactions = async () => {
-    try {
+      months.push(...results);
+      return months;
+    },
+    enabled: !loading,
+  });
+
+  // Recent transactions
+  const { data: recentTransactions = [] } = useQuery<RecentTransaction[]>({
+    queryKey: ['dashboard', 'recent-transactions'],
+    queryFn: async () => {
       const [expensesRes, incomeRes] = await Promise.all([
         api.get('/expenses?limit=5'),
         api.get('/income?limit=5'),
@@ -199,11 +127,19 @@ export function Dashboard() {
       ];
 
       transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      setRecentTransactions(transactions.slice(0, 10));
-    } catch (error) {
-      console.error('Failed to fetch recent transactions:', error);
-    }
-  };
+      return transactions.slice(0, 10);
+    },
+  });
+
+  // Derived data
+  const ownerDistCategory = expenseCategories.find((c) => c.categoryName === 'Owner Distribution');
+  const ownerDistributions = ownerDistCategory?.total || 0;
+  const netProfit = totalIncome - totalExpenses;
+
+  const categoryData: CategoryData[] = expenseCategories.map((item) => ({
+    name: item.categoryName || 'Uncategorized',
+    value: item.total,
+  }));
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-CA', {
@@ -249,7 +185,7 @@ export function Dashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-green-600">
-              {summary ? formatCurrency(summary.totalIncome) : '-'}
+              {formatCurrency(totalIncome)}
             </p>
           </CardContent>
         </Card>
@@ -260,7 +196,7 @@ export function Dashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-red-600">
-              {summary ? formatCurrency(summary.totalExpenses) : '-'}
+              {formatCurrency(totalExpenses)}
             </p>
           </CardContent>
         </Card>
@@ -271,7 +207,7 @@ export function Dashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-blue-600">
-              {summary ? formatCurrency(summary.ownerDistributions) : '-'}
+              {formatCurrency(ownerDistributions)}
             </p>
           </CardContent>
         </Card>
@@ -281,8 +217,8 @@ export function Dashboard() {
             <CardTitle className="text-sm font-medium text-gray-600">Net Profit</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className={`text-2xl font-bold ${summary && summary.netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {summary ? formatCurrency(summary.netProfit) : '-'}
+            <p className={`text-2xl font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {formatCurrency(netProfit)}
             </p>
           </CardContent>
         </Card>
