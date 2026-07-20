@@ -11,7 +11,7 @@ export interface CreateBudgetDto {
   name?: string;
   period?: "daily" | "weekly" | "monthly" | "quarterly" | "yearly";
   categoryId?: string;
-  userId: string;
+  userId?: string;
 }
 
 export interface UpdateBudgetDto {

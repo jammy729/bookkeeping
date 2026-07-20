@@ -137,4 +137,28 @@ export class ExpensesService {
       total: parseFloat(r.total) || 0,
     }));
   }
+
+  async getMonthlyTotals(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<{ month: string; total: number }[]> {
+    const results = await this.expenseRepository
+      .createQueryBuilder("expense")
+      .select("TO_CHAR(expense.date, 'YYYY-MM')", "month")
+      .addSelect("SUM(expense.amount)", "total")
+      .where("expense.userId = :userId", { userId })
+      .andWhere("expense.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .groupBy("TO_CHAR(expense.date, 'YYYY-MM')")
+      .orderBy("TO_CHAR(expense.date, 'YYYY-MM')", "ASC")
+      .getRawMany();
+
+    return results.map((r) => ({
+      month: r.month,
+      total: parseFloat(r.total) || 0,
+    }));
+  }
 }

@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { api } from '../lib/api';
+import { useState } from 'react';
+import { useBudgets, useBudgetMutations } from '../hooks/useBudgets';
+import { useExpenseCategories } from '../hooks/useCategories';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -31,45 +32,18 @@ interface Category {
 }
 
 export function Budgets() {
-  const [budgets, setBudgets] = useState<Budget[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: budgets = [], isLoading: loading } = useBudgets();
+  const { data: categories = [] } = useExpenseCategories();
+  const { remove: removeBudget } = useBudgetMutations();
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-
-  useEffect(() => {
-    fetchBudgets();
-    fetchCategories();
-  }, []);
-
-  const fetchBudgets = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get<Budget[]>('/budgets');
-      setBudgets(response.data);
-    } catch {
-      toast.error('Failed to fetch budgets');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await api.get<Category[]>('/categories/expenses');
-      setCategories(response.data);
-    } catch {
-      console.error('Failed to fetch categories:');
-    }
-  };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this budget?')) return;
     
     try {
-      await api.delete(`/budgets/${id}`);
+      await removeBudget.mutateAsync(id);
       toast.success('Budget deleted');
-      fetchBudgets();
     } catch {
       toast.error('Failed to delete budget');
     }
@@ -232,10 +206,7 @@ export function Budgets() {
           budget={selectedBudget}
           categories={categories}
           onClose={handleFormClose}
-          onSave={() => {
-            fetchBudgets();
-            handleFormClose();
-          }}
+          onSave={handleFormClose}
         />
       )}
     </div>
@@ -253,6 +224,7 @@ function BudgetDialog({
   onClose: () => void;
   onSave: () => void;
 }) {
+  const { create, update } = useBudgetMutations();
   const [formData, setFormData] = useState<CreateBudgetDto>({
     name: budget?.name || '',
     amount: budget?.amount || 0,
@@ -260,25 +232,21 @@ function BudgetDialog({
     categoryId: budget?.categoryId || undefined,
     notes: budget?.notes || '',
   });
-  const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
 
     try {
       if (budget) {
-        await api.put(`/budgets/${budget.id}`, formData);
+        await update.mutateAsync({ id: budget.id, data: formData });
         toast.success('Budget updated');
       } else {
-        await api.post('/budgets', formData);
+        await create.mutateAsync(formData);
         toast.success('Budget created');
       }
       onSave();
     } catch {
       toast.error(budget ? 'Failed to update budget' : 'Failed to create budget');
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -358,8 +326,8 @@ function BudgetDialog({
               <Button type="button" variant="outline" onClick={onClose} className="flex-1">
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving} className="flex-1">
-                {saving ? 'Saving...' : budget ? 'Update' : 'Create'}
+              <Button type="submit" disabled={create.isPending || update.isPending} className="flex-1">
+                {create.isPending || update.isPending ? 'Saving...' : budget ? 'Update' : 'Create'}
               </Button>
             </div>
           </form>

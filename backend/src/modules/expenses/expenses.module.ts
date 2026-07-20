@@ -1,11 +1,12 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { CacheModule } from "@nestjs/cache-manager";
 import { Expense } from "../../entities/expense.entity";
 import { ExpensesService } from "./expenses.service";
 import { ExpensesController } from "./expenses.controller";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Expense])],
+  imports: [TypeOrmModule.forFeature([Expense]), CacheModule.register()],
   providers: [ExpensesService],
   controllers: [ExpensesController],
   exports: [ExpensesService],

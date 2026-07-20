@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ThrottlerModule } from "@nestjs/throttler";
+import { CacheModule } from "@nestjs/cache-manager";
 import { AppController } from "./app.controller";
 import { AuthModule } from "./modules/auth/auth.module";
 import { ExpensesModule } from "./modules/expenses/expenses.module";
@@ -37,6 +38,12 @@ import { Budget } from "./entities/budget.entity";
         limit: 10,
       },
     ]),
+
+    // In-memory cache for aggregation endpoints (2 min TTL)
+    CacheModule.register({
+      ttl: 120000,
+      max: 200,
+    }),
 
     // TypeORM for PostgreSQL
     TypeOrmModule.forRootAsync({

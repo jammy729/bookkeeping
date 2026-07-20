@@ -175,4 +175,28 @@ export class IncomeService {
       count: parseInt(r.count) || 0,
     }));
   }
+
+  async getMonthlyTotals(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<{ month: string; total: number }[]> {
+    const results = await this.incomeRepository
+      .createQueryBuilder("income")
+      .select("TO_CHAR(income.date, 'YYYY-MM')", "month")
+      .addSelect("SUM(income.amount)", "total")
+      .where("income.userId = :userId", { userId })
+      .andWhere("income.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .groupBy("TO_CHAR(income.date, 'YYYY-MM')")
+      .orderBy("TO_CHAR(income.date, 'YYYY-MM')", "ASC")
+      .getRawMany();
+
+    return results.map((r) => ({
+      month: r.month,
+      total: parseFloat(r.total) || 0,
+    }));
+  }
 }
