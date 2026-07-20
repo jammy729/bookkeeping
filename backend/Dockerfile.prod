@@ -10,6 +10,9 @@ WORKDIR /app
 # Enable corepack to use pnpm
 RUN corepack enable
 
+# Configure pnpm to hoist node_modules
+RUN echo "node-linker=hoisted" > .npmrc
+
 # Copy workspace config + lockfiles
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY backend/package.json ./backend/
@@ -30,6 +33,9 @@ WORKDIR /app
 
 # Enable corepack to use pnpm
 RUN corepack enable
+
+# Configure pnpm to hoist node_modules (needed for production builds)
+RUN echo "node-linker=hoisted" > .npmrc
 
 # Copy workspace config + lockfiles
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
