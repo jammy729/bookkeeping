@@ -3,6 +3,16 @@ name: Deploy to Oracle Cloud VM
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - ci/deploy-workflow
 
 jobs:
   deploy:
@@ -16,5 +26,7 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             cd ~/bookkeeping
-            git pull
+            git fetch --all
+            git checkout ${{ github.event.inputs.branch || 'main' }}
+            git pull origin ${{ github.event.inputs.branch || 'main' }}
             docker compose -f docker-compose.prod.yml up -d --build
