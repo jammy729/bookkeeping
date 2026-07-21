@@ -12,7 +12,7 @@ on:
           - main
           - develop
           - feat/deploy-fly
-          - ci/deploy-workflow
+          - feat/health-check-and-deploy
 
 jobs:
   deploy:
