@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health Check</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .container {
+        max-width: 640px;
+        width: 100%;
+      }
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+      .card {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid #334155;
+      }
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+      .badge.ok {
+        background: #064e3b;
+        color: #34d399;
+      }
+      .badge.error {
+        background: #7f1d1d;
+        color: #f87171;
+      }
+      .badge.loading {
+        background: #1e3a5f;
+        color: #60a5fa;
+      }
+      .badge .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-top: 1px solid #334155;
+        font-size: 0.9rem;
+      }
+      .detail-label {
+        color: #94a3b8;
+      }
+      .detail-value {
+        font-family: "SF Mono", "Fira Code", monospace;
+        color: #e2e8f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>System Health</h1>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Frontend</span>
+          <span id="frontend-status" class="badge ok">
+            <span class="dot"></span> Serving
+          </span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Commit</span>
+          <span class="detail-value" id="frontend-commit">__GIT_COMMIT__</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Build Time</span>
+          <span class="detail-value" id="frontend-build">__BUILD_TIME__</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Backend</span>
+          <span id="backend-status" class="badge loading">
+            <span class="dot"></span> Checking...
+          </span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Commit</span>
+          <span class="detail-value" id="backend-commit">—</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Uptime</span>
+          <span class="detail-value" id="backend-uptime">—</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Server Time</span>
+          <span class="detail-value" id="backend-time">—</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function formatUptime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = Math.floor(seconds % 60);
+        if (h > 0) return h + "h " + m + "m " + s + "s";
+        if (m > 0) return m + "m " + s + "s";
+        return s + "s";
+      }
+
+      function setBackendStatus(status, text) {
+        var el = document.getElementById("backend-status");
+        el.className = "badge " + status;
+        el.innerHTML = '<span class="dot"></span> ' + text;
+      }
+
+      fetch("/api/health")
+        .then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          setBackendStatus("ok", "Healthy");
+          document.getElementById("backend-commit").textContent =
+            data.commit || "unknown";
+          document.getElementById("backend-uptime").textContent = formatUptime(
+            data.uptime || 0
+          );
+          document.getElementById("backend-time").textContent =
+            data.timestamp || "—";
+        })
+        .catch(function (err) {
+          setBackendStatus("error", "Unreachable");
+          document.getElementById("backend-commit").textContent =
+            "Error: " + err.message;
+        });
+    </script>
+  </body>
+</html>

@@ -11,10 +11,17 @@ export class AppController {
   }
 
   @Get("health")
-  getHealth(): { status: string; timestamp: string } {
+  getHealth(): {
+    status: string;
+    timestamp: string;
+    commit: string;
+    uptime: number;
+  } {
     return {
       status: "ok",
       timestamp: new Date().toISOString(),
+      commit: process.env.GIT_COMMIT || "unknown",
+      uptime: process.uptime(),
     };
   }
 }
