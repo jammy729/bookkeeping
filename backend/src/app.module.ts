@@ -48,27 +48,58 @@ import { Budget } from "./entities/budget.entity";
     // TypeORM for PostgreSQL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: "postgres",
-        host: configService.get<string>("DATABASE_HOST", "localhost"),
-        port: configService.get<number>("DATABASE_PORT", 5432),
-        username: configService.get<string>("DATABASE_USER", "postgres"),
-        password: configService.get<string>("DATABASE_PASSWORD", "postgres"),
-        database: configService.get<string>("DATABASE_NAME", "bookkeeping"),
-        entities: [
-          User,
-          Expense,
-          Income,
-          Category,
-          Client,
-          Invoice,
-          InvoiceItem,
-          Attachment,
-          Budget,
-        ],
-        autoLoadEntities: true,
-        synchronize: process.env.TYPEORM_SYNCHRONIZE === "true" || false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const url = configService.get<string>("DATABASE_URL");
+        if (url) {
+          return {
+            type: "postgres" as const,
+            url,
+            entities: [
+              User,
+              Expense,
+              Income,
+              Category,
+              Client,
+              Invoice,
+              InvoiceItem,
+              Attachment,
+              Budget,
+            ],
+            autoLoadEntities: true,
+            synchronize:
+              process.env.TYPEORM_SYNCHRONIZE === "true" || false,
+            ssl: { rejectUnauthorized: false },
+          };
+        }
+        return {
+          type: "postgres" as const,
+          host: configService.get<string>("DATABASE_HOST", "localhost"),
+          port: configService.get<number>("DATABASE_PORT", 5432),
+          username: configService.get<string>("DATABASE_USER", "postgres"),
+          password: configService.get<string>(
+            "DATABASE_PASSWORD",
+            "postgres",
+          ),
+          database: configService.get<string>(
+            "DATABASE_NAME",
+            "bookkeeping",
+          ),
+          entities: [
+            User,
+            Expense,
+            Income,
+            Category,
+            Client,
+            Invoice,
+            InvoiceItem,
+            Attachment,
+            Budget,
+          ],
+          autoLoadEntities: true,
+          synchronize:
+            process.env.TYPEORM_SYNCHRONIZE === "true" || false,
+        };
+      },
       inject: [ConfigService],
     }),
 
