@@ -1,0 +1,36 @@
+name: Deploy to Fly.io
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to deploy"
+        required: true
+        default: "main"
+        type: choice
+        options:
+          - main
+          - develop
+          - feat/deploy-fly
+          - feat/health-check-and-deploy
+
+jobs:
+  deploy:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Setup Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io
+        run: |
+          GIT_COMMIT=$(git rev-parse --short HEAD)
+          echo "Deploying commit: $GIT_COMMIT on branch: ${{ inputs.branch }}"
+          flyctl deploy --remote-only --build-arg GIT_COMMIT=$GIT_COMMIT
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

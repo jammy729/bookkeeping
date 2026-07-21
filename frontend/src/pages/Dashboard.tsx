@@ -66,7 +66,7 @@ export function Dashboard() {
         const effectiveEnd = monthEnd > end ? end : monthEnd;
         
         monthRanges.push({
-          label: current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+          label: current.toLocaleDateString('en-US', { month: 'short' }),
           start: effectiveStart.toISOString().split('T')[0],
           end: effectiveEnd.toISOString().split('T')[0],
         });
