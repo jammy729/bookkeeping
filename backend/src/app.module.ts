@@ -66,8 +66,7 @@ import { Budget } from "./entities/budget.entity";
               Budget,
             ],
             autoLoadEntities: true,
-            synchronize:
-              process.env.TYPEORM_SYNCHRONIZE === "true" || false,
+            synchronize: process.env.TYPEORM_SYNCHRONIZE === "true" || false,
             ssl: { rejectUnauthorized: false },
           };
         }
@@ -76,14 +75,8 @@ import { Budget } from "./entities/budget.entity";
           host: configService.get<string>("DATABASE_HOST", "localhost"),
           port: configService.get<number>("DATABASE_PORT", 5432),
           username: configService.get<string>("DATABASE_USER", "postgres"),
-          password: configService.get<string>(
-            "DATABASE_PASSWORD",
-            "postgres",
-          ),
-          database: configService.get<string>(
-            "DATABASE_NAME",
-            "bookkeeping",
-          ),
+          password: configService.get<string>("DATABASE_PASSWORD", "postgres"),
+          database: configService.get<string>("DATABASE_NAME", "bookkeeping"),
           entities: [
             User,
             Expense,
@@ -96,8 +89,7 @@ import { Budget } from "./entities/budget.entity";
             Budget,
           ],
           autoLoadEntities: true,
-          synchronize:
-            process.env.TYPEORM_SYNCHRONIZE === "true" || false,
+          synchronize: process.env.TYPEORM_SYNCHRONIZE === "true" || false,
         };
       },
       inject: [ConfigService],
