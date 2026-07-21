@@ -132,6 +132,19 @@
           <span class="detail-value" id="backend-time">—</span>
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Database</span>
+          <span id="db-status" class="badge loading">
+            <span class="dot"></span> Checking...
+          </span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Latency</span>
+          <span class="detail-value" id="db-latency">—</span>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -156,7 +169,8 @@
           return res.json();
         })
         .then(function (data) {
-          setBackendStatus("ok", "Healthy");
+          var overall = data.status === "ok" ? "ok" : "error";
+          setBackendStatus(overall, data.status === "ok" ? "Healthy" : "Degraded");
           document.getElementById("backend-commit").textContent =
             data.commit || "unknown";
           document.getElementById("backend-uptime").textContent = formatUptime(
@@ -164,6 +178,14 @@
           );
           document.getElementById("backend-time").textContent =
             data.timestamp || "—";
+
+          var dbBadge = document.getElementById("db-status");
+          var dbOk = data.database && data.database.status === "ok";
+          dbBadge.className = "badge " + (dbOk ? "ok" : "error");
+          dbBadge.innerHTML =
+            '<span class="dot"></span> ' + (dbOk ? "Connected" : "Error");
+          document.getElementById("db-latency").textContent =
+            data.database ? data.database.latencyMs + "ms" : "—";
         })
         .catch(function (err) {
           setBackendStatus("error", "Unreachable");
