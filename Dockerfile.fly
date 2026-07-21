@@ -16,7 +16,13 @@ RUN pnpm install --frozen-lockfile
 COPY frontend ./frontend/
 
 ARG VITE_API_URL=/api
+ARG GIT_COMMIT=unknown
 RUN pnpm --filter bookkeeping-frontend build
+
+# Inject commit ID + build time into health page
+RUN COMMIT="$GIT_COMMIT" BUILD="$(date -u +%Y-%m-%dT%H:%M:%SZ)" && \
+    sed -i "s/__GIT_COMMIT__/$COMMIT/g" /app/frontend/dist/health.html && \
+    sed -i "s/__BUILD_TIME__/$BUILD/g" /app/frontend/dist/health.html
 
 # ── Stage 2: Build backend ──────────────────────
 FROM node:22-alpine AS backend-builder
@@ -64,6 +70,10 @@ COPY nginx/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Create uploads directory
 RUN mkdir -p /app/backend/uploads
+
+# Set git commit for backend health endpoint
+ARG GIT_COMMIT=unknown
+ENV GIT_COMMIT=${GIT_COMMIT}
 
 EXPOSE 8080
 
