@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "=== Supabase Database Setup ==="
+echo ""
+echo "1. Go to https://supabase.com and sign up (free)"
+echo "2. Create a new project (any name, e.g. 'bookkeeping')"
+echo "3. Go to Settings → Database → Connection string → URI"
+echo "4. Copy the 'Transaction mode' (port 6543) connection string"
+echo "   It looks like: postgresql://postgres.xxxx:password@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
+echo ""
+echo "5. In Render dashboard (https://dashboard.render.com):"
+echo "   - Go to your bookkeeping-api service"
+echo "   - Go to Environment tab"
+echo "   - Add env var: DATABASE_URL = <your supabase connection string>"
+echo "   - Add env var: FRONTEND_URL = <your vercel url, e.g. https://bookkeeping.vercel.app>"
+echo ""
+echo "6. Redeploy the Render service"
+echo ""
+echo "Note: Supabase free tier pauses projects after 1 week of inactivity."
+echo "You'll need to manually resume it from the Supabase dashboard."
+echo ""
+echo "Done! Your app is now live."
