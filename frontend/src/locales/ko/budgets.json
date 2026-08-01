@@ -1,0 +1,118 @@
+{
+  "budgets": {
+    "title": "예산 관리",
+    "subtitle": "카테고리별 예산을 설정하고 추적하세요",
+    "addBudget": "예산 추가",
+    "editBudget": "예산 수정",
+    "stats": {
+      "totalBudget": "총 예산",
+      "totalSpent": "총 지출",
+      "remaining": "잔여 예산",
+      "utilized": "사용률",
+      "overBudget": "예산 초과",
+      "underBudget": "예산 미달",
+      "onTrack": "정상",
+      "total": "전체 예산",
+      "monthly": "월별 예산",
+      "yearly": "연별 예산"
+    },
+    "list": "예산 목록",
+    "empty": {
+      "noBudgets": "설정된 예산이 없습니다",
+      "getStarted": "첫 번째 예산을 설정하여 지출을 관리하세요",
+      "noSearchResults": "검색 결과가 없습니다",
+      "noOverBudget": "예산 초과 항목이 없습니다",
+      "noUnderBudget": "예산 미달 항목이 없습니다"
+    },
+    "table": {
+      "category": "카테고리",
+      "budgetAmount": "예산액",
+      "spent": "사용액",
+      "remaining": "잔여액",
+      "utilization": "사용률",
+      "period": "기간",
+      "status": "상태",
+      "actions": "작업",
+      "trend": "추이",
+      "name": "이름",
+      "amount": "금액"
+    },
+    "periods": {
+      "monthly": "월별",
+      "quarterly": "분기별",
+      "yearly": "연별",
+      "custom": "사용자 지정",
+      "startDate": "시작일",
+      "endDate": "종료일"
+    },
+    "form": {
+      "category": "카테고리",
+      "categoryPlaceholder": "카테고리 선택",
+      "amount": "예산액",
+      "amountPlaceholder": "예산 금액 입력",
+      "period": "기간",
+      "periodPlaceholder": "기간 선택",
+      "startDate": "시작일",
+      "endDate": "종료일",
+      "alertThreshold": "알림 기준",
+      "alertThresholdDescription": "예산 사용률이 이 수준을 초과하면 알림을 받습니다",
+      "alertThresholdPlaceholder": "예: 80",
+      "notes": "메모",
+      "notesPlaceholder": "예산 관련 메모 (선택사항)",
+      "save": "예산 저장",
+      "cancel": "취소",
+      "titleEdit": "예산 수정",
+      "titleCreate": "예산 추가",
+      "name": "이름 *",
+      "namePlaceholder": "예: 사무용품 예산",
+      "noCategory": "카테고리 없음"
+    },
+    "progress": {
+      "onTrack": "정상 진행 중",
+      "warning": "예산 사용량이 많습니다",
+      "overBudget": "예산을 초과했습니다",
+      "excellent": "우수한 관리",
+      "good": "양호",
+      "attention": "주의 필요",
+      "critical": "위험"
+    },
+    "toast": {
+      "created": "예산이 설정되었습니다",
+      "updated": "예산이 수정되었습니다",
+      "deleted": "예산이 삭제되었습니다",
+      "deleteConfirm": "이 예산을 삭제하시겠습니까?",
+      "overBudgetAlert": "카테고리 \"{{category}}\"의 예산을 초과했습니다",
+      "thresholdAlert": "카테고리 \"{{category}}\"의 예산 사용률이 {{percent}}%에 도달했습니다",
+      "categoryRequired": "카테고리를 선택해 주세요",
+      "amountRequired": "예산 금액을 입력해 주세요",
+      "deleteFailed": "예산 삭제에 실패했습니다",
+      "updateFailed": "예산 수정에 실패했습니다",
+      "createFailed": "예산 생성에 실패했습니다"
+    },
+    "confirmDialog": {
+      "title": "예산 삭제",
+      "description": "이 예산을 삭제하시겠습니까?",
+      "confirm": "삭제",
+      "cancel": "취소"
+    },
+    "charts": {
+      "budgetVsActual": "예산 vs 실적",
+      "utilizationByCategory": "카테고리별 사용률",
+      "monthlyBudgetTrend": "월별 예산 추이",
+      "noData": "차트를 표시할 데이터가 없습니다"
+    },
+    "comparison": {
+      "thisMonth": "이번 달",
+      "lastMonth": "지난 달",
+      "thisQuarter": "이번 분기",
+      "thisYear": "올해",
+      "vsLastMonth": "지난 달 대비",
+      "increase": "증가",
+      "decrease": "감소"
+    },
+    "description": "지출 한도를 설정하고 예산 목록을 추적하세요",
+    "noBudgets": "설정된 예산이 없습니다",
+    "noBudgetsDesc": "첫 번째 예산을 추가하여 지출 추적을 시작하세요"
+  },
+  "list": "예산 목록"
+}

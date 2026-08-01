@@ -1,0 +1,129 @@
+{
+  "budgets": {
+    "title": "Presupuestos",
+    "description": "Establezca y monitoree sus presupuestos por categoría",
+    "stats": {
+      "totalBudgets": "Total de presupuestos",
+      "activePresupuestos": "Activos",
+      "totalBudgeted": "Total presupuestado",
+      "totalSpent": "Total gastado",
+      "remaining": "Restante",
+      "percentUsed": "Porcentaje utilizado",
+      "onTrack": "En camino",
+      "warning": "En alerta",
+      "exceeded": "Excedido",
+      "total": "Total de presupuestos",
+      "monthly": "Presupuesto mensual",
+      "yearly": "Presupuesto anual"
+    },
+    "list": "Lista de presupuestos",
+    "empty": {
+      "noBudgets": "No hay presupuestos",
+      "noResults": "No se encontraron presupuestos",
+      "createFirst": "Cree su primer presupuesto para controlar sus gastos",
+      "exceeded": "Presupuestos excedidos",
+      "warnings": "Presupuestos en alerta",
+      "onTrack": "Todos los presupuestos están en camino"
+    },
+    "table": {
+      "category": "Categoría",
+      "budgetAmount": "Monto del presupuesto",
+      "spent": "Gastado",
+      "remaining": "Restante",
+      "percentUsed": "% Utilizado",
+      "progress": "Progreso",
+      "period": "Período",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin",
+      "status": "Estado",
+      "actions": "Acciones",
+      "name": "Nombre",
+      "amount": "Monto"
+    },
+    "progress": {
+      "underBudget": "Bajo el presupuesto",
+      "onBudget": "En el presupuesto",
+      "overBudget": "Sobre el presupuesto",
+      "percentRemaining": "{{percent}}% restante",
+      "percentUsed": "{{percent}}% utilizado",
+      "exceeded": "Excedido por {{amount}}",
+      "remaining": "{{amount}} restante"
+    },
+    "periods": {
+      "weekly": "Semanal",
+      "biweekly": "Quincenal",
+      "monthly": "Mensual",
+      "quarterly": "Trimestral",
+      "yearly": "Anual",
+      "custom": "Personalizado",
+      "selectPeriod": "Seleccionar período"
+    },
+    "form": {
+      "createTitle": "Crear presupuesto",
+      "editTitle": "Editar presupuesto",
+      "viewTitle": "Detalles del presupuesto",
+      "name": "Nombre",
+      "namePlaceholder": "Ej. Presupuesto de marketing mensual",
+      "category": "Categoría",
+      "selectCategory": "Seleccionar categoría",
+      "amount": "Monto del presupuesto",
+      "amountPlaceholder": "0.00",
+      "period": "Período",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin",
+      "alertThreshold": "Umbral de alerta",
+      "alertThresholdHelp": "Porcentaje del presupuesto para activar alerta",
+      "alertThresholdPlaceholder": "80",
+      "notes": "Notas",
+      "notesPlaceholder": "Notas adicionales sobre este presupuesto",
+      "isActive": "Activo",
+      "isActiveHelp": "Los presupuestos inactivos no generan alertas",
+      "saveButton": "Guardar presupuesto",
+      "saving": "Guardando...",
+      "titleEdit": "Editar presupuesto",
+      "titleCreate": "Agregar presupuesto",
+      "noCategory": "Sin categoría"
+    },
+    "dialogs": {
+      "deleteBudget": {
+        "title": "Eliminar presupuesto",
+        "message": "¿Está seguro de que desea eliminar el presupuesto \"{{name}}\"? Esta acción no se puede deshacer.",
+        "confirmLabel": "Eliminar",
+        "cancelLabel": "Cancelar"
+      },
+      "resetBudget": {
+        "title": "Reiniciar presupuesto",
+        "message": "¿Desea reiniciar el contador de gastos del presupuesto \"{{name}}\"? El monto establecido se mantendrá.",
+        "confirmLabel": "Reiniciar",
+        "cancelLabel": "Cancelar"
+      },
+      "exceededWarning": {
+        "title": "Presupuesto excedido",
+        "message": "El presupuesto de \"{{category}}\" ha sido excedido. Ha gastado {{spent}} de un presupuesto de {{budget}}.",
+        "viewBudget": "Ver presupuesto",
+        "dismiss": "Descartar"
+      }
+    },
+    "alert": {
+      "thresholdWarning": "El presupuesto de \"{{category}}\" ha alcanzado el {{percent}}% de uso",
+      "exceeded": "El presupuesto de \"{{category}}\" ha sido excedido",
+      "nearEnd": "Quedan pocos fondos en el presupuesto de \"{{category}}\""
+    },
+    "toast": {
+      "created": "Presupuesto creado exitosamente",
+      "updated": "Presupuesto actualizado exitosamente",
+      "deleted": "Presupuesto eliminado exitosamente",
+      "reset": "Presupuesto reiniciado",
+      "categoryExists": "Ya existe un presupuesto para esta categoría en este período",
+      "exceededAlert": "¡Atención! El presupuesto de \"{{category}}\" ha sido excedido",
+      "exportStarted": "Exportación de presupuestos iniciada",
+      "deleteFailed": "Error al eliminar el presupuesto",
+      "updateFailed": "Error al actualizar el presupuesto",
+      "createFailed": "Error al crear el presupuesto"
+    },
+    "addBudget": "Agregar presupuesto",
+    "noBudgets": "No se encontraron presupuestos",
+    "noBudgetsDesc": "Agregue su primer presupuesto para comenzar a controlar sus gastos"
+  },
+  "list": "Lista de presupuestos"
+}

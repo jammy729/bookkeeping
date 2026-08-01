@@ -1,0 +1,41 @@
+{
+  "categories": {
+    "title": "Categories",
+    "description": "Organize your transactions with custom categories",
+    "expenseTab": "Expense",
+    "incomeTab": "Income",
+    "stats": {
+      "total": "Total Categories",
+      "expense": "Expense Categories",
+      "income": "Income Categories"
+    },
+    "expenseSection": "Expense Categories",
+    "incomeSection": "Income Categories",
+    "noExpenseCategories": "No expense categories",
+    "noExpenseCategoriesDesc": "Add your first expense category",
+    "noIncomeCategories": "No income categories",
+    "noIncomeCategoriesDesc": "Add your first income category",
+    "active": "Active",
+    "inactive": "Inactive",
+    "form": {
+      "titleEdit": "Edit Category",
+      "titleCreate": "Add Category",
+      "type": "Type *",
+      "typeExpense": "Expense",
+      "typeIncome": "Income",
+      "name": "Name *",
+      "namePlaceholder": "e.g., Office Supplies, Consulting Income",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional description",
+      "active": "Active (show in forms)"
+    },
+    "toast": {
+      "deleted": "Category deleted",
+      "deleteFailed": "Failed to delete category",
+      "updated": "Category updated",
+      "created": "Category created",
+      "updateFailed": "Failed to update category",
+      "createFailed": "Failed to create category"
+    }
+  }
+}

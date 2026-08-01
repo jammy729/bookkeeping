@@ -1,0 +1,107 @@
+{
+  "dashboard": {
+    "title": "대시보드",
+    "greeting": "안녕하세요, {{name}}님",
+    "overview": "{{period}} 요약",
+    "netProfit": "순이익",
+    "netProfitDescription": "수입에서 비용을 뺀 금액",
+    "totalRevenue": "총 수입",
+    "totalRevenueDescription": "이번 기간의 총 수입",
+    "totalExpenses": "총 비용",
+    "totalExpensesDescription": "이번 기간의 총 비용",
+    "profitMargin": "이익률",
+    "profitMarginDescription": "수입 대비 이익 비율",
+    "cashFlow": "현금 흐름",
+    "cashFlowDescription": "입출금 현황",
+    "cashIn": "입금",
+    "cashOut": "출금",
+    "netCashFlow": "순현금흐름",
+    "spendingByCategory": "카테고리별 지출",
+    "spendingByCategoryDescription": "카테고리별 지출 내역",
+    "recentTransactions": "최근 거래 내역",
+    "recentTransactionsDescription": "최근 거래 내역을 확인하세요",
+    "viewAll": "전체 보기",
+    "datePresets": {
+      "thisMonth": "이번 달",
+      "lastMonth": "지난 달",
+      "thisQuarter": "이번 분기",
+      "lastQuarter": "지난 분기",
+      "thisYear": "올해",
+      "lastYear": "작년",
+      "custom": "사용자 지정",
+      "allTime": "전체 기간",
+      "ytd": "연간 누적"
+    },
+    "quickActions": {
+      "title": "빠른 작업",
+      "addExpense": "비용 추가",
+      "addIncome": "수입 추가",
+      "createInvoice": "청구서 작성",
+      "addClient": "고객 추가"
+    },
+    "actionItems": {
+      "title": "작업 항목",
+      "overdueInvoices": {
+        "singular": "연체된 청구서 {{count}}건",
+        "plural": "연체된 청구서 {{count}}건"
+      },
+      "pendingReview": {
+        "singular": "검토 대기 {{count}}건",
+        "plural": "검토 대기 {{count}}건"
+      },
+      "unlinkedReceipts": {
+        "singular": "미연결 영수증 {{count}}건",
+        "plural": "미연결 영수증 {{count}}건"
+      },
+      "noActionItems": "처리할 작업이 없습니다"
+    },
+    "charts": {
+      "revenueVsExpenses": "수입 vs 비용",
+      "monthlyTrend": "월별 추이",
+      "profitTrend": "이익 추이",
+      "categoryBreakdown": "카테고리별 분류"
+    },
+    "summaryCards": {
+      "income": "수입",
+      "expenses": "비용",
+      "profit": "이익",
+      "cash": "현금"
+    },
+    "period": {
+      "thisMonth": "이번 달",
+      "lastMonth": "지난 달",
+      "thisQuarter": "이번 분기",
+      "thisYear": "올해",
+      "lastYear": "작년",
+      "allTime": "전체 기간"
+    },
+    "noTransactions": "아직 거래 내역이 없습니다",
+    "noCategoryData": "카테고리 데이터가 없습니다",
+    "topExpenseCategories": "주요 지출 카테고리",
+    "topIncomeCategories": "주요 수입 카테고리",
+    "recentActivity": "최근 활동",
+    "accountSummary": "계좌 요약",
+    "financialHealth": "재정 상태",
+    "comparedToLastMonth": "지난 달 대비",
+    "increase": "증가",
+    "decrease": "감소",
+    "noChange": "변동 없음",
+    "revenue": "수입",
+    "expenses": "비용",
+    "uncategorizedTransactions": {
+      "one": "미분류 거래 {{count}}건",
+      "other": "미분류 거래 {{count}}건"
+    },
+    "uncategorizedDescription": "정확한 보고서를 위해 해당 거래에 카테고리를 지정해야 합니다",
+    "budgetsNearLimit": {
+      "one": "예산 한도 근처 {{count}}건",
+      "other": "예산 한도 근처 {{count}}건"
+    },
+    "budgetsNearLimitDescription": "예산 한도의 80% 이상 사용한 항목",
+    "chart": {
+      "income": "수입",
+      "expenses": "비용",
+      "amount": "금액"
+    }
+  }
+}

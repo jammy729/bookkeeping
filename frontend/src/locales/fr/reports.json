@@ -1,0 +1,63 @@
+{
+  "reports": {
+    "title": "Rapports et analyses",
+    "description": "Analysez votre rendement financier",
+    "exportCsv": "Exporter en CSV",
+    "exportSuccess": "Rapport exporté avec succès",
+    "settings": {
+      "title": "Paramètres du rapport",
+      "reportType": "Type de rapport",
+      "types": {
+        "monthly": "Mensuel",
+        "yearly": "Annuel",
+        "custom": "Période personnalisée"
+      }
+    },
+    "summary": {
+      "totalIncome": "Revenu total",
+      "totalExpenses": "Dépenses totales",
+      "ownerDistributions": "Retraits du propriétaire",
+      "netIncome": "Revenu net",
+      "profitMargin": "Marge bénéficiaire"
+    },
+    "charts": {
+      "expensesByCategory": "Dépenses par catégorie",
+      "incomeByType": "Revenus par type",
+      "monthlyComparison": "Comparaison mensuelle",
+      "noExpenseData": "Aucune donnée de dépenses",
+      "noExpenseDataDesc": "Aucune dépense enregistrée pour cette période",
+      "noIncomeData": "Aucune donnée de revenus",
+      "noIncomeDataDesc": "Aucun revenu enregistré pour cette période",
+      "noMonthlyData": "Aucune donnée mensuelle",
+      "noMonthlyDataDesc": "Aucune donnée disponible pour cette période"
+    },
+    "monthlyTable": {
+      "month": "Mois",
+      "income": "Revenus",
+      "expenses": "Dépenses",
+      "difference": "Différence"
+    },
+    "csvHeaders": {
+      "financialReport": "Rapport financier",
+      "period": "Période",
+      "summary": "Résumé",
+      "totalIncome": "Revenu total",
+      "totalExpenses": "Dépenses totales",
+      "ownerDistributions": "Retraits du propriétaire",
+      "netIncome": "Revenu net",
+      "profitMargin": "Marge bénéficiaire",
+      "expensesByCategory": "Dépenses par catégorie",
+      "category": "Catégorie",
+      "amount": "Montant",
+      "percentage": "Pourcentage",
+      "incomeByType": "Revenus par type",
+      "type": "Type"
+    },
+    "reportTitles": {
+      "monthly": "Rapport financier mensuel",
+      "yearly": "Rapport financier annuel",
+      "custom": "Rapport de période personnalisée"
+    },
+    "ownerDistribution": "Retrait du propriétaire"
+  }
+}

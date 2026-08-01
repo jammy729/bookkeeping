@@ -1,0 +1,109 @@
+{
+  "tax": {
+    "title": "Resumen fiscal",
+    "description": "Resumen de impuestos y gastos deducibles",
+    "stats": {
+      "totalIncome": "Ingresos totales",
+      "totalExpenses": "Gastos totales",
+      "taxableIncome": "Ingreso gravable",
+      "estimatedTax": "Impuesto estimado",
+      "effectiveTaxRate": "Tasa efectiva de impuestos",
+      "totalDeductible": "Total deducible",
+      "hstCollected": "IVA cobrado",
+      "hstPaid": "IVA pagado",
+      "hstOwed": "IVA por pagar",
+      "hstReceivable": "IVA por cobrar",
+      "netHst": "IVA neto"
+    },
+    "deductibleExpenses": "Gastos deducibles de impuestos",
+    "missingReceipts": "Recibos faltantes",
+    "breakdown": {
+      "title": "Desglose de impuestos",
+      "description": "Desglose detallado por tipo de impuesto",
+      "incomeTax": {
+        "title": "Impuesto sobre la renta",
+        "federal": "Federal",
+        "provincial": "Provincial",
+        "total": "Total impuesto sobre la renta",
+        "rate": "Tasa impositiva",
+        "brackets": "Tramos impositivos"
+      },
+      "salesTax": {
+        "title": "Impuesto sobre ventas (IVA)",
+        "hst": "IVA",
+        "gst": "GST",
+        "pst": "PST",
+        "qst": "QST",
+        "collected": "Cobrado",
+        "paid": "Pagado",
+        "net": "Neto",
+        "filingPeriod": "Período de declaración",
+        "nextFilingDate": "Próxima fecha de declaración",
+        "annualSummary": "Resumen anual de IVA"
+      },
+      "payrollTax": {
+        "title": "Impuestos de nómina",
+        "cpp": "CPP (Plan de pensiones canadiense)",
+        "ei": "EI (Seguro de empleo)",
+        "employerCPP": "CPP del empleador",
+        "employerEI": "EI del empleador",
+        "incomeTaxWithheld": "Impuesto retenido"
+      }
+    },
+    "summary": {
+      "title": "Resumen fiscal anual",
+      "period": "Período fiscal",
+      "fiscalYear": "Año fiscal {{year}}",
+      "totalRevenue": "Ingresos totales",
+      "totalDeductibleExpenses": "Gastos deducibles totales",
+      "netBusinessIncome": "Ingreso neto del negocio",
+      "taxableIncome": "Ingreso gravable",
+      "estimatedTaxLiability": "Responsabilidad fiscal estimada",
+      "effectiveTaxRate": "Tasa efectiva de impuestos",
+      "marginalTaxRate": "Tasa marginal de impuestos"
+    },
+    "reminders": {
+      "title": "Recordatorios fiscales",
+      "gstFiling": "Declaración de IVA",
+      "incomeTaxReturn": "Declaración de impuesto sobre la renta",
+      "cppPayments": "Pagos de CPP",
+      "eiPremiums": "Primas de EI",
+      "estimatedPayments": "Pagos estimados",
+      "nextDeadline": "Próxima fecha límite",
+      "daysRemaining": "{{count}} días restantes",
+      "overdue": "Vencido"
+    },
+    "empty": {
+      "noData": "No hay datos fiscales disponibles",
+      "addTransactions": "Agregue transacciones para ver su resumen fiscal",
+      "noDeductibleExpenses": "No hay gastos deducibles registrados",
+      "noMissingReceipts": "No hay recibos faltantes",
+      "noBreakdown": "No hay desglose disponible"
+    },
+    "toast": {
+      "receiptUploaded": "Recibo subido exitosamente",
+      "markedAsDeductible": "Gasto marcado como deducible",
+      "markedAsNonDeductible": "Gasto marcado como no deducible",
+      "exportStarted": "Exportación del resumen fiscal iniciada",
+      "reminderSet": "Recordatorio fiscal configurado"
+    },
+    "hstCollected": "IVA cobrado",
+    "totalDeductible": "Total deducible",
+    "netProfit": "Utilidad neta",
+    "noDeductibleExpenses": "No hay gastos deducibles registrados para {{year}}",
+    "table": {
+      "date": "Fecha",
+      "description": "Descripción",
+      "category": "Categoría",
+      "amount": "Monto"
+    },
+    "totalDeductibleLabel": "Total deducible",
+    "missingReceiptsTitle": "Recibos faltantes ({{count}} transacciones con más de $50)",
+    "missingReceiptsDescription": "Estas transacciones no tienen recibos y pueden necesitar documentación para fines fiscales.",
+    "viewAllTransactions": "Ver las {{count}} transacciones",
+    "expenseBreakdown": "Desglose de gastos por categoría",
+    "noData": "No hay datos disponibles"
+  },
+  "deductibleExpenses": "Gastos deducibles de impuestos",
+  "missingReceipts": "Recibos faltantes"
+}

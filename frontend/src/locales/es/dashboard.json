@@ -1,0 +1,106 @@
+{
+  "dashboard": {
+    "title": "Panel de control",
+    "greeting": "Buenos días, {{name}}",
+    "greetingAfternoon": "Buenas tardes, {{name}}",
+    "greetingEvening": "Buenas noches, {{name}}",
+    "overview": "Resumen de {{period}}",
+    "welcomeMessage": "Aquí está el resumen de sus finanzas",
+    "lastUpdated": "Última actualización: {{date}}",
+    "netProfit": "Utilidad neta",
+    "revenue": "Ingresos",
+    "expenses": "Gastos",
+    "profitMargin": "Margen de utilidad",
+    "cashFlow": "Flujo de efectivo",
+    "spendingByCategory": "Gastos por categoría",
+    "recentTransactions": "Transacciones recientes",
+    "datePresets": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "thisWeek": "Esta semana",
+      "lastWeek": "Semana pasada",
+      "thisMonth": "Este mes",
+      "lastMonth": "Mes pasado",
+      "thisQuarter": "Este trimestre",
+      "lastQuarter": "Trimestre pasado",
+      "thisYear": "Este año",
+      "lastYear": "Año pasado",
+      "allTime": "Todo el tiempo",
+      "custom": "Personalizado",
+      "ytd": "Año en curso"
+    },
+    "actionItems": {
+      "title": "Pendientes",
+      "description": "Acciones que requieren su atención",
+      "noItems": "No hay pendientes. ¡Todo al día!",
+      "invoices": {
+        "overdue": "{{count}} factura vencida",
+        "overdue_plural": "{{count}} facturas vencidas",
+        "draft": "{{count}} borrador sin enviar",
+        "draft_plural": "{{count}} borradores sin enviar"
+      },
+      "expenses": {
+        "missingReceipt": "{{count}} gasto sin recibo",
+        "missingReceipt_plural": "{{count}} gastos sin recibo",
+        "unreviewed": "{{count}} gasto sin revisar",
+        "unreviewed_plural": "{{count}} gastos sin revisar"
+      },
+      "clients": {
+        "inactive": "{{count}} cliente inactivo",
+        "inactive_plural": "{{count}} clientes inactivos",
+        "noActivity": "{{count}} cliente sin actividad reciente",
+        "noActivity_plural": "{{count}} clientes sin actividad reciente"
+      },
+      "budgets": {
+        "exceeded": "{{count}} presupuesto excedido",
+        "exceeded_plural": "{{count}} presupuestos excedidos",
+        "warning": "{{count}} presupuesto por agotar",
+        "warning_plural": "{{count}} presupuestos por agotar"
+      }
+    },
+    "quickActions": {
+      "title": "Acciones rápidas",
+      "addExpense": "Registrar gasto",
+      "addIncome": "Registrar ingreso",
+      "createInvoice": "Crear factura",
+      "addClient": "Agregar cliente",
+      "runReport": "Generar reporte"
+    },
+    "summaryCards": {
+      "totalIncome": "Ingresos totales",
+      "totalExpenses": "Gastos totales",
+      "netProfit": "Utilidad neta",
+      "cashOnHand": "Efectivo disponible",
+      "accountsReceivable": "Cuentas por cobrar",
+      "accountsPayable": "Cuentas por pagar",
+      "hstOwed": "IVA por pagar",
+      "hstReceivable": "IVA por cobrar"
+    },
+    "periodComparison": {
+      "currentPeriod": "Período actual",
+      "previousPeriod": "Período anterior",
+      "change": "Cambio",
+      "percentChange": "Cambio porcentual",
+      "improvement": "Mejora",
+      "decline": "Disminución",
+      "noChange": "Sin cambio"
+    },
+    "viewAll": "Ver todo",
+    "noTransactions": "Aún no hay transacciones. Agregue su primer ingreso o gasto.",
+    "uncategorizedTransactions": {
+      "one": "{{count}} transacción sin categoría",
+      "other": "{{count}} transacciones sin categoría"
+    },
+    "uncategorizedDescription": "Estas transacciones necesitan una categoría para reportes precisos",
+    "budgetsNearLimit": {
+      "one": "{{count}} presupuesto cerca del límite",
+      "other": "{{count}} presupuestos cerca del límite"
+    },
+    "budgetsNearLimitDescription": "Presupuestos al 80% o más de su límite",
+    "chart": {
+      "income": "Ingresos",
+      "expenses": "Gastos",
+      "amount": "Monto"
+    }
+  }
+}

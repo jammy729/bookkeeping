@@ -1,0 +1,53 @@
+{
+  "budgets": {
+    "title": "Budgets",
+    "description": "Définissez des limites de dépenses et suivez vos objectifs budgétaires",
+    "addBudget": "Ajouter un budget",
+    "stats": {
+      "total": "Total budgété",
+      "spent": "Total dépensé",
+      "remaining": "Restant",
+      "budgets": "budgets"
+    },
+    "list": "Liste des budgets",
+    "noBudgets": "Aucun budget trouvé",
+    "noBudgetsDesc": "Ajoutez votre premier budget pour commencer à suivre vos dépenses",
+    "table": {
+      "name": "Nom",
+      "category": "Catégorie",
+      "period": "Période",
+      "budgeted": "Budgété",
+      "spent": "Dépensé",
+      "remaining": "Restant",
+      "progress": "Progrès",
+      "actions": "Actions"
+    },
+    "periods": {
+      "daily": "Quotidien",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel",
+      "quarterly": "Trimestriel",
+      "yearly": "Annuel"
+    },
+    "form": {
+      "titleEdit": "Modifier le budget",
+      "titleCreate": "Ajouter un budget",
+      "name": "Nom",
+      "namePlaceholder": "p. ex., Budget fournitures de bureau",
+      "amount": "Montant *",
+      "startDate": "Date de début *",
+      "endDate": "Date de fin *",
+      "period": "Période *",
+      "category": "Catégorie (facultatif)",
+      "noCategory": "Aucune catégorie"
+    },
+    "toast": {
+      "deleted": "Budget supprimé",
+      "deleteFailed": "Échec de la suppression du budget",
+      "updated": "Budget mis à jour",
+      "created": "Budget créé",
+      "updateFailed": "Échec de la mise à jour du budget",
+      "createFailed": "Échec de la création du budget"
+    }
+  }
+}

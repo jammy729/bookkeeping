@@ -1,0 +1,60 @@
+{
+  "income": {
+    "title": "Income",
+    "addIncome": "Add Income",
+    "records": "Income Records",
+    "noRecords": "No income records found",
+    "noRecordsDesc": "Add your first income record to get started",
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "type": "Type",
+      "client": "Client",
+      "status": "Status",
+      "amount": "Amount (CAD)",
+      "actions": "Actions"
+    },
+    "inclHst": "(incl. HST: {{amount}})",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "types": {
+      "contractorPayment": "Contractor Payment",
+      "freelance": "Freelance",
+      "consulting": "Consulting",
+      "other": "Other"
+    },
+    "form": {
+      "titleEdit": "Edit Income",
+      "titleCreate": "Add Income",
+      "amount": "Amount (CAD) *",
+      "description": "Description *",
+      "descriptionPlaceholder": "e.g., Web development project",
+      "type": "Type *",
+      "date": "Date *",
+      "clientName": "Client Name",
+      "selectClient": "Select a client...",
+      "addNewClient": "Add new client",
+      "manageClients": "manage clients",
+      "invoiceNumber": "Invoice Number",
+      "invoicePlaceholder": "e.g., INV-2024-001",
+      "includesHst": "Includes HST (13%)",
+      "hstAmount": "HST Amount (13%)",
+      "autoCalculated": "Auto-calculated",
+      "base": "Base:",
+      "hst": "HST:",
+      "total": "Total:",
+      "markAsPaid": "Mark as paid",
+      "paidDate": "Paid Date",
+      "notes": "Notes"
+    },
+    "confirmDelete": "Are you sure you want to delete this income record?",
+    "toast": {
+      "deleted": "Income record deleted",
+      "deleteFailed": "Failed to delete income record",
+      "updated": "Income record updated",
+      "created": "Income record created",
+      "updateFailed": "Failed to update income",
+      "createFailed": "Failed to create income"
+    }
+  }
+}

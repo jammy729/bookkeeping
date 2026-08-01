@@ -1,0 +1,85 @@
+{
+  "receipts": {
+    "title": "Reçus",
+    "description": "Téléverser et gérer vos fichiers de reçus",
+    "uploadReceipt": "Téléverser un reçu",
+    "stats": {
+      "total": "Total des reçus",
+      "linked": "Liés à une dépense",
+      "awaitingReview": "En attente de révision"
+    },
+    "filters": {
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher des reçus...",
+      "fileType": "Type de fichier",
+      "allTypes": "Tous",
+      "images": "Images",
+      "pdfs": "PDF",
+      "category": "Catégorie",
+      "allCategories": "Toutes les catégories"
+    },
+    "tabs": {
+      "all": "Tous",
+      "linked": "Liés",
+      "awaitingReview": "En attente de révision"
+    },
+    "emptyState": {
+      "noMatch": "Aucun reçu ne correspond à vos filtres",
+      "noMatchDesc": "Essayez d'ajuster votre recherche ou vos filtres",
+      "noReceipts": "Aucun reçu trouvé",
+      "allLinked": "Tous les reçus sont liés à des dépenses",
+      "addFirst": "Téléversez votre premier reçu pour commencer"
+    },
+    "badge": {
+      "linked": "Lié",
+      "review": "Révision"
+    },
+    "linkedTo": "Lié à : {{description}}",
+    "unknownExpense": "Dépense inconnue",
+    "unlinkDialog": {
+      "title": "Délier le reçu",
+      "description": "Délier ce reçu ? Il passera en « En attente de révision » mais restera dans votre liste de reçus.",
+      "confirm": "Délier",
+      "unlinking": "Déliement en cours..."
+    },
+    "linkDialog": {
+      "title": "Lier à une dépense",
+      "selectExpense": "Sélectionner une dépense",
+      "chooseExpense": "Choisir une dépense...",
+      "confirm": "Lier le reçu",
+      "linking": "Lien en cours..."
+    },
+    "uploadDialog": {
+      "title": "Téléverser un reçu",
+      "dragDrop": "Cliquez pour téléverser ou glissez-déposez",
+      "formats": "JPEG, PNG, WebP, HEIC ou PDF — max 10 Mo",
+      "compressing": "Compression de l'image...",
+      "compressed": "Compressé de {{from}} à {{to}}",
+      "savings": "{{percent}}% plus léger",
+      "previewAlt": "Aperçu du reçu",
+      "linkToExpense": "Lier à une dépense (facultatif)",
+      "skipLink": "Passer — téléverser comme reçu non lié",
+      "uploading": "Téléversement en cours...",
+      "upload": "Téléverser",
+      "invalidFileType": "Type de fichier non autorisé. Utilisez JPEG, PNG, WebP, HEIC ou PDF.",
+      "fileTooLarge": "La taille du fichier dépasse la limite de 10 Mo.",
+      "compressionFailed": "La compression a échoué, téléversement de l'original",
+      "uploadSuccess": "Reçu téléversé avec succès",
+      "uploadFailed": "Échec du téléversement du reçu"
+    },
+    "preview": {
+      "open": "Ouvrir",
+      "download": "Télécharger",
+      "loadFailed": "Échec du chargement de l'aperçu",
+      "notAvailable": "Aperçu non disponible pour ce type de fichier"
+    },
+    "toast": {
+      "deleted": "Reçu supprimé",
+      "deleteFailed": "Échec de la suppression du reçu",
+      "linked": "Reçu lié à la dépense",
+      "linkFailed": "Échec du lien avec la dépense",
+      "unlinked": "Reçu délié",
+      "unlinkFailed": "Échec du déliement du reçu"
+    }
+  }
+}

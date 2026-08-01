@@ -1,0 +1,231 @@
+{
+  "reports": {
+    "title": "Reportes y análisis",
+    "description": "Analice el rendimiento financiero de su negocio",
+    "export": {
+      "button": "Exportar reporte",
+      "format": "Formato",
+      "csv": "CSV",
+      "pdf": "PDF",
+      "excel": "Excel",
+      "downloading": "Descargando...",
+      "downloaded": "Reporte descargado exitosamente",
+      "error": "Error al descargar el reporte"
+    },
+    "settings": {
+      "title": "Configuración del reporte",
+      "dateRange": "Rango de fechas",
+      "period": "Período",
+      "compareWith": "Comparar con",
+      "comparePrevious": "Período anterior",
+      "compareLastYear": "Mismo período del año pasado",
+      "compareNone": "Sin comparación",
+      "showBreakdown": "Mostrar desglose",
+      "includeCategories": "Incluir categorías",
+      "excludeCategories": "Excluir categorías",
+      "reportType": "Tipo de reporte",
+      "types": {
+        "monthly": "Mensual",
+        "yearly": "Anual",
+        "custom": "Período personalizado"
+      }
+    },
+    "summary": {
+      "title": "Resumen",
+      "totalIncome": "Ingresos totales",
+      "totalExpenses": "Gastos totales",
+      "netProfit": "Utilidad neta",
+      "profitMargin": "Margen de utilidad",
+      "revenueGrowth": "Crecimiento de ingresos",
+      "expenseGrowth": "Crecimiento de gastos",
+      "avgMonthlyIncome": "Ingreso mensual promedio",
+      "avgMonthlyExpenses": "Gasto mensual promedio",
+      "bestMonth": "Mejor mes",
+      "worstMonth": "Peor mes",
+      "ownerDistributions": "Distribuciones al propietario",
+      "netIncome": "Ingreso neto"
+    },
+    "profitLoss": {
+      "title": "Estado de resultados",
+      "description": "Resumen de ingresos, gastos y utilidad neta",
+      "income": "Ingresos",
+      "costOfGoods": "Costo de mercancía vendida",
+      "grossProfit": "Utilidad bruta",
+      "operatingExpenses": "Gastos operativos",
+      "operatingIncome": "Utilidad operativa",
+      "otherIncome": "Otros ingresos",
+      "otherExpenses": "Otros gastos",
+      "incomeBeforeTax": "Utilidad antes de impuestos",
+      "incomeTax": "Impuesto sobre la renta",
+      "netIncome": "Utilidad neta",
+      "ownerDistributions": "Distribuciones al propietario",
+      "retainedEarnings": "Utilidades retenidas"
+    },
+    "balanceSheet": {
+      "title": "Balance general",
+      "description": "Posición financiera a una fecha específica",
+      "assets": "Activos",
+      "currentAssets": "Activos corrientes",
+      "cash": "Efectivo",
+      "accountsReceivable": "Cuentas por cobrar",
+      "inventory": "Inventario",
+      "prepaidExpenses": "Gastos pagados por anticipado",
+      "fixedAssets": "Activos fijos",
+      "totalAssets": "Total de activos",
+      "liabilities": "Pasivos",
+      "currentLiabilities": "Pasivos corrientes",
+      "accountsPayable": "Cuentas por pagar",
+      "accruedLiabilities": "Pasivos acumulados",
+      "hstPayable": "IVA por pagar",
+      "longTermLiabilities": "Pasivos a largo plazo",
+      "totalLiabilities": "Total de pasivos",
+      "equity": "Capital contable",
+      "ownerEquity": "Capital del propietario",
+      "retainedEarningsEquity": "Utilidades retenidas",
+      "totalEquity": "Total de capital contable",
+      "totalLiabilitiesAndEquity": "Total de pasivos y capital"
+    },
+    "cashFlow": {
+      "title": "Flujo de efectivo",
+      "description": "Movimientos de efectivo durante el período",
+      "operating": "Actividades operativas",
+      "cashFromCustomers": "Cobros a clientes",
+      "cashToSuppliers": "Pagos a proveedores",
+      "cashToEmployees": "Pagos a empleados",
+      "interestPaid": "Intereses pagados",
+      "taxesPaid": "Impuestos pagados",
+      "netOperating": "Efectivo neto de operaciones",
+      "investing": "Actividades de inversión",
+      "equipmentPurchases": "Compra de equipo",
+      "assetSales": "Venta de activos",
+      "netInvesting": "Efectivo neto de inversiones",
+      "financing": "Actividades de financiamiento",
+      "ownerContributions": "Aportes del propietario",
+      "ownerDistributions": "Distribuciones al propietario",
+      "loanProceeds": "Préstamos recibidos",
+      "loanPayments": "Pago de préstamos",
+      "netFinancing": "Efectivo neto de financiamiento",
+      "netChangeInCash": "Cambio neto en efectivo",
+      "beginningCash": "Efectivo inicial",
+      "endingCash": "Efectivo final"
+    },
+    "charts": {
+      "revenueVsExpenses": "Ingresos vs. Gastos",
+      "monthlyTrend": "Tendencia mensual",
+      "categoryBreakdown": "Desglose por categoría",
+      "incomeByType": "Ingresos por tipo",
+      "expenseByCategory": "Gastos por categoría",
+      "profitTrend": "Tendencia de utilidad",
+      "cashFlowTrend": "Tendencia de flujo de efectivo",
+      "yearOverYear": "Año contra año",
+      "quarterlyComparison": "Comparación trimestral",
+      "noData": "Sin datos para el período seleccionado",
+      "expensesByCategory": "Gastos por categoría",
+      "monthlyComparison": "Comparación mensual",
+      "noExpenseData": "Sin datos de gastos",
+      "noExpenseDataDesc": "No hay gastos registrados para este período",
+      "noIncomeData": "Sin datos de ingresos",
+      "noIncomeDataDesc": "No hay ingresos registrados para este período",
+      "noMonthlyData": "Sin datos mensuales",
+      "noMonthlyDataDesc": "No hay datos disponibles para este período"
+    },
+    "tables": {
+      "category": "Categoría",
+      "amount": "Monto",
+      "percent": "Porcentaje",
+      "trend": "Tendencia",
+      "comparison": "Comparación",
+      "period": "Período",
+      "income": "Ingreso",
+      "expense": "Gasto",
+      "net": "Neto",
+      "total": "Total",
+      "average": "Promedio"
+    },
+    "csv": {
+      "headers": {
+        "date": "Fecha",
+        "description": "Descripción",
+        "category": "Categoría",
+        "amount": "Monto",
+        "type": "Tipo",
+        "paymentMethod": "Método de pago",
+        "reference": "Referencia",
+        "notes": "Notas",
+        "client": "Cliente",
+        "invoiceNumber": "Número de factura",
+        "taxAmount": "Monto de impuesto",
+        "total": "Total"
+      },
+      "profitLoss": {
+        "section": "Sección",
+        "value": "Valor",
+        "subtitle": "Estado de resultados",
+        "period": "Período"
+      },
+      "balanceSheet": {
+        "item": "Concepto",
+        "balance": "Saldo",
+        "subtitle": "Balance general",
+        "asOf": "Al"
+      },
+      "cashFlow": {
+        "activity": "Actividad",
+        "subtitle": "Flujo de efectivo",
+        "periodo": "Período"
+      }
+    },
+    "periods": {
+      "thisMonth": "Este mes",
+      "lastMonth": "Mes pasado",
+      "thisQuarter": "Este trimestre",
+      "lastQuarter": "Trimestre pasado",
+      "thisYear": "Este año",
+      "lastYear": "Año pasado",
+      "ytd": "Año en curso",
+      "custom": "Personalizado"
+    },
+    "empty": {
+      "noData": "No hay datos para generar reportes",
+      "addTransactions": "Agregue transacciones para ver análisis detallados",
+      "selectPeriod": "Seleccione un período para generar el reporte",
+      "noComparison": "No hay datos del período anterior para comparar"
+    },
+    "toast": {
+      "generated": "Reporte generado exitosamente",
+      "exported": "Reporte exportado exitosamente",
+      "error": "Error al generar el reporte",
+      "noData": "No hay datos disponibles para el período seleccionado"
+    },
+    "exportCsv": "Exportar CSV",
+    "exportSuccess": "Reporte exportado exitosamente",
+    "monthlyTable": {
+      "month": "Mes",
+      "income": "Ingresos",
+      "expenses": "Gastos",
+      "difference": "Diferencia"
+    },
+    "csvHeaders": {
+      "financialReport": "Reporte financiero",
+      "period": "Período",
+      "summary": "Resumen",
+      "totalIncome": "Ingresos totales",
+      "totalExpenses": "Gastos totales",
+      "ownerDistributions": "Distribuciones al propietario",
+      "netIncome": "Ingreso neto",
+      "profitMargin": "Margen de utilidad",
+      "expensesByCategory": "Gastos por categoría",
+      "category": "Categoría",
+      "amount": "Monto",
+      "percentage": "Porcentaje",
+      "incomeByType": "Ingresos por tipo",
+      "type": "Tipo"
+    },
+    "reportTitles": {
+      "monthly": "Reporte financiero mensual",
+      "yearly": "Reporte financiero anual",
+      "custom": "Reporte de período personalizado"
+    },
+    "ownerDistribution": "Distribución al propietario"
+  }
+}

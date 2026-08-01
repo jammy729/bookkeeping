@@ -1,0 +1,68 @@
+{
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account settings and preferences",
+    "tabs": {
+      "profile": "Profile",
+      "password": "Password",
+      "preferences": "Preferences"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "description": "Update your account profile information",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "First name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Last name",
+      "email": "Email Address",
+      "userId": "User ID",
+      "saveChanges": "Save Changes",
+      "saved": "Profile updated successfully",
+      "failed": "Failed to update profile"
+    },
+    "password": {
+      "title": "Change Password",
+      "description": "Update your password to keep your account secure",
+      "currentPassword": "Current Password",
+      "currentPlaceholder": "Enter current password",
+      "newPassword": "New Password",
+      "newPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm New Password",
+      "confirmPlaceholder": "Confirm new password",
+      "updatePassword": "Update Password",
+      "updated": "Password updated successfully",
+      "validation": {
+        "mismatch": "Passwords do not match",
+        "minLength": "Password must be at least 6 characters"
+      }
+    },
+    "preferences": {
+      "title": "Display Preferences",
+      "description": "Customize how data is displayed",
+      "currency": "Currency",
+      "currencyValue": "CAD - Canadian Dollar",
+      "currencyHelper": "Currency is set to CAD (Canadian Dollar) by default",
+      "fiscalYearStart": "Fiscal Year Start Month",
+      "language": "Language",
+      "languageHelper": "Select your preferred language"
+    },
+    "export": {
+      "title": "Data Export",
+      "description": "Download your financial data",
+      "descriptionDetail": "Export all your financial data including expenses, income, dividends, and categories.",
+      "exportAll": "Export All Data",
+      "exported": "Data export started. You will receive an email when ready."
+    },
+    "danger": {
+      "title": "Danger Zone",
+      "description": "Irreversible account actions",
+      "deleteWarning": "Once you delete your account, all your data will be permanently removed. This cannot be undone.",
+      "deleteAccount": "Delete Account",
+      "confirmDelete": "Delete your account?",
+      "passwordConfirm": "Enter your password to confirm",
+      "passwordPlaceholder": "Your current password",
+      "deleteSuccess": "Account deleted successfully",
+      "deleteFailed": "Failed to delete account. Check your password and try again."
+    }
+  }
+}

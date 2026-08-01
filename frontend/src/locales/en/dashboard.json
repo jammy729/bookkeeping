@@ -1,0 +1,44 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "greeting": "Hello, {{name}}",
+    "overview": "Here's your financial overview for {{period}}",
+    "netProfit": "Net Profit",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "profitMargin": "Profit Margin",
+    "cashFlow": "Cash Flow",
+    "spendingByCategory": "Spending by Category",
+    "recentTransactions": "Recent Transactions",
+    "viewAll": "View All",
+    "noTransactions": "No transactions yet. Add your first income or expense.",
+    "actionItems": "Action Items",
+    "uncategorizedTransactions": {
+      "one": "{{count}} uncategorized transaction",
+      "other": "{{count}} uncategorized transactions"
+    },
+    "uncategorizedDescription": "These transactions need a category for accurate reports",
+    "budgetsNearLimit": {
+      "one": "{{count}} budget near limit",
+      "other": "{{count}} budgets near limit"
+    },
+    "budgetsNearLimitDescription": "Budgets at 80% or more of their limit",
+    "datePresets": {
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month",
+      "thisQuarter": "This Quarter",
+      "ytd": "YTD"
+    },
+    "chart": {
+      "income": "Income",
+      "expenses": "Expenses",
+      "amount": "Amount"
+    },
+    "vsPreviousPeriod": "vs previous period",
+    "needsAttention": "Needs Attention",
+    "budgetAlerts": "Budget Alerts",
+    "pendingReceipts": "Pending Receipts",
+    "vsPrev": "vs previous",
+    "ownerDistributions": "Owner Distributions"
+  }
+}

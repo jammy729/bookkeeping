@@ -1,0 +1,46 @@
+{
+  "clients": {
+    "title": "Clients",
+    "description": "Gérez votre répertoire de clients",
+    "addClient": "Ajouter un client",
+    "stats": {
+      "total": "Total des clients",
+      "active": "Clients actifs"
+    },
+    "list": "Liste des clients",
+    "noClients": "Aucun client pour le moment",
+    "noClientsDesc": "Ajoutez votre premier client pour commencer à gérer vos relations",
+    "table": {
+      "name": "Nom",
+      "email": "Courriel",
+      "phone": "Téléphone",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "active": "Actif",
+    "inactive": "Inactif",
+    "form": {
+      "titleEdit": "Modifier le client",
+      "titleCreate": "Ajouter un client",
+      "name": "Nom *",
+      "namePlaceholder": "p. ex., Entreprise ABC",
+      "email": "Courriel",
+      "emailPlaceholder": "contact@entrepriseabc.com",
+      "phone": "Téléphone",
+      "phonePlaceholder": "(555) 123-4567",
+      "address": "Adresse",
+      "addressPlaceholder": "123 rue Principale, Toronto (Ontario)",
+      "notes": "Notes",
+      "notesPlaceholder": "Notes supplémentaires...",
+      "active": "Client actif"
+    },
+    "toast": {
+      "deleted": "Client supprimé",
+      "deleteFailed": "Échec de la suppression du client",
+      "updated": "Client mis à jour",
+      "created": "Client créé",
+      "updateFailed": "Échec de la mise à jour du client",
+      "createFailed": "Échec de la création du client"
+    }
+  }
+}

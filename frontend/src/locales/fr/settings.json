@@ -1,0 +1,68 @@
+{
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérez les paramètres et préférences de votre compte",
+    "tabs": {
+      "profile": "Profil",
+      "password": "Mot de passe",
+      "preferences": "Préférences"
+    },
+    "profile": {
+      "title": "Renseignements du profil",
+      "description": "Mise à jour des renseignements de votre profil",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Prénom",
+      "lastName": "Nom de famille",
+      "lastNamePlaceholder": "Nom de famille",
+      "email": "Adresse courriel",
+      "userId": "Identifiant de l'utilisateur",
+      "saveChanges": "Enregistrer les modifications",
+      "saved": "Profil mis à jour avec succès",
+      "failed": "Échec de la mise à jour du profil"
+    },
+    "password": {
+      "title": "Changer le mot de passe",
+      "description": "Mettez à jour votre mot de passe pour sécuriser votre compte",
+      "currentPassword": "Mot de passe actuel",
+      "currentPlaceholder": "Entrez le mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "newPlaceholder": "Entrez le nouveau mot de passe",
+      "confirmPassword": "Confirmer le nouveau mot de passe",
+      "confirmPlaceholder": "Confirmez le nouveau mot de passe",
+      "updatePassword": "Mettre à jour le mot de passe",
+      "updated": "Mot de passe mis à jour avec succès",
+      "validation": {
+        "mismatch": "Les mots de passe ne correspondent pas",
+        "minLength": "Le mot de passe doit comporter au moins 6 caractères"
+      }
+    },
+    "preferences": {
+      "title": "Préférences d'affichage",
+      "description": "Personnalisez l'affichage des données",
+      "currency": "Devise",
+      "currencyValue": "CAD — Dollar canadien",
+      "currencyHelper": "La devise est définie sur le dollar canadien (CAD) par défaut",
+      "fiscalYearStart": "Mois de début de l'exercice fiscal",
+      "language": "Langue",
+      "languageHelper": "Sélectionnez votre langue préférée"
+    },
+    "export": {
+      "title": "Exportation de données",
+      "description": "Téléchargez vos données financières",
+      "descriptionDetail": "Exportez toutes vos données financières, y compris les dépenses, les revenus, les dividendes et les catégories.",
+      "exportAll": "Exporter toutes les données",
+      "exported": "L'exportation des données a commencé. Vous recevrez un courriel lorsque ce sera prêt."
+    },
+    "danger": {
+      "title": "Zone de danger",
+      "description": "Actions irréversibles sur le compte",
+      "deleteWarning": "Une fois votre compte supprimé, toutes vos données seront définitivement supprimées. Cette action est irréversible.",
+      "deleteAccount": "Supprimer le compte",
+      "confirmDelete": "Supprimer votre compte ?",
+      "passwordConfirm": "Entrez votre mot de passe pour confirmer",
+      "passwordPlaceholder": "Votre mot de passe actuel",
+      "deleteSuccess": "Compte supprimé avec succès",
+      "deleteFailed": "Échec de la suppression du compte. Vérifiez votre mot de passe et réessayez."
+    }
+  }
+}

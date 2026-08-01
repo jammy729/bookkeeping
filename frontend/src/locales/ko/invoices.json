@@ -1,0 +1,84 @@
+{
+  "invoices": {
+    "title": "청구서",
+    "description": "고객 청구서 생성 및 관리",
+    "create": "새 청구서",
+    "list": "모든 청구서",
+    "filter": {
+      "all": "모든 상태"
+    },
+    "stats": {
+      "total": "총 청구서",
+      "paid": "결제 완료",
+      "outstanding": "미결제",
+      "overdue": "연체"
+    },
+    "status": {
+      "draft": "임시",
+      "sent": "발송됨",
+      "paid": "결제됨",
+      "overdue": "연체",
+      "cancelled": "취소됨"
+    },
+    "table": {
+      "invoice": "청구서 #",
+      "client": "고객",
+      "issueDate": "발행일",
+      "dueDate": "마감일",
+      "amount": "금액",
+      "status": "상태",
+      "actions": "작업"
+    },
+    "actions": {
+      "send": "발송으로 표시",
+      "markPaid": "결제로 표시",
+      "downloadPdf": "PDF 다운로드"
+    },
+    "pdf": {
+      "billTo": "청구 대상",
+      "description": "설명",
+      "qty": "수량",
+      "unitPrice": "단가",
+      "amount": "금액",
+      "terms": "약관",
+      "paidDate": "결제일"
+    },
+    "form": {
+      "titleCreate": "청구서 생성",
+      "titleEdit": "청구서 수정",
+      "client": "고객",
+      "selectClient": "고객 선택",
+      "issueDate": "발행일 *",
+      "dueDate": "마감일",
+      "items": "항목",
+      "addItem": "항목 추가",
+      "itemDescription": "설명",
+      "qty": "수량",
+      "price": "단가",
+      "taxRate": "세율 (%)",
+      "discount": "할인 ($)",
+      "subtotal": "소계",
+      "tax": "세금",
+      "discountLabel": "할인",
+      "total": "합계",
+      "notes": "메모",
+      "notesPlaceholder": "선택적 메모 또는 결제 안내"
+    },
+    "empty": {
+      "title": "청구서가 없습니다",
+      "description": "첫 번째 청구서를 생성하여 고객에게 청구하세요"
+    },
+    "toast": {
+      "created": "청구서가 생성되었습니다",
+      "updated": "청구서가 수정되었습니다",
+      "deleted": "청구서가 삭제되었습니다",
+      "sent": "청구서가 발송됨으로 표시되었습니다",
+      "paid": "청구서가 결제됨으로 표시되었습니다",
+      "createFailed": "청구서 생성에 실패했습니다",
+      "updateFailed": "청구서 수정에 실패했습니다",
+      "deleteFailed": "청구서 삭제에 실패했습니다",
+      "sendFailed": "발송 표시에 실패했습니다",
+      "paidFailed": "결제 표시에 실패했습니다"
+    }
+  }
+}

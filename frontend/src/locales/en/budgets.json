@@ -1,0 +1,53 @@
+{
+  "budgets": {
+    "title": "Budgets",
+    "description": "Set spending limits and track your budget goals",
+    "addBudget": "Add Budget",
+    "stats": {
+      "total": "Total Budgeted",
+      "spent": "Total Spent",
+      "remaining": "Remaining",
+      "budgets": "budgets"
+    },
+    "list": "Budget List",
+    "noBudgets": "No budgets found",
+    "noBudgetsDesc": "Add your first budget to start tracking your spending",
+    "table": {
+      "name": "Name",
+      "category": "Category",
+      "period": "Period",
+      "budgeted": "Budgeted",
+      "spent": "Spent",
+      "remaining": "Remaining",
+      "progress": "Progress",
+      "actions": "Actions"
+    },
+    "periods": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly"
+    },
+    "form": {
+      "titleEdit": "Edit Budget",
+      "titleCreate": "Add Budget",
+      "name": "Name",
+      "namePlaceholder": "e.g., Office Supplies Budget",
+      "amount": "Amount *",
+      "startDate": "Start Date *",
+      "endDate": "End Date *",
+      "period": "Period *",
+      "category": "Category (optional)",
+      "noCategory": "No category"
+    },
+    "toast": {
+      "deleted": "Budget deleted",
+      "deleteFailed": "Failed to delete budget",
+      "updated": "Budget updated",
+      "created": "Budget created",
+      "updateFailed": "Failed to update budget",
+      "createFailed": "Failed to create budget"
+    }
+  }
+}

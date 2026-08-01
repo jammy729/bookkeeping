@@ -1,0 +1,41 @@
+{
+  "categories": {
+    "title": "Catégories",
+    "description": "Organisez vos transactions avec des catégories personnalisées",
+    "expenseTab": "Dépenses",
+    "incomeTab": "Revenus",
+    "stats": {
+      "total": "Total des catégories",
+      "expense": "Catégories de dépenses",
+      "income": "Catégories de revenus"
+    },
+    "expenseSection": "Catégories de dépenses",
+    "incomeSection": "Catégories de revenus",
+    "noExpenseCategories": "Aucune catégorie de dépenses",
+    "noExpenseCategoriesDesc": "Ajoutez votre première catégorie de dépenses",
+    "noIncomeCategories": "Aucune catégorie de revenus",
+    "noIncomeCategoriesDesc": "Ajoutez votre première catégorie de revenus",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "form": {
+      "titleEdit": "Modifier la catégorie",
+      "titleCreate": "Ajouter une catégorie",
+      "type": "Type *",
+      "typeExpense": "Dépense",
+      "typeIncome": "Revenu",
+      "name": "Nom *",
+      "namePlaceholder": "p. ex., Fournitures de bureau, Revenus de conseil",
+      "description": "Description",
+      "descriptionPlaceholder": "Description facultative",
+      "active": "Actif (afficher dans les formulaires)"
+    },
+    "toast": {
+      "deleted": "Catégorie supprimée",
+      "deleteFailed": "Échec de la suppression de la catégorie",
+      "updated": "Catégorie mise à jour",
+      "created": "Catégorie créée",
+      "updateFailed": "Échec de la mise à jour de la catégorie",
+      "createFailed": "Échec de la création de la catégorie"
+    }
+  }
+}

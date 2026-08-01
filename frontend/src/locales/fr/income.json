@@ -1,0 +1,60 @@
+{
+  "income": {
+    "title": "Revenus",
+    "addIncome": "Ajouter un revenu",
+    "records": "Registres de revenus",
+    "noRecords": "Aucun registre de revenus trouvé",
+    "noRecordsDesc": "Ajoutez votre premier registre de revenus pour commencer",
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "type": "Type",
+      "client": "Client",
+      "status": "Statut",
+      "amount": "Montant (CAD)",
+      "actions": "Actions"
+    },
+    "inclHst": "(incl. TVH : {{amount}})",
+    "paid": "Payé",
+    "unpaid": "Impayé",
+    "types": {
+      "contractorPayment": "Paiement de sous-traitant",
+      "freelance": "Travail autonome",
+      "consulting": "Conseil",
+      "other": "Autre"
+    },
+    "form": {
+      "titleEdit": "Modifier le revenu",
+      "titleCreate": "Ajouter un revenu",
+      "amount": "Montant (CAD) *",
+      "description": "Description *",
+      "descriptionPlaceholder": "p. ex., Projet de développement Web",
+      "type": "Type *",
+      "date": "Date *",
+      "clientName": "Nom du client",
+      "selectClient": "Sélectionnez un client...",
+      "addNewClient": "Ajouter un nouveau client",
+      "manageClients": "gérer les clients",
+      "invoiceNumber": "Numéro de facture",
+      "invoicePlaceholder": "p. ex., FAC-2024-001",
+      "includesHst": "Inclut la TVH (13%)",
+      "hstAmount": "Montant de la TVH (13%)",
+      "autoCalculated": "Calculé automatiquement",
+      "base": "Base :",
+      "hst": "TVH :",
+      "total": "Total :",
+      "markAsPaid": "Marquer comme payé",
+      "paidDate": "Date de paiement",
+      "notes": "Notes"
+    },
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce registre de revenus?",
+    "toast": {
+      "deleted": "Registre de revenus supprimé",
+      "deleteFailed": "Échec de la suppression du registre de revenus",
+      "updated": "Registre de revenus mis à jour",
+      "created": "Registre de revenus créé",
+      "updateFailed": "Échec de la mise à jour du revenu",
+      "createFailed": "Échec de la création du revenu"
+    }
+  }
+}

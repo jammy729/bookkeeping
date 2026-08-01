@@ -1,0 +1,104 @@
+{
+  "categories": {
+    "title": "카테고리 관리",
+    "subtitle": "비용과 수입 카테고리를 관리하세요",
+    "tabs": {
+      "expenses": "비용 카테고리",
+      "income": "수입 카테고리"
+    },
+    "addCategory": "카테고리 추가",
+    "editCategory": "카테고리 수정",
+    "stats": {
+      "totalCategories": "전체 카테고리",
+      "expenseCategories": "비용 카테고리",
+      "incomeCategories": "수입 카테고리",
+      "activeCategories": "활성 카테고리",
+      "total": "전체 카테고리",
+      "expense": "비용 카테고리",
+      "income": "수입 카테고리"
+    },
+    "sections": {
+      "essential": "필수 카테고리",
+      "business": "사업 관련",
+      "personal": "개인",
+      "custom": "사용자 지정"
+    },
+    "empty": {
+      "noExpenseCategories": "비용 카테고리가 없습니다",
+      "noIncomeCategories": "수입 카테고리가 없습니다",
+      "getStartedExpense": "비용을 분류할 카테고리를 추가하세요",
+      "getStartedIncome": "수입을 분류할 카테고리를 추가하세요",
+      "noSearchResults": "검색 결과가 없습니다"
+    },
+    "form": {
+      "name": "카테고리 이름",
+      "namePlaceholder": "카테고리 이름 입력",
+      "description": "설명",
+      "descriptionPlaceholder": "카테고리 설명 (선택사항)",
+      "type": "카테고리 유형",
+      "typeExpense": "비용",
+      "typeIncome": "수입",
+      "color": "색상",
+      "icon": "아이콘",
+      "isActive": "활성",
+      "save": "카테고리 저장",
+      "cancel": "취소",
+      "titleEdit": "카테고리 수정",
+      "titleCreate": "카테고리 추가",
+      "active": "활성 (양식에 표시)"
+    },
+    "toast": {
+      "created": "카테고리가 추가되었습니다",
+      "updated": "카테고리가 수정되었습니다",
+      "deleted": "카테고리가 삭제되었습니다",
+      "deleteConfirm": "이 카테고리를 삭제하시겠습니까?",
+      "deleteWarning": "이 카테고리에 연결된 거래가 있습니다",
+      "nameExists": "이미 존재하는 카테고리 이름입니다",
+      "inUse": "사용 중인 카테고리는 삭제할 수 없습니다",
+      "deleteFailed": "카테고리 삭제에 실패했습니다",
+      "updateFailed": "카테고리 수정에 실패했습니다",
+      "createFailed": "카테고리 생성에 실패했습니다"
+    },
+    "defaultCategories": {
+      "housing": "주거비",
+      "utilities": "공과금",
+      "transportation": "교통비",
+      "food": "식비",
+      "healthcare": "의료비",
+      "insurance": "보험",
+      "entertainment": "여가",
+      "education": "교육",
+      "office": "사무용품",
+      "software": "소프트웨어",
+      "marketing": "마케팅",
+      "professional": "전문서비스",
+      "travel": "출장",
+      "meals": "식사",
+      "supplies": "소모품",
+      "maintenance": "유지보수",
+      "ownerDistribution": "오너 분배금",
+      "contractorIncome": "도급 수입",
+      "freelanceIncome": "프리랜서 수입",
+      "consultingIncome": "컨설팅 수입",
+      "otherIncome": "기타 수입"
+    },
+    "confirmDialog": {
+      "title": "카테고리 삭제",
+      "description": "이 카테고리를 삭제하시겠습니까?",
+      "warning": "이 카테고리에 연결된 거래가 {{count}}개 있습니다. 삭제 시 해당 거래의 카테고리가 해제됩니다.",
+      "confirm": "삭제",
+      "cancel": "취소"
+    },
+    "description": "사용자 지정 카테고리로 거래를 정리하세요",
+    "expenseTab": "비용",
+    "incomeTab": "수입",
+    "expenseSection": "비용 카테고리",
+    "incomeSection": "수입 카테고리",
+    "noExpenseCategories": "비용 카테고리가 없습니다",
+    "noExpenseCategoriesDesc": "첫 번째 비용 카테고리를 추가하세요",
+    "noIncomeCategories": "수입 카테고리가 없습니다",
+    "noIncomeCategoriesDesc": "첫 번째 수입 카테고리를 추가하세요",
+    "active": "활성",
+    "inactive": "비활성"
+  }
+}

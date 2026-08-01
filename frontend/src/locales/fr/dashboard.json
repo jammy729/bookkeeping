@@ -1,0 +1,38 @@
+{
+  "dashboard": {
+    "title": "Tableau de bord",
+    "greeting": "Bonjour, {{name}}",
+    "overview": "Voici votre apercu financier pour {{period}}",
+    "netProfit": "Profit net",
+    "revenue": "Revenu",
+    "expenses": "Depenses",
+    "profitMargin": "Marge beneficiaire",
+    "cashFlow": "Flux de tresorerie",
+    "spendingByCategory": "Depenses par categorie",
+    "recentTransactions": "Transactions recentes",
+    "viewAll": "Voir tout",
+    "noTransactions": "Aucune transaction. Ajoutez votre premier revenu ou depense.",
+    "actionItems": "Actions requises",
+    "uncategorizedTransactions": {
+      "one": "{{count}} transaction sans categorie",
+      "other": "{{count}} transactions sans categorie"
+    },
+    "uncategorizedDescription": "Ces transactions necessitent une categorie pour des rapports precis",
+    "budgetsNearLimit": {
+      "one": "{{count}} budget pres de la limite",
+      "other": "{{count}} budgets pres de la limite"
+    },
+    "budgetsNearLimitDescription": "Budgets a 80% ou plus de leur limite",
+    "datePresets": {
+      "thisMonth": "Ce mois",
+      "lastMonth": "Mois dernier",
+      "thisQuarter": "Ce trimestre",
+      "ytd": "Annee en cours"
+    },
+    "chart": {
+      "income": "Revenu",
+      "expenses": "Depenses",
+      "amount": "Montant"
+    }
+  }
+}

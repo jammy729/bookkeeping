@@ -1,0 +1,84 @@
+{
+  "invoices": {
+    "title": "Factures",
+    "description": "Créez et gérez les factures clients",
+    "create": "Nouvelle facture",
+    "list": "Toutes les factures",
+    "filter": {
+      "all": "Tous les statuts"
+    },
+    "stats": {
+      "total": "Total des factures",
+      "paid": "Payées",
+      "outstanding": "Impayées",
+      "overdue": "En retard"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "sent": "Envoyée",
+      "paid": "Payée",
+      "overdue": "En retard",
+      "cancelled": "Annulée"
+    },
+    "table": {
+      "invoice": "Facture #",
+      "client": "Client",
+      "issueDate": "Date d'émission",
+      "dueDate": "Date d'échéance",
+      "amount": "Montant",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "actions": {
+      "send": "Marquer comme envoyée",
+      "markPaid": "Marquer comme payée",
+      "downloadPdf": "Télécharger le PDF"
+    },
+    "pdf": {
+      "billTo": "Facturer à",
+      "description": "Description",
+      "qty": "Qté",
+      "unitPrice": "Prix unitaire",
+      "amount": "Montant",
+      "terms": "Conditions",
+      "paidDate": "Date de paiement"
+    },
+    "form": {
+      "titleCreate": "Créer une facture",
+      "titleEdit": "Modifier la facture",
+      "client": "Client",
+      "selectClient": "Sélectionnez un client",
+      "issueDate": "Date d'émission *",
+      "dueDate": "Date d'échéance",
+      "items": "Lignes de facture",
+      "addItem": "Ajouter une ligne",
+      "itemDescription": "Description",
+      "qty": "Qté",
+      "price": "Prix unitaire",
+      "taxRate": "Taux de taxe (%)",
+      "discount": "Remise ($)",
+      "subtotal": "Sous-total",
+      "tax": "Taxe",
+      "discountLabel": "Remise",
+      "total": "Total",
+      "notes": "Notes",
+      "notesPlaceholder": "Notes ou instructions de paiement facultatives"
+    },
+    "empty": {
+      "title": "Aucune facture trouvée",
+      "description": "Créez votre première facture pour facturer vos clients"
+    },
+    "toast": {
+      "created": "Facture créée",
+      "updated": "Facture mise à jour",
+      "deleted": "Facture supprimée",
+      "sent": "Facture marquée comme envoyée",
+      "paid": "Facture marquée comme payée",
+      "createFailed": "Échec de la création de la facture",
+      "updateFailed": "Échec de la mise à jour de la facture",
+      "deleteFailed": "Échec de la suppression de la facture",
+      "sendFailed": "Échec du marquage comme envoyée",
+      "paidFailed": "Échec du marquage comme payée"
+    }
+  }
+}

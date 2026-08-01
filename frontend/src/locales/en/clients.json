@@ -1,0 +1,46 @@
+{
+  "clients": {
+    "title": "Clients",
+    "description": "Manage your client directory",
+    "addClient": "Add Client",
+    "stats": {
+      "total": "Total Clients",
+      "active": "Active Clients"
+    },
+    "list": "Client List",
+    "noClients": "No clients yet",
+    "noClientsDesc": "Add your first client to start managing relationships",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "active": "Active",
+    "inactive": "Inactive",
+    "form": {
+      "titleEdit": "Edit Client",
+      "titleCreate": "Add Client",
+      "name": "Name *",
+      "namePlaceholder": "e.g., ABC Company",
+      "email": "Email",
+      "emailPlaceholder": "contact@abccompany.com",
+      "phone": "Phone",
+      "phonePlaceholder": "(555) 123-4567",
+      "address": "Address",
+      "addressPlaceholder": "123 Main St, Toronto, ON",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional notes...",
+      "active": "Active client"
+    },
+    "toast": {
+      "deleted": "Client deleted",
+      "deleteFailed": "Failed to delete client",
+      "updated": "Client updated",
+      "created": "Client created",
+      "updateFailed": "Failed to update client",
+      "createFailed": "Failed to create client"
+    }
+  }
+}

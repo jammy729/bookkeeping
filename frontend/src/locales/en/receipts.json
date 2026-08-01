@@ -1,0 +1,85 @@
+{
+  "receipts": {
+    "title": "Receipts",
+    "description": "Upload and manage your receipt files",
+    "uploadReceipt": "Upload Receipt",
+    "stats": {
+      "total": "Total Receipts",
+      "linked": "Linked to Expense",
+      "awaitingReview": "Awaiting Review"
+    },
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Search receipts...",
+      "fileType": "File Type",
+      "allTypes": "All",
+      "images": "Images",
+      "pdfs": "PDFs",
+      "category": "Category",
+      "allCategories": "All Categories"
+    },
+    "tabs": {
+      "all": "All",
+      "linked": "Linked",
+      "awaitingReview": "Awaiting Review"
+    },
+    "emptyState": {
+      "noMatch": "No receipts match your filters",
+      "noMatchDesc": "Try adjusting your search or filters",
+      "noReceipts": "No receipts found",
+      "allLinked": "All receipts are linked to expenses",
+      "addFirst": "Upload your first receipt to get started"
+    },
+    "badge": {
+      "linked": "Linked",
+      "review": "Review"
+    },
+    "linkedTo": "Linked to: {{description}}",
+    "unknownExpense": "Unknown expense",
+    "unlinkDialog": {
+      "title": "Unlink Receipt",
+      "description": "Unlink this receipt? It will move to \"Awaiting Review\" but remain in your receipts list.",
+      "confirm": "Unlink",
+      "unlinking": "Unlinking..."
+    },
+    "linkDialog": {
+      "title": "Link to Expense",
+      "selectExpense": "Select Expense",
+      "chooseExpense": "Choose an expense...",
+      "confirm": "Link Receipt",
+      "linking": "Linking..."
+    },
+    "uploadDialog": {
+      "title": "Upload Receipt",
+      "dragDrop": "Click to upload or drag and drop",
+      "formats": "JPEG, PNG, WebP, HEIC, or PDF — max 10MB",
+      "compressing": "Compressing image...",
+      "compressed": "Compressed {{from}} → {{to}}",
+      "savings": "{{percent}}% smaller",
+      "previewAlt": "Receipt preview",
+      "linkToExpense": "Link to Expense (optional)",
+      "skipLink": "Skip — upload as unlinked receipt",
+      "uploading": "Uploading...",
+      "upload": "Upload",
+      "invalidFileType": "File type not allowed. Use JPEG, PNG, WebP, HEIC, or PDF.",
+      "fileTooLarge": "File size exceeds 10MB limit.",
+      "compressionFailed": "Compression failed, uploading original",
+      "uploadSuccess": "Receipt uploaded successfully",
+      "uploadFailed": "Failed to upload receipt"
+    },
+    "preview": {
+      "open": "Open",
+      "download": "Download",
+      "loadFailed": "Failed to load preview",
+      "notAvailable": "Preview not available for this file type"
+    },
+    "toast": {
+      "deleted": "Receipt deleted",
+      "deleteFailed": "Failed to delete receipt",
+      "linked": "Receipt linked to expense",
+      "linkFailed": "Failed to link receipt",
+      "unlinked": "Receipt unlinked",
+      "unlinkFailed": "Failed to unlink receipt"
+    }
+  }
+}

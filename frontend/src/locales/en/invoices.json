@@ -1,0 +1,84 @@
+{
+  "invoices": {
+    "title": "Invoices",
+    "description": "Create and manage client invoices",
+    "create": "New Invoice",
+    "list": "All Invoices",
+    "filter": {
+      "all": "All Statuses"
+    },
+    "stats": {
+      "total": "Total Invoices",
+      "paid": "Paid",
+      "outstanding": "Outstanding",
+      "overdue": "Overdue"
+    },
+    "status": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "paid": "Paid",
+      "overdue": "Overdue",
+      "cancelled": "Cancelled"
+    },
+    "table": {
+      "invoice": "Invoice #",
+      "client": "Client",
+      "issueDate": "Issue Date",
+      "dueDate": "Due Date",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "send": "Mark as Sent",
+      "markPaid": "Mark as Paid",
+      "downloadPdf": "Download PDF"
+    },
+    "pdf": {
+      "billTo": "Bill To",
+      "description": "Description",
+      "qty": "Qty",
+      "unitPrice": "Unit Price",
+      "amount": "Amount",
+      "terms": "Terms",
+      "paidDate": "Paid Date"
+    },
+    "form": {
+      "titleCreate": "Create Invoice",
+      "titleEdit": "Edit Invoice",
+      "client": "Client",
+      "selectClient": "Select a client",
+      "issueDate": "Issue Date *",
+      "dueDate": "Due Date",
+      "items": "Line Items",
+      "addItem": "Add Item",
+      "itemDescription": "Description",
+      "qty": "Qty",
+      "price": "Unit Price",
+      "taxRate": "Tax Rate (%)",
+      "discount": "Discount ($)",
+      "subtotal": "Subtotal",
+      "tax": "Tax",
+      "discountLabel": "Discount",
+      "total": "Total",
+      "notes": "Notes",
+      "notesPlaceholder": "Optional notes or payment instructions"
+    },
+    "empty": {
+      "title": "No invoices found",
+      "description": "Create your first invoice to bill your clients"
+    },
+    "toast": {
+      "created": "Invoice created",
+      "updated": "Invoice updated",
+      "deleted": "Invoice deleted",
+      "sent": "Invoice marked as sent",
+      "paid": "Invoice marked as paid",
+      "createFailed": "Failed to create invoice",
+      "updateFailed": "Failed to update invoice",
+      "deleteFailed": "Failed to delete invoice",
+      "sendFailed": "Failed to mark invoice as sent",
+      "paidFailed": "Failed to mark invoice as paid"
+    }
+  }
+}

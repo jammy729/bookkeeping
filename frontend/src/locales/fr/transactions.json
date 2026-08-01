@@ -1,0 +1,97 @@
+{
+  "transactions": {
+    "title": "Transactions",
+    "addExpense": "Ajouter une depense",
+    "addIncome": "Ajouter un revenu",
+    "tabs": {
+      "all": "Toutes",
+      "expenses": "Depenses",
+      "income": "Revenus"
+    },
+    "searchPlaceholder": "Rechercher des transactions...",
+    "noTransactions": "Aucune transaction trouvee",
+    "noTransactionsDesc": "Ajoutez votre premiere transaction pour commencer",
+    "adjustFilters": "Essayez d'ajuster votre recherche ou vos filtres",
+    "addTransaction": "Ajouter une transaction",
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "category": "Categorie",
+      "type": "Type",
+      "amount": "Montant",
+      "actions": "Actions"
+    },
+    "pagination": {
+      "showing": "Affichage de {{from}} a {{to}} sur {{total}} transactions"
+    },
+    "expenseForm": {
+      "titleEdit": "Modifier la depense",
+      "titleCreate": "Ajouter une depense",
+      "amount": "Montant (CAD) *",
+      "description": "Description *",
+      "date": "Date *",
+      "category": "Categorie",
+      "selectCategory": "Selectionner une categorie",
+      "notes": "Notes",
+      "receipt": "Recu",
+      "receiptOptional": "Joindre un recu (optionnel)",
+      "change": "Changer",
+      "removeReceipt": "Supprimer le recu",
+      "recurring": "Depense recurrente",
+      "frequency": "Frequence",
+      "selectFrequency": "Selectionner une frequence",
+      "nextOccurrence": "Prochaine occurrence"
+    },
+    "recurrence": {
+      "weekly": "Hebdomadaire",
+      "biweekly": "Bihebdomadaire",
+      "monthly": "Mensuelle",
+      "quarterly": "Trimestrielle",
+      "yearly": "Annuelle"
+    },
+    "recurringBadge": "Recurrent",
+    "incomeForm": {
+      "titleEdit": "Modifier le revenu",
+      "titleCreate": "Ajouter un revenu",
+      "amount": "Montant (CAD) *",
+      "description": "Description *",
+      "descriptionPlaceholder": "ex. Projet de developpement web",
+      "date": "Date *",
+      "type": "Type *",
+      "clientName": "Nom du client",
+      "selectClient": "Selectionner un client...",
+      "invoiceNumber": "Numero de facture",
+      "invoicePlaceholder": "ex. INV-2024-001",
+      "includesHst": "Inclut la TVH (13%)",
+      "hstAmount": "Montant TVH",
+      "autoCalculated": "Calcule automatiquement",
+      "markAsPaid": "Marquer comme paye",
+      "notes": "Notes"
+    },
+    "incomeTypes": {
+      "contractorPayment": "Paiement contractuel",
+      "freelance": "Travail independant",
+      "consulting": "Consultation",
+      "other": "Autre"
+    },
+    "confirmDelete": "Etes-vous sur de vouloir supprimer cette transaction ?",
+    "toast": {
+      "deleted": "Transaction supprimee",
+      "deleteFailed": "Echec de la suppression de la transaction",
+      "expenseUpdated": "Depense mise a jour",
+      "expenseCreated": "Depense creee",
+      "expenseSavedWarning": "Depense enregistree mais echec du televersement du recu",
+      "expenseUpdateFailed": "Echec de la mise a jour de la depense",
+      "expenseCreateFailed": "Echec de la creation de la depense",
+      "incomeUpdated": "Revenu mis a jour",
+      "incomeCreated": "Revenu cree",
+      "incomeUpdateFailed": "Echec de la mise a jour du revenu",
+      "incomeCreateFailed": "Echec de la creation du revenu",
+      "receiptRemoved": "Recu supprime",
+      "receiptRemoveFailed": "Echec de la suppression du recu",
+      "invalidFileType": "Type de fichier non autorise. Utilisez JPEG, PNG, WebP, HEIC ou PDF.",
+      "fileTooLarge": "La taille du fichier depasse la limite de 10 Mo.",
+      "recurringGenerated": "{{count}} depense(s) recurrente(s) generee(s)"
+    }
+  }
+}

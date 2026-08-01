@@ -1,0 +1,63 @@
+{
+  "reports": {
+    "title": "Reports & Analytics",
+    "description": "Analyze your financial performance",
+    "exportCsv": "Export CSV",
+    "exportSuccess": "Report exported successfully",
+    "settings": {
+      "title": "Report Settings",
+      "reportType": "Report Type",
+      "types": {
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "custom": "Custom Period"
+      }
+    },
+    "summary": {
+      "totalIncome": "Total Income",
+      "totalExpenses": "Total Expenses",
+      "ownerDistributions": "Owner Distributions",
+      "netIncome": "Net Income",
+      "profitMargin": "Profit Margin"
+    },
+    "charts": {
+      "expensesByCategory": "Expenses by Category",
+      "incomeByType": "Income by Type",
+      "monthlyComparison": "Monthly Comparison",
+      "noExpenseData": "No expense data",
+      "noExpenseDataDesc": "No expenses recorded for this period",
+      "noIncomeData": "No income data",
+      "noIncomeDataDesc": "No income recorded for this period",
+      "noMonthlyData": "No monthly data",
+      "noMonthlyDataDesc": "No data available for this period"
+    },
+    "monthlyTable": {
+      "month": "Month",
+      "income": "Income",
+      "expenses": "Expenses",
+      "difference": "Difference"
+    },
+    "csvHeaders": {
+      "financialReport": "Financial Report",
+      "period": "Period",
+      "summary": "Summary",
+      "totalIncome": "Total Income",
+      "totalExpenses": "Total Expenses",
+      "ownerDistributions": "Owner Distributions",
+      "netIncome": "Net Income",
+      "profitMargin": "Profit Margin",
+      "expensesByCategory": "Expenses by Category",
+      "category": "Category",
+      "amount": "Amount",
+      "percentage": "Percentage",
+      "incomeByType": "Income by Type",
+      "type": "Type"
+    },
+    "reportTitles": {
+      "monthly": "Monthly Financial Report",
+      "yearly": "Annual Financial Report",
+      "custom": "Custom Period Report"
+    },
+    "ownerDistribution": "Owner Distribution"
+  }
+}

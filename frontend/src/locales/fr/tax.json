@@ -1,0 +1,23 @@
+{
+  "tax": {
+    "title": "Résumé fiscal",
+    "hstCollected": "TVH perçue",
+    "totalDeductible": "Total des déductions",
+    "netProfit": "Profit net",
+    "missingReceipts": "Reçus manquants",
+    "deductibleExpenses": "Dépenses déductibles ({{year}})",
+    "noDeductibleExpenses": "Aucune dépense déductible enregistrée pour {{year}}",
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "category": "Catégorie",
+      "amount": "Montant"
+    },
+    "totalDeductibleLabel": "Total des déductions",
+    "missingReceiptsTitle": "Reçus manquants ({{count}} transactions de plus de 50 $)",
+    "missingReceiptsDescription": "Ces transactions n'ont pas de reçus et pourraient nécessiter une documentation aux fins fiscales.",
+    "viewAllTransactions": "Voir les {{count}} transactions",
+    "expenseBreakdown": "Répartition des dépenses par catégorie",
+    "noData": "Aucune donnée disponible"
+  }
+}

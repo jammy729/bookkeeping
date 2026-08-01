@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "groups": {
+      "main": "Principal",
+      "manage": "Gestión",
+      "insights": "Análisis",
+      "account": "Cuenta"
+    },
+    "items": {
+      "dashboard": "Panel de control",
+      "transactions": "Transacciones",
+      "receipts": "Recibos",
+      "clients": "Clientes",
+      "categories": "Categorías",
+      "invoices": "Facturas",
+      "budgets": "Presupuestos",
+      "reports": "Reportes",
+      "taxSummary": "Resumen fiscal",
+      "settings": "Configuración"
+    },
+    "header": {
+      "search": "Buscar",
+      "searchPlaceholder": "Buscar o saltar a...",
+      "new": "Nuevo"
+    },
+    "user": {
+      "account": "Cuenta",
+      "lightMode": "Modo claro",
+      "darkMode": "Modo oscuro",
+      "systemTheme": "Tema del sistema",
+      "settings": "Configuración",
+      "logout": "Cerrar sesión"
+    },
+    "command": {
+      "pages": "Páginas",
+      "quickActions": "Acciones rápidas",
+      "addExpense": "Agregar gasto",
+      "addIncome": "Agregar ingreso"
+    }
+  }
+}

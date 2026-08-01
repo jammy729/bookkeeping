@@ -1,0 +1,187 @@
+{
+  "app": "Comptabilite",
+  "loading": "Chargement...",
+  "noResults": "Aucun resultat trouve.",
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "create": "Creer",
+  "update": "Modifier",
+  "delete": "Supprimer",
+  "saving": "Enregistrement...",
+  "updating": "Modification...",
+  "creating": "Creation...",
+  "deleting": "Suppression...",
+  "confirm": "Confirmer",
+  "back": "Retour",
+  "continue": "Continuer",
+  "next": "Suivant",
+  "finish": "Terminer",
+  "close": "Fermer",
+  "search": "Rechercher",
+  "filter": "Filtrer",
+  "clearFilters": "Effacer les filtres",
+  "all": "Tout",
+  "none": "Aucun",
+  "yes": "Oui",
+  "no": "Non",
+  "active": "Actif",
+  "inactive": "Inactif",
+  "enabled": "Active",
+  "disabled": "Desactive",
+  "actions": "Actions",
+  "edit": "Modifier",
+  "view": "Voir",
+  "export": "Exporter",
+  "import": "Importer",
+  "download": "Telecharger",
+  "upload": "Televerser",
+  "open": "Ouvrir",
+  "add": "Ajouter",
+  "remove": "Supprimer",
+  "from": "Du",
+  "to": "Au",
+  "date": "Date",
+  "description": "Description",
+  "category": "Categorie",
+  "amount": "Montant",
+  "type": "Type",
+  "status": "Statut",
+  "name": "Nom",
+  "email": "Courriel",
+  "phone": "Telephone",
+  "address": "Adresse",
+  "notes": "Notes",
+  "total": "Total",
+  "subtotal": "Sous-total",
+  "tax": "Taxe",
+  "discount": "Remise",
+  "paid": "Paye",
+  "unpaid": "Non paye",
+  "unknown": "Inconnu",
+  "uncategorized": "Sans categorie",
+  "notSet": "Non defini",
+  "or": "ou",
+  "of": "de",
+  "months": {
+    "january": "Janvier",
+    "february": "Fevrier",
+    "march": "Mars",
+    "april": "Avril",
+    "may": "Mai",
+    "june": "Juin",
+    "july": "Juillet",
+    "august": "Aout",
+    "september": "Septembre",
+    "october": "Octobre",
+    "november": "Novembre",
+    "december": "Decembre"
+  },
+  "monthsShort": {
+    "jan": "Janv",
+    "feb": "Fevr",
+    "mar": "Mars",
+    "apr": "Avr",
+    "may": "Mai",
+    "jun": "Juin",
+    "jul": "Juil",
+    "aug": "Aout",
+    "sep": "Sept",
+    "oct": "Oct",
+    "nov": "Nov",
+    "dec": "Dec"
+  },
+  "greetings": {
+    "morning": "Bonjour",
+    "afternoon": "Bon apres-midi",
+    "evening": "Bonsoir"
+  },
+  "toast": {
+    "success": {
+      "created": "{{entity}} cree",
+      "updated": "{{entity}} mis a jour",
+      "deleted": "{{entity}} supprime",
+      "saved": "Enregistre avec succes",
+      "exported": "Exporte avec succes"
+    },
+    "error": {
+      "create": "Echec de la creation de {{entity}}",
+      "update": "Echec de la mise a jour de {{entity}}",
+      "delete": "Echec de la suppression de {{entity}}",
+      "generic": "Une erreur s'est produite",
+      "network": "Erreur reseau. Veuillez reessayer."
+    },
+    "warning": {
+      "savedButWarning": "Enregistre mais {{warning}}"
+    },
+    "info": {
+      "loading": "Chargement..."
+    }
+  },
+  "dialog": {
+    "confirmDelete": "Etes-vous sur de vouloir supprimer cet {{entity}} ?",
+    "deleteTitle": "Supprimer {{entity}}"
+  },
+  "emptyState": {
+    "noData": "Aucune donnee disponible",
+    "noItems": "Aucun(e) {{items}} trouve(e)",
+    "addFirst": "Ajoutez votre premier(e) {{item}} pour commencer",
+    "adjustFilters": "Essayez d'ajuster votre recherche ou vos filtres"
+  },
+  "table": {
+    "showing": "Affichage de {{from}} a {{to}} sur {{to}} {{items}}",
+    "noItems": "Aucun(e) {{items}} a afficher"
+  },
+  "form": {
+    "required": "Ce champ est obligatoire",
+    "invalidEmail": "Veuillez entrer un courriel valide",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "passwordMinLength": "Le mot de passe doit contenir au moins 6 caracteres"
+  },
+  "pagination": {
+    "previous": "Precedent",
+    "next": "Suivant",
+    "page": "Page {{page}} sur {{total}}"
+  },
+  "accessibility": {
+    "toggleTheme": "Basculer le theme",
+    "toggleMenu": "Basculer le menu",
+    "closeDialog": "Fermer la boite de dialogue",
+    "openMenu": "Ouvrir le menu"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "import": {
+    "titleExpenses": "Importer des depenses depuis CSV",
+    "titleIncome": "Importer des revenus depuis CSV",
+    "dropOrClick": "Deposez un fichier CSV ici ou cliquez pour parcourir",
+    "csvOnly": "Fichiers .csv pris en charge",
+    "changeFile": "Changer le fichier",
+    "rowsDetected": "lignes detectees",
+    "mapColumns": "Mapper les colonnes",
+    "dateColumn": "Colonne date",
+    "descriptionColumn": "Colonne description",
+    "amountColumn": "Colonne montant",
+    "selectColumn": "Selectionner une colonne",
+    "preview": "Apercu (5 premieres lignes)",
+    "andMore": "...et {{count}} lignes de plus",
+    "import": "Importer {{count}} lignes",
+    "importing": "Importation...",
+    "close": "Fermer",
+    "result": {
+      "success": "{{count}} transactions importees avec succes",
+      "errors": "{{count}} lignes ont echoue lors de l'importation"
+    },
+    "toast": {
+      "invalidFileType": "Veuillez selectionner un fichier CSV",
+      "emptyFile": "Le fichier CSV est vide",
+      "parseError": "Echec de l'analyse du fichier CSV",
+      "mappingRequired": "Veuillez mapper toutes les colonnes requises (Date, Description, Montant)",
+      "success": "{{count}} transactions importees avec succes",
+      "partialSuccess": "{{imported}} importees, {{failed}} echouees",
+      "importFailed": "Echec de l'importation des transactions"
+    }
+  }
+}

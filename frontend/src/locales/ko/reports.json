@@ -1,0 +1,188 @@
+{
+  "reports": {
+    "title": "보고서 및 분석",
+    "subtitle": "재정 상태를 분석하고 보고서를 생성하세요",
+    "exportCSV": "CSV 내보내기",
+    "exportingCSV": "CSV 내보내기 중...",
+    "reportSettings": {
+      "title": "보고서 설정",
+      "period": "기간",
+      "startDate": "시작일",
+      "endDate": "종료일",
+      "monthly": "월별",
+      "yearly": "연별",
+      "custom": "사용자 지정",
+      "apply": "적용",
+      "reset": "초기화"
+    },
+    "tabs": {
+      "overview": "개요",
+      "profitLoss": "손익계산서",
+      "balanceSheet": "재무상태표",
+      "cashFlow": "현금흐름표",
+      "monthly": "월별 비교",
+      "custom": "사용자 지정"
+    },
+    "summary": {
+      "title": "재정 요약",
+      "totalIncome": "총 수입",
+      "totalExpenses": "총 비용",
+      "netProfit": "순이익",
+      "profitMargin": "이익률",
+      "cashBalance": "현금 잔액",
+      "accountsReceivable": "미수금",
+      "accountsPayable": "미지급금",
+      "hstOwed": "납부할 HST",
+      "hstCollected": "수취한 HST",
+      "netHst": "HST 정산",
+      "ownerDistributions": "오너 분배금",
+      "netIncome": "순수입"
+    },
+    "profitLoss": {
+      "title": "손익계산서 (P&L)",
+      "subtitle": "수입과 비용을 한눈에 확인하세요",
+      "revenue": "수입",
+      "costOfGoodsSold": "매출원가",
+      "grossProfit": "매출총이익",
+      "operatingExpenses": "운영비",
+      "operatingIncome": "영업이익",
+      "otherIncome": "기타 수입",
+      "otherExpenses": "기타 비용",
+      "netIncome": "순이익",
+      "ownerDistributions": "오너 분배금",
+      "netProfitAfterDistributions": "분배 후 순이익"
+    },
+    "balanceSheet": {
+      "title": "재무상태표",
+      "subtitle": "자산, 부채, 자본을 확인하세요",
+      "assets": "자산",
+      "currentAssets": "유동자산",
+      "cash": "현금",
+      "accountsReceivable": "미수금",
+      "inventory": "재고",
+      "totalAssets": "총 자산",
+      "liabilities": "부채",
+      "currentLiabilities": "유동부채",
+      "accountsPayable": "미지급금",
+      "hstPayable": "납부할 HST",
+      "totalLiabilities": "총 부채",
+      "equity": "자본",
+      "retainedEarnings": "이익잉여금",
+      "ownerEquity": "오너 자본",
+      "totalEquity": "총 자본",
+      "totalLiabilitiesAndEquity": "총 부채 및 자본"
+    },
+    "cashFlow": {
+      "title": "현금흐름표",
+      "subtitle": "현금 유입과 유출을 추적하세요",
+      "operatingActivities": "영업활동",
+      "cashFromCustomers": "고객으로부터 현금 수취",
+      "cashToSuppliers": "공급업체에 현금 지급",
+      "cashToEmployees": "직원 급여 지급",
+      "netOperatingCash": "영업활동 순현금흐름",
+      "financingActivities": "재무활동",
+      "ownerDistributions": "오너 분배금",
+      "netFinancingCash": "재무활동 순현금흐름",
+      "investingActivities": "투자활동",
+      "netInvestingCash": "투자활동 순현금흐름",
+      "netCashFlow": "순현금흐름",
+      "beginningCash": "기초 현금",
+      "endingCash": "기말 현금"
+    },
+    "charts": {
+      "revenueVsExpenses": "수입 vs 비용",
+      "monthlyTrend": "월별 추이",
+      "profitTrend": "이익 추이",
+      "categoryBreakdown": "카테고리별 분류",
+      "expenseDistribution": "비용 분포",
+      "incomeDistribution": "수입 분포",
+      "cashFlowTrend": "현금흐름 추이",
+      "noData": "차트를 표시할 데이터가 없습니다",
+      "expensesByCategory": "카테고리별 비용",
+      "incomeByType": "유형별 수입",
+      "monthlyComparison": "월별 비교",
+      "noExpenseData": "비용 데이터가 없습니다",
+      "noExpenseDataDesc": "이 기간에 등록된 비용이 없습니다",
+      "noIncomeData": "수입 데이터가 없습니다",
+      "noIncomeDataDesc": "이 기간에 등록된 수입이 없습니다",
+      "noMonthlyData": "월별 데이터가 없습니다",
+      "noMonthlyDataDesc": "이 기간에 사용 가능한 데이터가 없습니다"
+    },
+    "monthlyComparison": {
+      "title": "월별 비교",
+      "subtitle": "월별 재정 성과를 비교하세요",
+      "table": {
+        "month": "월",
+        "income": "수입",
+        "expenses": "비용",
+        "profit": "이익",
+        "margin": "이익률",
+        "cashFlow": "현금흐름",
+        "change": "변동"
+      },
+      "bestMonth": "최고의 달",
+      "worstMonth": "가장 낮은 달",
+      "averageMonthly": "월평균"
+    },
+    "csvHeaders": {
+      "date": "날짜",
+      "description": "설명",
+      "category": "카테고리",
+      "amount": "금액",
+      "type": "유형",
+      "notes": "메모",
+      "client": "고객",
+      "invoiceNumber": "청구서 번호",
+      "isPaid": "지불 여부",
+      "includesHst": "HST 포함",
+      "hstAmount": "HST 금액",
+      "receiptAttached": "영수증 첨부 여부",
+      "financialReport": "재정 보고서",
+      "period": "기간",
+      "summary": "요약",
+      "totalIncome": "총 수입",
+      "totalExpenses": "총 비용",
+      "ownerDistributions": "오너 분배금",
+      "netIncome": "순수입",
+      "profitMargin": "이익률",
+      "expensesByCategory": "카테고리별 비용",
+      "percentage": "비율",
+      "incomeByType": "유형별 수입"
+    },
+    "empty": {
+      "noData": "이 기간에 해당하는 데이터가 없습니다",
+      "noTransactions": "거래 내역이 없습니다",
+      "adjustPeriod": "기간을 조정하여 다시 시도하세요",
+      "getStarted": "첫 번째 거래를 추가하여 보고서를 확인하세요"
+    },
+    "toast": {
+      "exported": "보고서가 내보내기되었습니다",
+      "exportFailed": "내보내기 중 오류가 발생했습니다",
+      "reportGenerated": "보고서가 생성되었습니다"
+    },
+    "description": "재정 성과를 분석하세요",
+    "exportCsv": "CSV 내보내기",
+    "exportSuccess": "보고서가 성공적으로 내보내기되었습니다",
+    "settings": {
+      "title": "보고서 설정",
+      "reportType": "보고서 유형",
+      "types": {
+        "monthly": "월별",
+        "yearly": "연별",
+        "custom": "사용자 지정 기간"
+      }
+    },
+    "monthlyTable": {
+      "month": "월",
+      "income": "수입",
+      "expenses": "비용",
+      "difference": "차이"
+    },
+    "reportTitles": {
+      "monthly": "월간 재정 보고서",
+      "yearly": "연간 재정 보고서",
+      "custom": "사용자 지정 기간 보고서"
+    },
+    "ownerDistribution": "오너 분배금"
+  }
+}

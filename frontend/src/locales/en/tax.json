@@ -1,0 +1,23 @@
+{
+  "tax": {
+    "title": "Tax Summary",
+    "hstCollected": "HST Collected",
+    "totalDeductible": "Total Deductible",
+    "netProfit": "Net Profit",
+    "missingReceipts": "Missing Receipts",
+    "deductibleExpenses": "Tax Deductible Expenses ({{year}})",
+    "noDeductibleExpenses": "No tax deductible expenses recorded for {{year}}",
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "amount": "Amount"
+    },
+    "totalDeductibleLabel": "Total Deductible",
+    "missingReceiptsTitle": "Missing Receipts ({{count}} transactions over $50)",
+    "missingReceiptsDescription": "These transactions are missing receipts and may need documentation for tax purposes.",
+    "viewAllTransactions": "View all {{count}} transactions",
+    "expenseBreakdown": "Expense Breakdown by Category",
+    "noData": "No data available"
+  }
+}

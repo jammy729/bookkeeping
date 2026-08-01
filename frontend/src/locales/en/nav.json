@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "groups": {
+      "main": "Main",
+      "manage": "Manage",
+      "insights": "Insights",
+      "account": "Account"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "transactions": "Transactions",
+      "receipts": "Receipts",
+      "clients": "Clients",
+      "categories": "Categories",
+      "invoices": "Invoices",
+      "budgets": "Budgets",
+      "reports": "Reports",
+      "taxSummary": "Tax Summary",
+      "settings": "Settings"
+    },
+    "header": {
+      "search": "Search",
+      "searchPlaceholder": "Search or jump to...",
+      "new": "New"
+    },
+    "user": {
+      "account": "Account",
+      "lightMode": "Light Mode",
+      "darkMode": "Dark Mode",
+      "systemTheme": "System Theme",
+      "settings": "Settings",
+      "logout": "Logout"
+    },
+    "command": {
+      "pages": "Pages",
+      "quickActions": "Quick Actions",
+      "addExpense": "Add Expense",
+      "addIncome": "Add Income"
+    }
+  }
+}

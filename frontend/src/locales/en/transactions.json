@@ -1,0 +1,97 @@
+{
+  "transactions": {
+    "title": "Transactions",
+    "addExpense": "Add Expense",
+    "addIncome": "Add Income",
+    "tabs": {
+      "all": "All",
+      "expenses": "Expenses",
+      "income": "Income"
+    },
+    "searchPlaceholder": "Search transactions...",
+    "noTransactions": "No transactions found",
+    "noTransactionsDesc": "Add your first transaction to get started",
+    "adjustFilters": "Try adjusting your search or filters",
+    "addTransaction": "Add Transaction",
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "type": "Type",
+      "amount": "Amount",
+      "actions": "Actions"
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} transactions"
+    },
+    "expenseForm": {
+      "titleEdit": "Edit Expense",
+      "titleCreate": "Add Expense",
+      "amount": "Amount (CAD) *",
+      "description": "Description *",
+      "date": "Date *",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "notes": "Notes",
+      "receipt": "Receipt",
+      "receiptOptional": "Attach a receipt (optional)",
+      "change": "Change",
+      "removeReceipt": "Remove receipt",
+      "recurring": "Recurring expense",
+      "frequency": "Frequency",
+      "selectFrequency": "Select frequency",
+      "nextOccurrence": "Next occurrence"
+    },
+    "recurrence": {
+      "weekly": "Weekly",
+      "biweekly": "Biweekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly"
+    },
+    "recurringBadge": "Recurring",
+    "incomeForm": {
+      "titleEdit": "Edit Income",
+      "titleCreate": "Add Income",
+      "amount": "Amount (CAD) *",
+      "description": "Description *",
+      "descriptionPlaceholder": "e.g., Web development project",
+      "date": "Date *",
+      "type": "Type *",
+      "clientName": "Client Name",
+      "selectClient": "Select a client...",
+      "invoiceNumber": "Invoice Number",
+      "invoicePlaceholder": "e.g., INV-2024-001",
+      "includesHst": "Includes HST (13%)",
+      "hstAmount": "HST Amount",
+      "autoCalculated": "Auto-calculated",
+      "markAsPaid": "Mark as paid",
+      "notes": "Notes"
+    },
+    "incomeTypes": {
+      "contractorPayment": "Contractor Payment",
+      "freelance": "Freelance",
+      "consulting": "Consulting",
+      "other": "Other"
+    },
+    "confirmDelete": "Are you sure you want to delete this transaction?",
+    "toast": {
+      "deleted": "Transaction deleted",
+      "deleteFailed": "Failed to delete transaction",
+      "expenseUpdated": "Expense updated",
+      "expenseCreated": "Expense created",
+      "expenseSavedWarning": "Expense saved but receipt upload failed",
+      "expenseUpdateFailed": "Failed to update expense",
+      "expenseCreateFailed": "Failed to create expense",
+      "incomeUpdated": "Income updated",
+      "incomeCreated": "Income created",
+      "incomeUpdateFailed": "Failed to update income",
+      "incomeCreateFailed": "Failed to create income",
+      "receiptRemoved": "Receipt removed",
+      "receiptRemoveFailed": "Failed to remove receipt",
+      "invalidFileType": "File type not allowed. Use JPEG, PNG, WebP, HEIC, or PDF.",
+      "fileTooLarge": "File size exceeds 10MB limit.",
+      "recurringGenerated": "{{count}} recurring expense(s) generated"
+    }
+  }
+}

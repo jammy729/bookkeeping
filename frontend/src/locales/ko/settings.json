@@ -1,0 +1,199 @@
+{
+  "settings": {
+    "title": "설정",
+    "subtitle": "계정 및 앱 설정을 관리하세요",
+    "tabs": {
+      "profile": "프로필",
+      "password": "비밀번호",
+      "preferences": "환경 설정",
+      "notifications": "알림",
+      "data": "데이터 관리"
+    },
+    "profile": {
+      "title": "프로필 정보",
+      "description": "개인 정보를 관리하세요",
+      "avatar": "프로필 사진",
+      "changeAvatar": "사진 변경",
+      "removeAvatar": "사진 삭제",
+      "firstName": "이름",
+      "lastName": "성",
+      "email": "이메일",
+      "phone": "전화번호",
+      "phonePlaceholder": "전화번호 입력",
+      "company": "회사명",
+      "companyPlaceholder": "회사명 입력",
+      "jobTitle": "직책",
+      "jobTitlePlaceholder": "직책 입력",
+      "bio": "자기소개",
+      "bioPlaceholder": "간단한 자기소개를 입력하세요",
+      "saveChanges": "변경 사항 저장",
+      "saving": "저장 중...",
+      "toast": {
+        "updated": "프로필이 업데이트되었습니다",
+        "avatarUpdated": "프로필 사진이 변경되었습니다",
+        "avatarRemoved": "프로필 사진이 삭제되었습니다"
+      },
+      "firstNamePlaceholder": "이름",
+      "lastNamePlaceholder": "성",
+      "userId": "사용자 ID",
+      "saved": "프로필이 성공적으로 업데이트되었습니다",
+      "failed": "프로필 업데이트에 실패했습니다"
+    },
+    "password": {
+      "title": "비밀번호 변경",
+      "description": "비밀번호를 정기적으로 변경하여 보안을 강화하세요",
+      "currentPassword": "현재 비밀번호",
+      "currentPasswordPlaceholder": "현재 비밀번호 입력",
+      "newPassword": "새 비밀번호",
+      "newPasswordPlaceholder": "새 비밀번호 입력",
+      "confirmPassword": "새 비밀번호 확인",
+      "confirmPasswordPlaceholder": "새 비밀번호 다시 입력",
+      "changePassword": "비밀번호 변경",
+      "changing": "변경 중...",
+      "requirements": "비밀번호 요구사항",
+      "requirementsList": {
+        "minLength": "최소 8자 이상",
+        "uppercase": "대문자 1개 이상",
+        "lowercase": "소문자 1개 이상",
+        "number": "숫자 1개 이상",
+        "special": "특수문자 1개 이상"
+      },
+      "toast": {
+        "updated": "비밀번호가 변경되었습니다",
+        "incorrectCurrent": "현재 비밀번호가 올바르지 않습니다"
+      },
+      "currentPlaceholder": "현재 비밀번호 입력",
+      "newPlaceholder": "새 비밀번호 입력",
+      "confirmPlaceholder": "새 비밀번호 확인",
+      "updatePassword": "비밀번호 변경",
+      "updated": "비밀번호가 성공적으로 변경되었습니다",
+      "validation": {
+        "mismatch": "비밀번호가 일치하지 않습니다",
+        "minLength": "비밀번호는 최소 6자 이상이어야 합니다"
+      }
+    },
+    "preferences": {
+      "title": "환경 설정",
+      "description": "앱 표시 및 동작 방식을 설정하세요",
+      "display": {
+        "title": "표시 설정",
+        "language": "언어",
+        "languageDescription": "앱 표시 언어를 선택하세요",
+        "currency": "통화",
+        "currencyDescription": "금액 표시에 사용할 통화",
+        "dateFormat": "날짜 형식",
+        "dateFormatDescription": "날짜 표시 형식을 선택하세요",
+        "timezone": "시간대",
+        "timezoneDescription": "시간대를 선택하세요",
+        "firstDayOfWeek": "주 시작일",
+        "firstDayOfWeekDescription": "달력의 주 시작일을 선택하세요"
+      },
+      "numberFormats": {
+        "decimalSeparator": "소수점 구분자",
+        "thousandsSeparator": "천 단위 구분자"
+      },
+      "save": "설정 저장",
+      "toast": {
+        "updated": "환경 설정이 저장되었습니다"
+      },
+      "currency": "통화",
+      "currencyValue": "CAD - 캐나다 달러",
+      "currencyHelper": "통화는 기본값으로 CAD(캐나다 달러)로 설정됩니다",
+      "fiscalYearStart": "회계 연도 시작 월",
+      "language": "언어",
+      "languageHelper": "선호하는 언어를 선택하세요"
+    },
+    "notifications": {
+      "title": "알림 설정",
+      "description": "알림 수신 방법을 설정하세요",
+      "emailNotifications": "이메일 알림",
+      "emailNotificationsDescription": "중요한 알림을 이메일로 받기",
+      "pushNotifications": "푸시 알림",
+      "pushNotificationsDescription": "브라우저 푸시 알림 받기",
+      "weeklyReport": "주간 보고서",
+      "weeklyReportDescription": "매주 재정 요약 보고서 받기",
+      "budgetAlerts": "예산 알림",
+      "budgetAlertsDescription": "예산 초과 시 알림 받기",
+      "invoiceReminders": "청구서 알림",
+      "invoiceRemindersDescription": "연체된 청구서 알림 받기",
+      "save": "설정 저장",
+      "toast": {
+        "updated": "알림 설정이 저장되었습니다"
+      }
+    },
+    "data": {
+      "title": "데이터 관리",
+      "description": "데이터를 내보내거나 삭제할 수 있습니다",
+      "export": {
+        "title": "데이터 내보내기",
+        "description": "모든 데이터를 CSV 파일로 내보내세요",
+        "format": "파일 형식",
+        "dateRange": "기간",
+        "includeReceipts": "영수증 포함",
+        "exportButton": "데이터 내보내기",
+        "exporting": "내보내기 중...",
+        "toast": {
+          "success": "데이터 내보내기가 완료되었습니다",
+          "error": "내보내기 중 오류가 발생했습니다"
+        }
+      },
+      "import": {
+        "title": "데이터 가져오기",
+        "description": "CSV 파일에서 데이터를 가져오세요",
+        "importButton": "파일 선택",
+        "dragDrop": "파일을 여기에 끌어다 놓세요",
+        "supportedFormats": "지원 형식: CSV",
+        "toast": {
+          "success": "데이터 가져오기가 완료되었습니다",
+          "error": "가져오기 중 오류가 발생했습니다",
+          "invalidFormat": "올바른 CSV 형식이 아닙니다"
+        }
+      }
+    },
+    "dangerZone": {
+      "title": "위험 영역",
+      "description": "이 작업들은 되돌릴 수 없습니다",
+      "deleteAccount": {
+        "title": "계정 삭제",
+        "description": "계정과 모든 데이터가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
+        "button": "계정 삭제",
+        "confirmTitle": "정말로 계정을 삭제하시겠습니까?",
+        "confirmDescription": "이 작업은 되돌릴 수 없습니다. 모든 데이터가 영구적으로 삭제됩니다.",
+        "confirmInput": "삭제를 확인하려면 이메일을 입력하세요",
+        "confirmButton": "계정 삭제",
+        "toast": {
+          "deleted": "계정이 삭제되었습니다"
+        }
+      },
+      "resetData": {
+        "title": "데이터 초기화",
+        "description": "모든 거래 데이터를 삭제합니다. 계정은 유지됩니다.",
+        "button": "데이터 초기화",
+        "confirmTitle": "정말로 모든 데이터를 초기화하시겠습니까?",
+        "confirmDescription": "이 작업은 되돌릴 수 없습니다. 모든 거래, 영수증, 보고서가 삭제됩니다.",
+        "toast": {
+          "success": "데이터가 초기화되었습니다"
+        }
+      }
+    },
+    "description": "계정 설정 및 환경 설정을 관리하세요",
+    "export": {
+      "title": "데이터 내보내기",
+      "description": "재정 데이터를 다운로드하세요",
+      "descriptionDetail": "비용, 수입, 오너 분배금, 카테고리를 포함한 모든 재정 데이터를 내보내세요.",
+      "exportAll": "전체 데이터 내보내기",
+      "exported": "데이터 내보내기가 시작되었습니다. 준비되면 이메일로 알림을 받으시게 됩니다."
+    },
+    "danger": {
+      "title": "위험 영역",
+      "description": "되돌릴 수 없는 계정 작업",
+      "deleteWarning": "계정을 삭제하면 모든 데이터가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
+      "deleteAccount": "계정 삭제",
+      "confirmDelete": "계정을 삭제하시겠습니까?",
+      "passwordConfirm": "비밀번호를 입력하여 확인하세요",
+      "passwordPlaceholder": "현재 비밀번호",
+      "deleteSuccess": "계정이 삭제되었습니다",
+      "deleteFailed": "계정 삭제에 실패했습니다. 비밀번호를 확인하고 다시 시도하세요."
+    }
+  }
+}
