@@ -1,8 +1,119 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "default_agent": "conductor",
   "instructions": [
     "architecture.md",
     "roadmap.md",
     ".specify/memory/constitution.md"
-  ]
+  ],
+  "agent": {
+    "conductor": {
+      "description": "Feature pipeline conductor — guides features through 7 gated phases (spec→plan→design→implement→QA→ship), delegates to specialist subagents, manages gates and WORKFLOW_STATE.md",
+      "mode": "primary",
+      "temperature": 0.15,
+      "permission": { "edit": "allow", "bash": "allow" }
+    },
+    "architect": {
+      "description": "Architecture governance — writes ADRs documenting every significant decision (context, options, constitution check, decision, consequences). Validates data model integrity, API contract consistency, financial entity state machines, and audit trail compliance against constitution.",
+      "mode": "subagent",
+      "temperature": 0.05,
+      "permission": { "edit": "allow", "bash": "ask" }
+    },
+    "plan": {
+      "description": "Research-driven implementation planner — first investigates unknowns (technology, domain, integration risks), consolidates findings into research.md, then produces plan.md, data-model.md, API contracts, and quickstart.md",
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": { "edit": "allow", "bash": "allow" }
+    },
+    "project-manager": {
+      "description": "Project management — scopes requirements, prioritizes (P1/P2/P3), maps dependencies, maintains risk register and blocker log in WORKFLOW_STATE.md, plans sprints. Risk-first: flags financial calculation risks, data migration hazards, security vulnerabilities before they become issues.",
+      "mode": "subagent",
+      "temperature": 0.0,
+      "permission": {
+        "edit": { "*": "deny", "WORKFLOW_STATE.md": "allow", "specs/*": "allow" },
+        "bash": "deny"
+      }
+    },
+    "specify": {
+      "description": "Feature specification writer — crafts structured spec.md with testable requirements (FR-###) and measurable success criteria (SC-###). Each requirement must be verifiable. No implementation details ever.",
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": { "edit": "allow", "bash": "allow" }
+    },
+    "clarify": {
+      "description": "Requirements clarifier — systematically scans specs across 10 dimensions (scope, data model, UX, edge cases, constraints, terminology, etc.). Asks up to 5 multiple-choice questions ONE AT A TIME, each with a recommended answer. Updates spec immediately after each answer.",
+      "mode": "subagent",
+      "temperature": 0.15,
+      "permission": { "edit": "allow", "bash": "deny" }
+    },
+    "checklist": {
+      "description": "Requirements checklist generator — creates domain-specific checklists as 'unit tests for requirements.' Never implementation tests. Minimum 80% traceability to spec sections.",
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": { "edit": "allow", "bash": "deny" }
+    },
+    "tasks": {
+      "description": "Task list generator — decomposes implementation plans into atomic, dependency-ordered tasks. Dependency chain is explicit (T002 depends on T001). Parallel tasks marked [P]. Phase-structured: Setup → Foundational → User Stories → Polish. Wrong dependency order blocks execution.",
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": { "edit": "allow", "bash": "allow" }
+    },
+    "senior-engineer": {
+      "description": "TDD implementer — Red-Green-Refactor MANDATORY. Financial rules enforced: decimal types only (never float), soft deletes on financial records, reversing entries for corrections, audit fields on every mutation, debits=credits balanced. 80% coverage on financial modules. NestJS backend + React frontend.",
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": { "edit": "allow", "bash": "ask" }
+    },
+    "design-engineer": {
+      "description": "UI component engineer — translates UX specs to production components. Specializes in financial UI patterns: CurrencyInput (locale-aware, decimal enforcement), AccountSelect (searchable + validation), TransactionTable (sortable, paginated, balanced), BalanceDisplay (real-time, positive/negative), ConfirmationDialog (pre-mutation verification). shadcn/ui + Radix + Tailwind. WCAG AA mandatory.",
+      "mode": "subagent",
+      "temperature": 0.15,
+      "permission": { "edit": "allow", "bash": "ask" }
+    },
+    "ux-designer": {
+      "description": "UX designer for financial apps — maps user flows, screen specs, accessibility requirements, component specs. STRICTLY READ-ONLY: produces design documents only. NEVER writes code. All implementation by @design-engineer.",
+      "mode": "subagent",
+      "temperature": 0.3,
+      "permission": { "edit": "deny", "bash": "ask" }
+    },
+    "qa-engineer": {
+      "description": "QA/test strategist — produces test plans and CI quality gates. Gates: unit tests pass (<30s), integration tests pass (<2min), coverage ≥80% on financial modules, lint zero warnings, build succeeds. E2E runs on staging before production deploy. All gates must pass before merge.",
+      "mode": "subagent",
+      "temperature": 0.05,
+      "permission": {
+        "edit": { "*": "deny", "WORKFLOW_STATE.md": "allow", "specs/*": "allow" },
+        "bash": "ask"
+      }
+    },
+    "code-reviewer": {
+      "description": "Code reviewer — structured 5-pass review. TWO-REVIEWER RULE: changes affecting financial calculations require two reviewers before merge. BLOCKING findings (constitution, security, correctness) prevent merge. Read-only.",
+      "mode": "subagent",
+      "temperature": 0.0,
+      "permission": { "edit": "deny", "bash": "ask" }
+    },
+    "analyze": {
+      "description": "Quality analyst — 7 detection passes across all artifacts spec/plan/tasks/code. Includes IMPLEMENTATION CONVERGENCE (Pass G): maps every requirement to code, classifies gaps (missing/partial/contradicts/unrequested). Read-only, appends convergence findings to tasks.md only.",
+      "mode": "subagent",
+      "temperature": 0.05,
+      "permission": { "edit": "deny", "bash": "deny" }
+    },
+    "tech-writer": {
+      "description": "Technical writer — produces developer API docs AND end-user documentation from an accountant's perspective: step-by-step workflows (month-end close, reconciliation, correcting entries), real-world examples, tax preparation guides. Every interface change must have an end-user guide update.",
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": { "edit": "allow", "bash": "ask" }
+    },
+    "taskstoissues": {
+      "description": "GitHub issue creator — reads tasks.md, deduplicates against existing issues, creates issues with auto-labeling: P0/P1/P2/P3 priority, [TDD], [FE]/[BE], [financial]. Errors on non-GitHub remotes. Never duplicates.",
+      "mode": "subagent",
+      "temperature": 0.05,
+      "permission": { "edit": "deny", "bash": "allow" }
+    },
+    "constitution": {
+      "description": "Constitution manager — creates/updates .specify/memory/constitution.md. Semantic versioning: MAJOR (principle removals), MINOR (new principles), PATCH (clarifications). Validates: no bracket tokens, ISO dates, declarative principles. Propagates to all templates.",
+      "mode": "subagent",
+      "temperature": 0.05,
+      "permission": { "edit": "allow", "bash": "deny" }
+    }
+  }
 }

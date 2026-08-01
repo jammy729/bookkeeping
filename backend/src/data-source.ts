@@ -1,20 +1,34 @@
 import { config } from "dotenv";
 import { DataSource, DataSourceOptions } from "typeorm";
+import { SeederOptions } from "typeorm-extension";
 
 config();
 
-export const dataSourceOptions: DataSourceOptions = {
-  type: "postgres",
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+const url = process.env.DB_URL;
 
-  entities: [__dirname + "/**/*.entity{.ts,.js}"],
-  migrations: [__dirname + "/database/migrations/*{.ts,.js}"],
+const options: DataSourceOptions & SeederOptions = url
+  ? {
+      type: "postgres" as const,
+      url,
+      ssl: { rejectUnauthorized: false },
+      entities: [__dirname + "/**/*.entity{.ts,.js}"],
+      migrations: [__dirname + "/migrations/*{.ts,.js}"],
+      seeds: [__dirname + "/database/seeds/**/*{.ts,.js}"],
+      logging: true,
+    }
+  : {
+      type: "postgres" as const,
+      host: process.env.DB_HOST || "localhost",
+      port: Number(process.env.DB_PORT) || 5432,
+      username: process.env.DB_USERNAME || "postgres",
+      password: process.env.DB_PASSWORD || "postgres",
+      database: process.env.DB_DATABASE || "bookkeeping",
 
-  logging: true,
-};
+      entities: [__dirname + "/**/*.entity{.ts,.js}"],
+      migrations: [__dirname + "/migrations/*{.ts,.js}"],
+      seeds: [__dirname + "/database/seeds/**/*{.ts,.js}"],
+      logging: true,
+    };
 
-export const dataSource = new DataSource(dataSourceOptions);
+export const dataSourceOptions = options;
+export const dataSource = new DataSource(options);

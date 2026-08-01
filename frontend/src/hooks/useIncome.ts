@@ -11,6 +11,7 @@ export function useIncome(filters?: IncomeFilters) {
   return useQuery({
     queryKey: ['income', filters],
     queryFn: () => incomeService.getAll(filters),
+    placeholderData: (prev) => prev,
   });
 }
 

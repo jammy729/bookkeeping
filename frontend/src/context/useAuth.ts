@@ -4,15 +4,18 @@ import { AuthResponse } from '../services/auth.service';
 export interface User {
   id: string;
   email: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<AuthResponse>;
-  register: (email: string, password: string) => Promise<AuthResponse>;
+  register: (email: string, firstName: string, lastName: string, password: string) => Promise<AuthResponse>;
   logout: () => void;
   isAuthenticated: boolean;
+  setUser: (user: User | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

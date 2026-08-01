@@ -9,9 +9,23 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DATABASE_URL
+      - key: PORT
+        value: 3001
+      - key: DB_URL
         sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
         sync: false
+      - key: ALLOWED_IPS
+        sync: false
+      - key: SUPABASE_S3_ENDPOINT
+        sync: false
+      - key: SUPABASE_S3_ACCESS_KEY
+        sync: false
+      - key: SUPABASE_S3_SECRET_KEY
+        sync: false
+      - key: SUPABASE_S3_REGION
+        value: us-east-1
+      - key: SUPABASE_S3_BUCKET
+        value: receipts

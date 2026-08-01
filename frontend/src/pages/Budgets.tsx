@@ -1,51 +1,47 @@
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { zodResolver } from '@hookform/resolvers/zod';
+import i18n from '../i18n';
 import { useBudgets, useBudgetMutations } from '../hooks/useBudgets';
 import { useExpenseCategories } from '../hooks/useCategories';
+import { type Budget } from '../services/budgets.service';
+import { budgetSchema, type BudgetFormData } from '../lib/form-schemas';
+import { formatCurrency } from '../lib/utils';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../components/ui/dialog';
+import { FormField } from '../components/ui/FormField';
+import { CurrencyInput } from '../components/ui/CurrencyInput';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { Label } from '../components/ui/label';
+import { Skeleton } from '../components/ui/skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { toast } from 'sonner';
-import { Pencil, Trash2, Plus } from 'lucide-react';
-
-interface Budget {
-  id: string;
-  name: string;
-  amount: number;
-  period: string;
-  categoryId?: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface CreateBudgetDto {
-  name: string;
-  amount: number;
-  period: 'monthly' | 'quarterly' | 'yearly';
-  categoryId?: string;
-  notes?: string;
-}
-
-interface Category {
-  id: string;
-  name: string;
-}
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from '../components/ui/alert-dialog';
+import { Pencil, Trash2, Plus, Wallet, TrendingDown, PiggyBank } from 'lucide-react';
 
 export function Budgets() {
+  const { t } = useTranslation();
   const { data: budgets = [], isLoading: loading } = useBudgets();
   const { data: categories = [] } = useExpenseCategories();
   const { remove: removeBudget } = useBudgetMutations();
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string } | null>(null);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this budget?')) return;
-    
+  const handleDelete = (id: string) => {
+    setDeleteTarget({ id });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
     try {
-      await removeBudget.mutateAsync(id);
-      toast.success('Budget deleted');
+      await removeBudget.mutateAsync(deleteTarget.id);
+      toast.success(t('budgets.toast.deleted'));
+      setDeleteTarget(null);
     } catch {
-      toast.error('Failed to delete budget');
+      toast.error(t('budgets.toast.deleteFailed'));
     }
   };
 
@@ -59,76 +55,84 @@ export function Budgets() {
     setIsFormOpen(true);
   };
 
-  const handleFormClose = () => {
-    setIsFormOpen(false);
-    setSelectedBudget(null);
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-CA', {
-      style: 'currency',
-      currency: 'CAD',
-    }).format(amount);
-  };
+  const totalBudgeted = budgets.reduce((sum, b) => sum + b.amount, 0);
+  const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Budgets</h1>
+        <div>
+          <h1 className="text-2xl font-bold">{t('budgets.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('budgets.description')}</p>
+        </div>
         <Button onClick={handleAddNew}>
           <Plus className="w-4 h-4 mr-2" />
-          Add Budget
+          {t('budgets.addBudget')}
         </Button>
       </div>
 
-      {/* Budget Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Budgets</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{budgets.length}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Monthly Budget</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {formatCurrency(budgets.filter(b => b.period === 'monthly').reduce((sum, b) => sum + b.amount, 0))}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Yearly Budget</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {formatCurrency(budgets.filter(b => b.period === 'yearly').reduce((sum, b) => sum + b.amount, 0))}
-            </p>
-          </CardContent>
-        </Card>
+        {loading ? (
+          <>
+            <Skeleton className="h-28" />
+            <Skeleton className="h-28" />
+            <Skeleton className="h-28" />
+          </>
+        ) : (
+          <>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('budgets.stats.total')}</CardTitle>
+                <Wallet className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{formatCurrency(totalBudgeted, i18n.language)}</p>
+                <p className="text-xs text-muted-foreground">{budgets.length} {t('budgets.stats.budgets')}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('budgets.stats.spent')}</CardTitle>
+                <TrendingDown className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{formatCurrency(totalSpent, i18n.language)}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('budgets.stats.remaining')}</CardTitle>
+                <PiggyBank className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <p className={`text-2xl font-bold ${totalBudgeted - totalSpent < 0 ? 'text-destructive' : ''}`}>
+                  {formatCurrency(totalBudgeted - totalSpent, i18n.language)}
+                </p>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
-      {/* Budgets Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Budget List</CardTitle>
+          <CardTitle>{t('budgets.list')}</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="text-center py-8">Loading...</div>
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-20 w-full" />
+              ))}
+            </div>
           ) : budgets.length === 0 ? (
             <EmptyState
-              title="No budgets found"
-              description="Add your first budget to start tracking"
+              title={t('budgets.noBudgets')}
+              description={t('budgets.noBudgetsDesc')}
               action={
                 <Button onClick={handleAddNew}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Budget
+                  {t('budgets.addBudget')}
                 </Button>
               }
             />
@@ -137,62 +141,77 @@ export function Budgets() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-semibold">Name</th>
-                    <th className="text-left py-3 px-4 font-semibold">Category</th>
-                    <th className="text-left py-3 px-4 font-semibold">Period</th>
-                    <th className="text-right py-3 px-4 font-semibold">Amount</th>
-                    <th className="text-right py-3 px-4 font-semibold">Actions</th>
+                    <th className="text-left py-3 px-4 font-semibold">{t('budgets.table.name')}</th>
+                    <th className="text-left py-3 px-4 font-semibold">{t('budgets.table.category')}</th>
+                    <th className="text-left py-3 px-4 font-semibold">{t('budgets.table.period')}</th>
+                    <th className="text-right py-3 px-4 font-semibold">{t('budgets.table.budgeted')}</th>
+                    <th className="text-right py-3 px-4 font-semibold">{t('budgets.table.spent')}</th>
+                    <th className="text-right py-3 px-4 font-semibold">{t('budgets.table.remaining')}</th>
+                    <th className="text-center py-3 px-4 font-semibold">{t('budgets.table.progress')}</th>
+                    <th className="text-right py-3 px-4 font-semibold">{t('budgets.table.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {budgets.map((budget) => (
-                    <tr key={budget.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4">
-                        <div>
-                          <div className="font-medium">{budget.name}</div>
-                          {budget.notes && (
-                            <div className="text-sm text-gray-500">{budget.notes}</div>
+                  {budgets.map((budget) => {
+                    const remaining = budget.amount - budget.spent;
+                    const percentUsed = budget.amount > 0 ? Math.min((budget.spent / budget.amount) * 100, 100) : 0;
+                    const isOver = budget.spent > budget.amount;
+                    return (
+                      <tr key={budget.id} className="border-b hover:bg-muted/50 transition-colors">
+                        <td className="py-3 px-4">
+                          <div className="font-medium">{budget.name || '-'}</div>
+                        </td>
+                        <td className="py-3 px-4">
+                          {budget.category ? (
+                            <span className="px-2 py-1 bg-primary/10 text-primary rounded text-sm">
+                              {budget.category.name}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground">-</span>
                           )}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        {budget.categoryId ? (
-                          <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
-                            {categories.find(c => c.id === budget.categoryId)?.name || 'Unknown'}
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="px-2 py-1 bg-muted rounded text-sm capitalize">
+                            {t(`budgets.periods.${budget.period}`)}
                           </span>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm capitalize">
-                          {budget.period}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-right font-medium">
-                        {formatCurrency(budget.amount)}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEdit(budget)}
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(budget.id)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="py-3 px-4 text-right font-medium">
+                          {formatCurrency(budget.amount, i18n.language)}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          {formatCurrency(budget.spent, i18n.language)}
+                        </td>
+                        <td className={`py-3 px-4 text-right font-medium ${isOver ? 'text-destructive' : 'text-green-600'}`}>
+                          {isOver ? `-${formatCurrency(Math.abs(remaining), i18n.language)}` : formatCurrency(remaining, i18n.language)}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all ${
+                                  isOver ? 'bg-destructive' : percentUsed > 80 ? 'bg-yellow-500' : 'bg-green-500'
+                                }`}
+                                style={{ width: `${Math.min(percentUsed, 100)}%` }}
+                              />
+                            </div>
+                            <span className={`text-xs w-10 text-right ${isOver ? 'text-destructive' : ''}`}>
+                              {percentUsed.toFixed(0)}%
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button variant="ghost" size="icon" onClick={() => handleEdit(budget)}>
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon" onClick={() => handleDelete(budget.id)} className="text-destructive hover:text-destructive">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -200,15 +219,25 @@ export function Budgets() {
         </CardContent>
       </Card>
 
-      {/* Budget Form Dialog */}
-      {isFormOpen && (
-        <BudgetDialog
-          budget={selectedBudget}
-          categories={categories}
-          onClose={handleFormClose}
-          onSave={handleFormClose}
-        />
-      )}
+      <BudgetDialog
+        budget={selectedBudget}
+        categories={categories}
+        open={isFormOpen}
+        onClose={() => { setIsFormOpen(false); setSelectedBudget(null); }}
+      />
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('dialog.deleteTitle', { entity: 'budget' })}</AlertDialogTitle>
+            <AlertDialogDescription>{t('common.confirmDelete', { entity: 'budget' })}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>{t('delete')}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -216,123 +245,149 @@ export function Budgets() {
 function BudgetDialog({
   budget,
   categories,
+  open,
   onClose,
-  onSave,
 }: {
   budget: Budget | null;
-  categories: Category[];
+  categories: { id: string; name: string }[];
+  open: boolean;
   onClose: () => void;
-  onSave: () => void;
 }) {
+  const { t } = useTranslation();
   const { create, update } = useBudgetMutations();
-  const [formData, setFormData] = useState<CreateBudgetDto>({
-    name: budget?.name || '',
-    amount: budget?.amount || 0,
-    period: budget?.period as 'monthly' | 'quarterly' | 'yearly' || 'monthly',
-    categoryId: budget?.categoryId || undefined,
-    notes: budget?.notes || '',
+  const { control, handleSubmit, formState: { errors } } = useForm<BudgetFormData>({
+    resolver: zodResolver(budgetSchema),
+    defaultValues: budget
+      ? {
+          name: budget.name || '',
+          amount: budget.amount,
+          period: budget.period as BudgetFormData['period'],
+          startDate: budget.startDate,
+          endDate: budget.endDate,
+          categoryId: budget.categoryId || '',
+        }
+      : (() => {
+          const now = new Date();
+          const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+          const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+          return {
+            name: '',
+            amount: 0,
+            period: 'monthly' as const,
+            startDate: startOfMonth.toISOString().split('T')[0],
+            endDate: endOfMonth.toISOString().split('T')[0],
+            categoryId: '',
+          };
+        })(),
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: BudgetFormData) => {
     try {
+      const payload = { ...data, categoryId: data.categoryId || undefined };
       if (budget) {
-        await update.mutateAsync({ id: budget.id, data: formData });
-        toast.success('Budget updated');
+        await update.mutateAsync({ id: budget.id, data: payload });
+        toast.success(t('budgets.toast.updated'));
       } else {
-        await create.mutateAsync(formData);
-        toast.success('Budget created');
+        await create.mutateAsync(payload);
+        toast.success(t('budgets.toast.created'));
       }
-      onSave();
+      onClose();
     } catch {
-      toast.error(budget ? 'Failed to update budget' : 'Failed to create budget');
+      toast.error(budget ? t('budgets.toast.updateFailed') : t('budgets.toast.createFailed'));
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full">
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">
-            {budget ? 'Edit Budget' : 'Add Budget'}
-          </h2>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Name *</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                required
-                placeholder="e.g., Office Supplies Budget"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Amount *</label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.amount}
-                onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Period *</label>
-              <select
-                value={formData.period}
-                onChange={(e) => setFormData({ ...formData, period: e.target.value as 'monthly' | 'quarterly' | 'yearly' })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              >
-                <option value="monthly">Monthly</option>
-                <option value="quarterly">Quarterly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Category (optional)</label>
-              <select
-                value={formData.categoryId || ''}
-                onChange={(e) => setFormData({ ...formData, categoryId: e.target.value || undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              >
-                <option value="">No category</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Notes</label>
-              <textarea
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                rows={3}
-              />
-            </div>
-
-            <div className="flex gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-                Cancel
-              </Button>
-              <Button type="submit" disabled={create.isPending || update.isPending} className="flex-1">
-                {create.isPending || update.isPending ? 'Saving...' : budget ? 'Update' : 'Create'}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{budget ? t('budgets.form.titleEdit') : t('budgets.form.titleCreate')}</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            label={t('budgets.form.name')}
+            name="name"
+            control={control}
+            errors={errors}
+            placeholder={t('budgets.form.namePlaceholder')}
+          />
+          <CurrencyInput
+            label={t('budgets.form.amount')}
+            name="amount"
+            control={control}
+            errors={errors}
+            required
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              label={t('budgets.form.startDate')}
+              name="startDate"
+              control={control}
+              errors={errors}
+              type="date"
+              required
+            />
+            <FormField
+              label={t('budgets.form.endDate')}
+              name="endDate"
+              control={control}
+              errors={errors}
+              type="date"
+              required
+            />
+          </div>
+          <div>
+            <Label>{t('budgets.form.period')}</Label>
+            <Controller
+              name="period"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="daily">{t('budgets.periods.daily')}</SelectItem>
+                    <SelectItem value="weekly">{t('budgets.periods.weekly')}</SelectItem>
+                    <SelectItem value="monthly">{t('budgets.periods.monthly')}</SelectItem>
+                    <SelectItem value="quarterly">{t('budgets.periods.quarterly')}</SelectItem>
+                    <SelectItem value="yearly">{t('budgets.periods.yearly')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.period && (
+              <p className="text-sm text-destructive mt-1">{errors.period.message}</p>
+            )}
+          </div>
+          <div>
+            <Label>{t('budgets.form.category')}</Label>
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value || 'none'} onValueChange={(v) => field.onChange(v === 'none' ? '' : v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('budgets.form.noCategory')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{t('budgets.form.noCategory')}</SelectItem>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>{t('cancel')}</Button>
+            <Button type="submit" disabled={create.isPending || update.isPending}>
+              {create.isPending || update.isPending ? t('saving') : budget ? t('update') : t('create')}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

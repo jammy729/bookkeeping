@@ -10,9 +10,19 @@ import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import * as crypto from "crypto";
 import { User } from "../../entities/user.entity";
+import { Expense } from "../../entities/expense.entity";
+import { Income } from "../../entities/income.entity";
+import { Client } from "../../entities/client.entity";
+import { Invoice } from "../../entities/invoice.entity";
+import { InvoiceItem } from "../../entities/invoice-item.entity";
+import { Category } from "../../entities/category.entity";
+import { Budget } from "../../entities/budget.entity";
+import { Attachment } from "../../entities/attachment.entity";
 
 export interface RegisterDto {
   email: string;
+  firstName: string;
+  lastName: string;
   password: string;
 }
 
@@ -35,6 +45,22 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Expense)
+    private expenseRepository: Repository<Expense>,
+    @InjectRepository(Income)
+    private incomeRepository: Repository<Income>,
+    @InjectRepository(Client)
+    private clientRepository: Repository<Client>,
+    @InjectRepository(Invoice)
+    private invoiceRepository: Repository<Invoice>,
+    @InjectRepository(InvoiceItem)
+    private invoiceItemRepository: Repository<InvoiceItem>,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+    @InjectRepository(Budget)
+    private budgetRepository: Repository<Budget>,
+    @InjectRepository(Attachment)
+    private attachmentRepository: Repository<Attachment>,
     private jwtService: JwtService,
   ) {}
 
@@ -53,12 +79,19 @@ export class AuthService {
 
     const user = this.userRepository.create({
       email: registerDto.email,
+      firstName: registerDto.firstName,
+      lastName: registerDto.lastName,
       password: hashedPassword,
     });
 
     await this.userRepository.save(user);
 
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
+    const token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
 
     return { user, token };
   }
@@ -81,7 +114,12 @@ export class AuthService {
       throw new UnauthorizedException("Invalid credentials");
     }
 
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
+    const token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
 
     return { user, token };
   }
@@ -168,6 +206,44 @@ export class AuthService {
     return { message: "Email verified successfully" };
   }
 
+  async updateProfile(
+    userId: string,
+    updateData: { firstName?: string; lastName?: string; email?: string },
+  ): Promise<{ user: Omit<User, "password">; token: string }> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new BadRequestException("User not found");
+    }
+
+    if (updateData.firstName) {
+      user.firstName = updateData.firstName;
+    }
+
+    if (updateData.lastName) {
+      user.lastName = updateData.lastName;
+    }
+
+    if (updateData.email) {
+      user.email = updateData.email;
+    }
+
+    await this.userRepository.save(user);
+
+    const token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...result } = user;
+    return { user: result, token };
+  }
+
   async resendVerificationEmail(email: string): Promise<{ message: string }> {
     const user = await this.userRepository.findOne({
       where: { email },
@@ -189,5 +265,85 @@ export class AuthService {
     );
 
     return { message: "If the email exists, a verification link will be sent" };
+  }
+
+  async deleteAccount(
+    userId: string,
+    password: string,
+  ): Promise<{ message: string }> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new BadRequestException("User not found");
+    }
+
+    // Verify password before destructive action
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException("Incorrect password");
+    }
+
+    // Delete all child entities explicitly in order (invoice items before invoices)
+    await this.invoiceItemRepository
+      .createQueryBuilder()
+      .delete()
+      .where(
+        `"invoiceId" IN (SELECT "id" FROM invoices WHERE "userId" = :userId)`,
+        { userId },
+      )
+      .execute();
+
+    await this.attachmentRepository
+      .createQueryBuilder()
+      .delete()
+      .where("userId = :userId", { userId })
+      .execute();
+
+    await this.expenseRepository
+      .createQueryBuilder()
+      .delete()
+      .where("userId = :userId", { userId })
+      .execute();
+
+    await this.incomeRepository
+      .createQueryBuilder()
+      .delete()
+      .where("userId = :userId", { userId })
+      .execute();
+
+    await this.invoiceRepository
+      .createQueryBuilder()
+      .delete()
+      .where("userId = :userId", { userId })
+      .execute();
+
+    await this.clientRepository
+      .createQueryBuilder()
+      .delete()
+      .where("userId = :userId", { userId })
+      .execute();
+
+    await this.budgetRepository
+      .createQueryBuilder()
+      .delete()
+      .where("userId = :userId", { userId })
+      .execute();
+
+    await this.categoryRepository
+      .createQueryBuilder()
+      .delete()
+      .where("userId = :userId", { userId })
+      .execute();
+
+    // Finally delete the user
+    await this.userRepository
+      .createQueryBuilder()
+      .delete()
+      .where("id = :userId", { userId })
+      .execute();
+
+    return { message: "Account deleted successfully" };
   }
 }

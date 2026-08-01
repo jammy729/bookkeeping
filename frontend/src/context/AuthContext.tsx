@@ -11,7 +11,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        setUser({ id: payload.sub, email: payload.email });
+        setUser({ id: payload.sub, email: payload.email, firstName: payload.firstName, lastName: payload.lastName });
       } catch {
         authService.logout();
       }
@@ -21,19 +21,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const response = await authService.login({ email, password });
-    setUser({ id: response.user.id, email: response.user.email });
+    setUser({ id: response.user.id, email: response.user.email, firstName: response.user.firstName, lastName: response.user.lastName });
     return response;
   };
 
-  const register = async (email: string, password: string) => {
-    const response = await authService.register({ email, password });
-    setUser({ id: response.user.id, email: response.user.email });
+  const register = async (email: string, firstName: string, lastName: string, password: string) => {
+    const response = await authService.register({ email, firstName, lastName, password });
+    setUser({ id: response.user.id, email: response.user.email, firstName: response.user.firstName, lastName: response.user.lastName });
     return response;
   };
 
   const logout = () => {
     authService.logout();
     setUser(null);
+  };
+
+  const setUserFromUpdate = (updatedUser: User | null) => {
+    setUser(updatedUser);
   };
 
   return (
@@ -45,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         register,
         logout,
         isAuthenticated: !!user,
+        setUser: setUserFromUpdate,
       }}
     >
       {children}

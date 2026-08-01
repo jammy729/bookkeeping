@@ -1,5 +1,7 @@
 import { api } from '../lib/api';
 
+export type RecurrenceFrequency = 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'yearly';
+
 export interface Expense {
   id: string;
   amount: number;
@@ -9,6 +11,9 @@ export interface Expense {
   category: { id: string; name: string } | null;
   notes: string | null;
   isRecurring: boolean;
+  recurrenceFrequency: RecurrenceFrequency | null;
+  nextOccurrence: string | null;
+  attachments?: { id: string; originalName: string; mimeType: string; size: number }[];
   createdAt: string;
   updatedAt: string;
 }
@@ -20,6 +25,8 @@ export interface CreateExpenseDto {
   categoryId?: string;
   notes?: string;
   isRecurring?: boolean;
+  recurrenceFrequency?: RecurrenceFrequency;
+  nextOccurrence?: string;
 }
 
 export interface UpdateExpenseDto {
@@ -29,22 +36,35 @@ export interface UpdateExpenseDto {
   categoryId?: string;
   notes?: string;
   isRecurring?: boolean;
+  recurrenceFrequency?: RecurrenceFrequency;
+  nextOccurrence?: string;
 }
 
 export interface ExpensesFilters {
   startDate?: string;
   endDate?: string;
   categoryId?: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: { total: number; page: number; limit: number; totalPages: number };
 }
 
 export const expensesService = {
-  async getAll(filters?: ExpensesFilters): Promise<Expense[]> {
+  async getAll(filters?: ExpensesFilters): Promise<Expense[] | PaginatedResponse<Expense>> {
     const params = new URLSearchParams();
     if (filters?.startDate) params.append('startDate', filters.startDate);
     if (filters?.endDate) params.append('endDate', filters.endDate);
     if (filters?.categoryId) params.append('categoryId', filters.categoryId);
-    
-    const response = await api.get<Expense[]>(`/expenses?${params.toString()}`);
+    if (filters?.page) params.append('page', String(filters.page));
+    if (filters?.limit) params.append('limit', String(filters.limit));
+    if (filters?.search) params.append('search', filters.search);
+
+    const response = await api.get(`/expenses?${params.toString()}`);
     return response.data;
   },
 
@@ -76,6 +96,16 @@ export const expensesService = {
   async getByCategory(startDate: string, endDate: string): Promise<{ categoryId: string; categoryName: string; total: number }[]> {
     const params = new URLSearchParams({ startDate, endDate });
     const response = await api.get<{ categoryId: string; categoryName: string; total: number }[]>(`/expenses/summary/by-category?${params.toString()}`);
+    return response.data;
+  },
+
+  async generateRecurring(): Promise<{ created: number; expenses: Expense[] }> {
+    const response = await api.post<{ created: number; expenses: Expense[] }>('/expenses/generate-recurring');
+    return response.data;
+  },
+
+  async bulkImport(rows: CreateExpenseDto[]): Promise<{ imported: number; errors: string[] }> {
+    const response = await api.post<{ imported: number; errors: string[] }>('/expenses/bulk-import', { rows });
     return response.data;
   },
 };

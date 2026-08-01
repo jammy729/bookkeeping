@@ -4,12 +4,21 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   ManyToOne,
   JoinColumn,
   Index,
 } from "typeorm";
 import { User } from "./user.entity";
 import { Category } from "./category.entity";
+
+export enum RecurrenceFrequency {
+  WEEKLY = "weekly",
+  BIWEEKLY = "biweekly",
+  MONTHLY = "monthly",
+  QUARTERLY = "quarterly",
+  YEARLY = "yearly",
+}
 
 @Entity("expenses")
 @Index(["userId", "date"])
@@ -49,9 +58,22 @@ export class Expense {
   @Column({ default: false })
   isRecurring: boolean;
 
+  @Column({
+    type: "enum",
+    enum: RecurrenceFrequency,
+    nullable: true,
+  })
+  recurrenceFrequency: RecurrenceFrequency | null;
+
+  @Column({ type: "date", nullable: true })
+  nextOccurrence: Date | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

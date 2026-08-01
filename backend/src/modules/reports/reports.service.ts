@@ -4,6 +4,8 @@ import { Repository, Between } from "typeorm";
 import { Income } from "../../entities/income.entity";
 import { Expense } from "../../entities/expense.entity";
 import { Invoice, InvoiceStatus } from "../../entities/invoice.entity";
+import { Budget } from "../../entities/budget.entity";
+import { Attachment } from "../../entities/attachment.entity";
 
 export interface TaxReportDto {
   period: {
@@ -77,6 +79,24 @@ export interface CashFlowDto {
   };
 }
 
+export interface MonthlySummaryDto {
+  monthlyData: { month: string; income: number; expenses: number }[];
+  totals: {
+    totalIncome: number;
+    totalExpenses: number;
+    ownerDistributions: number;
+    netIncome: number;
+  };
+  categoryBreakdown: { name: string; value: number }[];
+  incomeByType: { name: string; value: number }[];
+}
+
+export interface ActionItemsDto {
+  uncategorizedCount: number;
+  budgetAlerts: number;
+  pendingReceipts: number;
+}
+
 @Injectable()
 export class ReportsService {
   constructor(
@@ -86,7 +106,175 @@ export class ReportsService {
     private expenseRepository: Repository<Expense>,
     @InjectRepository(Invoice)
     private invoiceRepository: Repository<Invoice>,
+    @InjectRepository(Budget)
+    private budgetRepository: Repository<Budget>,
+    @InjectRepository(Attachment)
+    private attachmentRepository: Repository<Attachment>,
   ) {}
+
+  async getMonthlySummary(
+    userId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<MonthlySummaryDto> {
+    const expenseMonthly = await this.expenseRepository
+      .createQueryBuilder("expense")
+      .select("TO_CHAR(expense.date, 'YYYY-MM')", "month")
+      .addSelect("SUM(expense.amount)", "total")
+      .where("expense.userId = :userId", { userId })
+      .andWhere("expense.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .andWhere("expense.deletedAt IS NULL")
+      .groupBy("TO_CHAR(expense.date, 'YYYY-MM')")
+      .orderBy("TO_CHAR(expense.date, 'YYYY-MM')", "ASC")
+      .getRawMany();
+
+    const incomeMonthly = await this.incomeRepository
+      .createQueryBuilder("income")
+      .select("TO_CHAR(income.date, 'YYYY-MM')", "month")
+      .addSelect("SUM(income.amount)", "total")
+      .where("income.userId = :userId", { userId })
+      .andWhere("income.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .andWhere("income.deletedAt IS NULL")
+      .groupBy("TO_CHAR(income.date, 'YYYY-MM')")
+      .orderBy("TO_CHAR(income.date, 'YYYY-MM')", "ASC")
+      .getRawMany();
+
+    const expenseByMonth = new Map(
+      expenseMonthly.map((r) => [r.month, parseFloat(r.total) || 0]),
+    );
+    const incomeByMonth = new Map(
+      incomeMonthly.map((r) => [r.month, parseFloat(r.total) || 0]),
+    );
+
+    const allMonths = new Set([
+      ...expenseByMonth.keys(),
+      ...incomeByMonth.keys(),
+    ]);
+    const monthlyData = Array.from(allMonths)
+      .sort()
+      .map((month) => ({
+        month,
+        income: incomeByMonth.get(month) || 0,
+        expenses: expenseByMonth.get(month) || 0,
+      }));
+
+    // Totals
+    const totalIncome = Array.from(incomeByMonth.values()).reduce(
+      (a, b) => a + b,
+      0,
+    );
+    const totalExpenses = Array.from(expenseByMonth.values()).reduce(
+      (a, b) => a + b,
+      0,
+    );
+
+    // Owner distributions
+    const ownerDistResult = await this.expenseRepository
+      .createQueryBuilder("expense")
+      .select("SUM(expense.amount)", "total")
+      .leftJoin("expense.category", "category")
+      .where("expense.userId = :userId", { userId })
+      .andWhere("expense.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .andWhere("expense.deletedAt IS NULL")
+      .andWhere("category.name = 'Owner Distribution'")
+      .getRawOne();
+
+    const ownerDistributions = parseFloat(ownerDistResult?.total) || 0;
+
+    // Category breakdown
+    const categoryResults = await this.expenseRepository
+      .createQueryBuilder("expense")
+      .select("COALESCE(cat.name, 'Uncategorized')", "name")
+      .addSelect("SUM(expense.amount)", "value")
+      .leftJoin("expense.category", "cat")
+      .where("expense.userId = :userId", { userId })
+      .andWhere("expense.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .andWhere("expense.deletedAt IS NULL")
+      .groupBy("cat.name")
+      .getRawMany();
+
+    const categoryBreakdown = categoryResults.map((r) => ({
+      name: r.name,
+      value: parseFloat(r.value) || 0,
+    }));
+
+    // Income by type
+    const typeResults = await this.incomeRepository
+      .createQueryBuilder("income")
+      .select("income.type", "name")
+      .addSelect("SUM(income.amount)", "value")
+      .where("income.userId = :userId", { userId })
+      .andWhere("income.date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .andWhere("income.deletedAt IS NULL")
+      .groupBy("income.type")
+      .getRawMany();
+
+    const incomeByType = typeResults.map((r) => ({
+      name: r.name,
+      value: parseFloat(r.value) || 0,
+    }));
+
+    return {
+      monthlyData,
+      totals: {
+        totalIncome,
+        totalExpenses,
+        ownerDistributions,
+        netIncome: totalIncome - totalExpenses,
+      },
+      categoryBreakdown,
+      incomeByType,
+    };
+  }
+
+  async getActionItems(userId: string): Promise<ActionItemsDto> {
+    const uncategorizedResult = await this.expenseRepository
+      .createQueryBuilder("expense")
+      .select("COUNT(expense.id)", "count")
+      .where("expense.userId = :userId", { userId })
+      .andWhere("expense.deletedAt IS NULL")
+      .andWhere("expense.categoryId IS NULL")
+      .getRawOne();
+
+    const uncategorizedCount = parseInt(uncategorizedResult?.count) || 0;
+
+    const budgets = await this.budgetRepository
+      .createQueryBuilder("budget")
+      .where("budget.userId = :userId", { userId })
+      .getMany();
+
+    const budgetAlerts = budgets.filter((b) => {
+      const spent = parseFloat(String(b.spent || 0));
+      const amount = parseFloat(String(b.amount || 1));
+      return amount > 0 && spent / amount >= 0.8;
+    }).length;
+
+    const pendingResult = await this.attachmentRepository
+      .createQueryBuilder("attachment")
+      .select("COUNT(attachment.id)", "count")
+      .where("attachment.entityId IS NULL")
+      .andWhere("attachment.userId = :userId", { userId })
+      .getRawOne();
+
+    const pendingReceipts = parseInt(pendingResult?.count) || 0;
+
+    return { uncategorizedCount, budgetAlerts, pendingReceipts };
+  }
 
   async getTaxReport(
     userId: string,

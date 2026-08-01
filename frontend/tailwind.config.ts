@@ -41,6 +41,43 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "financial-positive": {
+          DEFAULT: "hsl(var(--financial-positive))",
+          foreground: "hsl(var(--financial-positive-foreground))",
+        },
+        "financial-negative": {
+          DEFAULT: "hsl(var(--financial-negative))",
+          foreground: "hsl(var(--financial-negative-foreground))",
+        },
+        "financial-warning": {
+          DEFAULT: "hsl(var(--financial-warning))",
+          foreground: "hsl(var(--financial-warning-foreground))",
+        },
+        "financial-audit": {
+          DEFAULT: "hsl(var(--financial-audit))",
+          foreground: "hsl(var(--financial-audit-foreground))",
+        },
+        "financial-info": {
+          DEFAULT: "hsl(var(--financial-info))",
+          foreground: "hsl(var(--financial-info-foreground))",
+        },
+        "financial-neutral": {
+          DEFAULT: "hsl(var(--financial-neutral))",
+          foreground: "hsl(var(--financial-neutral-foreground))",
+        },
+        chart: {
+          1: "hsl(var(--chart-1))",
+          2: "hsl(var(--chart-2))",
+          3: "hsl(var(--chart-3))",
+          4: "hsl(var(--chart-4))",
+          5: "hsl(var(--chart-5))",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          border: "hsl(var(--sidebar-border))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

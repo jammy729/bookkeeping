@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   OneToMany,
   ManyToOne,
   JoinColumn,
@@ -49,6 +50,9 @@ export class Category {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @OneToMany(() => Expense, (expense) => expense.category)
   expenses: Expense[];

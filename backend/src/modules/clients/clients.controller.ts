@@ -66,10 +66,17 @@ export class ClientsController {
   }
 
   @Delete(":id")
-  @ApiOperation({ summary: "Delete a client" })
+  @ApiOperation({ summary: "Soft delete a client" })
   @ApiResponse({ status: 200, description: "Client deleted successfully" })
   @ApiResponse({ status: 404, description: "Client not found" })
   async remove(@Request() req, @Param("id") id: string) {
     return this.clientsService.delete(req.user.userId, id);
+  }
+
+  @Post(":id/restore")
+  @ApiOperation({ summary: "Restore soft-deleted client" })
+  @ApiResponse({ status: 200, description: "Client restored" })
+  async restore(@Request() req, @Param("id") id: string) {
+    return this.clientsService.restore(req.user.userId, id);
   }
 }

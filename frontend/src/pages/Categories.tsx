@@ -1,34 +1,50 @@
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useExpenseCategories,
   useIncomeCategories,
   useCategoryMutations,
 } from '../hooks/useCategories';
-import { type Category, type CreateCategoryDto, type UpdateCategoryDto } from '../services/categories.service';
+import { type Category } from '../services/categories.service';
+import { categorySchema, type CategoryFormData } from '../lib/form-schemas';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../components/ui/dialog';
+import { FormField } from '../components/ui/FormField';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { Label } from '../components/ui/label';
+import { Skeleton } from '../components/ui/skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { toast } from 'sonner';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from '../components/ui/alert-dialog';
+import { Pencil, Trash2, Plus, Tags } from 'lucide-react';
 
 export function Categories() {
+  const { t } = useTranslation();
   const { data: expenseCategories = [], isLoading: loadingExpenses } = useExpenseCategories();
   const { data: incomeCategories = [], isLoading: loadingIncomes } = useIncomeCategories();
   const { remove: removeCategory } = useCategoryMutations();
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formType, setFormType] = useState<'expense' | 'income'>('expense');
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string } | null>(null);
 
   const loading = loadingExpenses || loadingIncomes;
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
-    
+  const handleDelete = (id: string) => {
+    setDeleteTarget({ id });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
     try {
-      await removeCategory.mutateAsync(id);
-      toast.success('Category deleted');
+      await removeCategory.mutateAsync(deleteTarget.id);
+      toast.success(t('categories.toast.deleted'));
+      setDeleteTarget(null);
     } catch {
-      toast.error('Failed to delete category');
+      toast.error(t('categories.toast.deleteFailed'));
     }
   };
 
@@ -44,36 +60,78 @@ export function Categories() {
     setIsFormOpen(true);
   };
 
-  const handleFormClose = () => {
-    setIsFormOpen(false);
-    setSelectedCategory(null);
-  };
+  const totalCategories = expenseCategories.length + incomeCategories.length;
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
+        <div>
+          <h1 className="text-2xl font-bold">{t('categories.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('categories.description')}</p>
+        </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => handleAddNew('expense')}>
             <Plus className="w-4 h-4 mr-2" />
-            Add Expense Category
+            {t('categories.expenseTab')}
           </Button>
           <Button variant="outline" onClick={() => handleAddNew('income')}>
             <Plus className="w-4 h-4 mr-2" />
-            Add Income Category
+            {t('categories.incomeTab')}
           </Button>
         </div>
       </div>
 
+      {/* Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {loading ? (
+          <>
+            <Skeleton className="h-28" />
+            <Skeleton className="h-28" />
+            <Skeleton className="h-28" />
+          </>
+        ) : (
+          <>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('categories.stats.total')}</CardTitle>
+                <Tags className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{totalCategories}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('categories.stats.expense')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{expenseCategories.length}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('categories.stats.income')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{incomeCategories.length}</p>
+              </CardContent>
+            </Card>
+          </>
+        )}
+      </div>
+
       {loading ? (
-        <div className="text-center py-8">Loading...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Skeleton className="h-64" />
+          <Skeleton className="h-64" />
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Expense Categories */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Expense Categories</span>
+                <span>{t('categories.expenseSection')}</span>
                 <Button size="sm" variant="outline" onClick={() => handleAddNew('expense')}>
                   <Plus className="w-4 h-4" />
                 </Button>
@@ -82,8 +140,8 @@ export function Categories() {
             <CardContent>
               {expenseCategories.length === 0 ? (
                 <EmptyState
-                  title="No expense categories"
-                  description="Add your first expense category"
+                  title={t('categories.noExpenseCategories')}
+                  description={t('categories.noExpenseCategoriesDesc')}
                 />
               ) : (
                 <div className="space-y-2">
@@ -104,7 +162,7 @@ export function Categories() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Income Categories</span>
+                <span>{t('categories.incomeSection')}</span>
                 <Button size="sm" variant="outline" onClick={() => handleAddNew('income')}>
                   <Plus className="w-4 h-4" />
                 </Button>
@@ -113,8 +171,8 @@ export function Categories() {
             <CardContent>
               {incomeCategories.length === 0 ? (
                 <EmptyState
-                  title="No income categories"
-                  description="Add your first income category"
+                  title={t('categories.noIncomeCategories')}
+                  description={t('categories.noIncomeCategoriesDesc')}
                 />
               ) : (
                 <div className="space-y-2">
@@ -134,14 +192,25 @@ export function Categories() {
       )}
 
       {/* Category Form Dialog */}
-      {isFormOpen && (
-        <CategoryDialog
-          category={selectedCategory}
-          type={formType}
-          onClose={handleFormClose}
-          onSave={handleFormClose}
-        />
-      )}
+      <CategoryDialog
+        category={selectedCategory}
+        type={formType}
+        open={isFormOpen}
+        onClose={() => { setIsFormOpen(false); setSelectedCategory(null); }}
+      />
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('dialog.deleteTitle', { entity: 'category' })}</AlertDialogTitle>
+            <AlertDialogDescription>{t('common.confirmDelete', { entity: 'category' })}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>{t('delete')}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -155,22 +224,23 @@ function CategoryRow({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const { t } = useTranslation();
   return (
-    <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+    <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors">
       <div>
         <div className="font-medium">{category.name}</div>
         {category.description && (
-          <div className="text-sm text-gray-500">{category.description}</div>
+          <div className="text-sm text-muted-foreground">{category.description}</div>
         )}
       </div>
       <div className="flex items-center gap-2">
-        <span className={`px-2 py-1 rounded text-xs ${category.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
-          {category.isActive ? 'Active' : 'Inactive'}
+        <span className={`px-2 py-1 rounded text-xs ${category.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-muted text-muted-foreground'}`}>
+          {category.isActive ? t('categories.active') : t('categories.inactive')}
         </span>
-        <Button variant="ghost" size="sm" onClick={onEdit}>
+        <Button variant="ghost" size="icon" onClick={onEdit}>
           <Pencil className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" onClick={onDelete} className="text-red-600 hover:text-red-700">
+        <Button variant="ghost" size="icon" onClick={onDelete} className="text-destructive hover:text-destructive">
           <Trash2 className="w-4 h-4" />
         </Button>
       </div>
@@ -181,105 +251,91 @@ function CategoryRow({
 function CategoryDialog({
   category,
   type,
+  open,
   onClose,
-  onSave,
 }: {
   category: Category | null;
   type: 'expense' | 'income';
+  open: boolean;
   onClose: () => void;
-  onSave: () => void;
 }) {
+  const { t } = useTranslation();
   const { create, update } = useCategoryMutations();
-  const [formData, setFormData] = useState<CreateCategoryDto & UpdateCategoryDto>({
-    name: category?.name || '',
-    type: category?.type || type,
-    description: category?.description || '',
-    isActive: category?.isActive ?? true,
+  const { control, handleSubmit, formState: { errors } } = useForm<CategoryFormData>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: category?.name || '',
+      type: category?.type || type,
+      description: category?.description || '',
+    },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: CategoryFormData) => {
     try {
       if (category) {
-        await update.mutateAsync({ id: category.id, data: formData });
-        toast.success('Category updated');
+        await update.mutateAsync({ id: category.id, data });
+        toast.success(t('categories.toast.updated'));
       } else {
-        await create.mutateAsync(formData as CreateCategoryDto);
-        toast.success('Category created');
+        await create.mutateAsync(data);
+        toast.success(t('categories.toast.created'));
       }
-      onSave();
+      onClose();
     } catch {
-      toast.error(category ? 'Failed to update category' : 'Failed to create category');
+      toast.error(category ? t('categories.toast.updateFailed') : t('categories.toast.createFailed'));
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full">
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">
-            {category ? 'Edit Category' : 'Add Category'}
-          </h2>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Type *</label>
-              <select
-                value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as 'expense' | 'income' })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                disabled={!!category}
-              >
-                <option value="expense">Expense</option>
-                <option value="income">Income</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Name *</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                required
-                placeholder="e.g., Office Supplies, Consulting Income"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Description</label>
-              <textarea
-                value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                rows={3}
-                placeholder="Optional description for this category"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="isActive"
-                checked={formData.isActive ?? true}
-                onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-              />
-              <label htmlFor="isActive" className="text-sm">Active (show in forms)</label>
-            </div>
-
-            <div className="flex gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-                Cancel
-              </Button>
-              <Button type="submit" disabled={create.isPending || update.isPending} className="flex-1">
-                {create.isPending || update.isPending ? 'Saving...' : category ? 'Update' : 'Create'}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{category ? t('categories.form.titleEdit') : t('categories.form.titleCreate')}</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <Label>{t('categories.form.type')}</Label>
+            <Controller
+              name="type"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange} disabled={!!category}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="expense">{t('categories.form.typeExpense')}</SelectItem>
+                    <SelectItem value="income">{t('categories.form.typeIncome')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.type && (
+              <p className="text-sm text-destructive mt-1">{errors.type.message}</p>
+            )}
+          </div>
+          <FormField
+            label={t('categories.form.name')}
+            name="name"
+            control={control}
+            errors={errors}
+            required
+            placeholder={t('categories.form.namePlaceholder')}
+          />
+          <FormField
+            label={t('categories.form.description')}
+            name="description"
+            control={control}
+            errors={errors}
+            placeholder={t('categories.form.descriptionPlaceholder')}
+          />
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>{t('cancel')}</Button>
+            <Button type="submit" disabled={create.isPending || update.isPending}>
+              {create.isPending || update.isPending ? t('saving') : category ? t('update') : t('create')}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

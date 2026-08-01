@@ -3,6 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
   ManyToOne,
   JoinColumn,
 } from "typeorm";
@@ -43,4 +45,10 @@ export class Attachment {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

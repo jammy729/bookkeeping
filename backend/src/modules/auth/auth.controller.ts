@@ -1,11 +1,15 @@
 import {
   Controller,
   Post,
+  Put,
+  Delete,
   Body,
   HttpCode,
   HttpStatus,
   Get,
   Query,
+  UseGuards,
+  Request,
 } from "@nestjs/common";
 import {
   AuthService,
@@ -14,7 +18,14 @@ import {
   ForgotPasswordDto,
   ResetPasswordDto,
 } from "./auth.service";
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from "@nestjs/swagger";
+import { JwtAuthGuard } from "../../guards/jwt-auth.guard";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiQuery,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
 
 @ApiTags("Auth")
 @Controller("auth")
@@ -77,5 +88,31 @@ export class AuthController {
   })
   async resendVerification(@Body() body: { email: string }) {
     return this.authService.resendVerificationEmail(body.email);
+  }
+
+  @Put("update-profile")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Update user profile" })
+  @ApiResponse({ status: 200, description: "Profile updated successfully" })
+  @ApiResponse({ status: 400, description: "Invalid update data" })
+  async updateProfile(
+    @Request() req,
+    @Body()
+    updateData: { firstName?: string; lastName?: string; email?: string },
+  ) {
+    return this.authService.updateProfile(req.user.userId, updateData);
+  }
+
+  @Delete("account")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Delete account and all associated data" })
+  @ApiResponse({ status: 200, description: "Account deleted successfully" })
+  @ApiResponse({ status: 401, description: "Incorrect password" })
+  async deleteAccount(@Request() req, @Body() body: { password: string }) {
+    return this.authService.deleteAccount(req.user.userId, body.password);
   }
 }

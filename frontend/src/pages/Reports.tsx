@@ -1,8 +1,15 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/api';
+import { formatCurrency } from '../lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Skeleton } from '../components/ui/skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { toast } from 'sonner';
 import { Download, FileText, TrendingUp, PieChart } from 'lucide-react';
@@ -27,6 +34,7 @@ interface MonthlyData {
 }
 
 export function Reports() {
+  const { t } = useTranslation();
   const [reportType, setReportType] = useState<'monthly' | 'yearly' | 'custom'>('monthly');
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
@@ -69,7 +77,6 @@ export function Reports() {
 
   const loading = loadingExpenses || loadingIncome;
 
-  // Monthly comparison - parallel fetch instead of N+1
   const { data: monthlyData = [] } = useQuery<MonthlyData[]>({
     queryKey: ['reports', 'monthly', { startDate, endDate }],
     queryFn: async () => {
@@ -81,12 +88,11 @@ export function Reports() {
       while (current <= end) {
         const monthStart = new Date(current.getFullYear(), current.getMonth(), 1);
         const monthEnd = new Date(current.getFullYear(), current.getMonth() + 1, 0);
-        
         const effectiveStart = monthStart < start ? start : monthStart;
         const effectiveEnd = monthEnd > end ? end : monthEnd;
 
         monthRanges.push({
-          label: current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+          label: current.toLocaleDateString(i18n.language, { month: 'short', year: '2-digit' }),
           start: effectiveStart.toISOString().split('T')[0],
           end: effectiveEnd.toISOString().split('T')[0],
         });
@@ -113,20 +119,14 @@ export function Reports() {
     enabled: !loading,
   });
 
-  // Derived data
-  const ownerDistCategory = expenseCategories.find((c) => c.categoryName === 'Owner Distribution');
-  const ownerDistributions = ownerDistCategory?.total || 0;
-  const netIncome = totalIncome - totalExpenses;
-  const profitMargin = totalIncome > 0 ? ((netIncome / totalIncome) * 100) : 0;
-
   const formatTypeLabel = (type: string) => {
     return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
 
   const expensesByCategory = expenseCategories
-    .filter((item) => item.categoryName !== 'Owner Distribution')
+    .filter((item) => item.categoryName !== t('reports.ownerDistribution'))
     .map((item) => ({
-      category: item.categoryName || 'Uncategorized',
+      category: item.categoryName || t('uncategorized'),
       amount: item.total,
       percentage: totalExpenses > 0 ? ((item.total / totalExpenses) * 100).toFixed(1) : 0,
     }));
@@ -138,10 +138,15 @@ export function Reports() {
   }));
 
   const getReportTitle = () => {
-    if (reportType === 'monthly') return 'Monthly Financial Report';
-    if (reportType === 'yearly') return 'Annual Financial Report';
-    return 'Custom Period Report';
+    if (reportType === 'monthly') return t('reports.reportTitles.monthly');
+    if (reportType === 'yearly') return t('reports.reportTitles.yearly');
+    return t('reports.reportTitles.custom');
   };
+
+  const ownerDistCategory = expenseCategories.find((c) => c.categoryName === 'Owner Distribution');
+  const ownerDistributions = ownerDistCategory?.total || 0;
+  const netIncome = totalIncome - totalExpenses;
+  const profitMargin = totalIncome > 0 ? ((netIncome / totalIncome) * 100) : 0;
 
   const reportData: ReportData | null = loading ? null : {
     title: getReportTitle(),
@@ -156,33 +161,26 @@ export function Reports() {
     monthlyData,
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
-  };
-
   const exportToCSV = () => {
     if (!reportData) return;
 
     const csvRows = [
-      ['Financial Report', reportData.title],
-      ['Period', reportData.period],
+      [t('reports.csvHeaders.financialReport'), reportData.title],
+      [t('reports.csvHeaders.period'), reportData.period],
       [],
-      ['Summary'],
-      ['Total Income', reportData.totalIncome.toFixed(2)],
-      ['Total Expenses', reportData.totalExpenses.toFixed(2)],
-      ['Owner Distributions', reportData.ownerDistributions.toFixed(2)],
-      ['Net Income', reportData.netIncome.toFixed(2)],
-      ['Profit Margin', `${reportData.profitMargin.toFixed(1)}%`],
+      [t('reports.csvHeaders.summary')],
+      [t('reports.csvHeaders.totalIncome'), reportData.totalIncome.toFixed(2)],
+      [t('reports.csvHeaders.totalExpenses'), reportData.totalExpenses.toFixed(2)],
+      [t('reports.csvHeaders.ownerDistributions'), reportData.ownerDistributions.toFixed(2)],
+      [t('reports.csvHeaders.netIncome'), reportData.netIncome.toFixed(2)],
+      [t('reports.csvHeaders.profitMargin'), `${reportData.profitMargin.toFixed(1)}%`],
       [],
-      ['Expenses by Category'],
-      ['Category', 'Amount', 'Percentage'],
+      [t('reports.csvHeaders.expensesByCategory')],
+      [t('reports.csvHeaders.category'), t('reports.csvHeaders.amount'), t('reports.csvHeaders.percentage')],
       ...reportData.expensesByCategory.map(e => [e.category, e.amount.toFixed(2), `${e.percentage}%`]),
       [],
-      ['Income by Type'],
-      ['Type', 'Amount', 'Percentage'],
+      [t('reports.csvHeaders.incomeByType')],
+      [t('reports.csvHeaders.type'), t('reports.csvHeaders.amount'), t('reports.csvHeaders.percentage')],
       ...reportData.incomeByType.map(i => [i.type, i.amount.toFixed(2), `${i.percentage}%`]),
     ];
 
@@ -194,112 +192,119 @@ export function Reports() {
     a.download = `financial-report-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('Report exported successfully');
+    toast.success(t('reports.exportSuccess'));
   };
-
-  if (loading) {
-    return <div className="text-center py-8">Generating report...</div>;
-  }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
+        <div>
+          <h1 className="text-2xl font-bold">{t('reports.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('reports.description')}</p>
+        </div>
         <Button onClick={exportToCSV} disabled={!reportData}>
           <Download className="w-4 h-4 mr-2" />
-          Export CSV
+          {t('reports.exportCsv')}
         </Button>
       </div>
 
       {/* Report Controls */}
       <Card>
         <CardHeader>
-          <CardTitle>Report Settings</CardTitle>
+          <CardTitle>{t('reports.settings.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4 items-end">
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Report Type</label>
-              <select
-                value={reportType}
-                onChange={(e) => setReportType(e.target.value as 'monthly' | 'yearly' | 'custom')}
-                className="px-3 py-2 border border-gray-300 rounded-md"
-              >
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-                <option value="custom">Custom Period</option>
-              </select>
+            <div className="space-y-1">
+              <Label>{t('reports.settings.reportType')}</Label>
+              <Select value={reportType} onValueChange={(v) => setReportType(v as typeof reportType)}>
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="monthly">{t('reports.settings.types.monthly')}</SelectItem>
+                  <SelectItem value="yearly">{t('reports.settings.types.yearly')}</SelectItem>
+                  <SelectItem value="custom">{t('reports.settings.types.custom')}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">From</label>
-              <input
+            <div className="space-y-1">
+              <Label htmlFor="report-start">{t('from')}</Label>
+              <Input
+                id="report-start"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md"
+                className="w-40"
               />
             </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">To</label>
-              <input
+            <div className="space-y-1">
+              <Label htmlFor="report-end">{t('to')}</Label>
+              <Input
+                id="report-end"
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md"
+                className="w-40"
               />
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {reportData && (
+      {loading ? (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-28" />
+            ))}
+          </div>
+          <Skeleton className="h-64" />
+        </div>
+      ) : reportData && (
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Total Income</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.summary.totalIncome')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xl font-bold text-green-600">{formatCurrency(reportData.totalIncome)}</p>
+                <p className="text-xl font-bold text-green-600 dark:text-green-400">{formatCurrency(reportData.totalIncome, i18n.language)}</p>
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Total Expenses</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.summary.totalExpenses')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xl font-bold text-red-600">{formatCurrency(reportData.totalExpenses)}</p>
+                <p className="text-xl font-bold text-red-600 dark:text-red-400">{formatCurrency(reportData.totalExpenses, i18n.language)}</p>
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Owner Distributions</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.summary.ownerDistributions')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xl font-bold text-blue-600">{formatCurrency(reportData.ownerDistributions)}</p>
+                <p className="text-xl font-bold">{formatCurrency(reportData.ownerDistributions, i18n.language)}</p>
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Net Income</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.summary.netIncome')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className={`text-xl font-bold ${reportData.netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatCurrency(reportData.netIncome)}
+                <p className={`text-xl font-bold ${reportData.netIncome >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                  {formatCurrency(reportData.netIncome, i18n.language)}
                 </p>
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Profit Margin</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.summary.profitMargin')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className={`text-xl font-bold ${reportData.profitMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <p className={`text-xl font-bold ${reportData.profitMargin >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                   {reportData.profitMargin.toFixed(1)}%
                 </p>
               </CardContent>
@@ -313,12 +318,12 @@ export function Reports() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <PieChart className="w-5 h-5" />
-                  Expenses by Category
+                  {t('reports.charts.expensesByCategory')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {reportData.expensesByCategory.length === 0 ? (
-                  <EmptyState title="No expense data" description="No expenses recorded for this period" />
+                  <EmptyState title={t('reports.charts.noExpenseData')} description={t('reports.charts.noExpenseDataDesc')} />
                 ) : (
                   <div className="space-y-3">
                     {reportData.expensesByCategory.map((item, index) => (
@@ -326,15 +331,15 @@ export function Reports() {
                         <div className="flex-1">
                           <div className="flex justify-between mb-1">
                             <span className="text-sm font-medium">{item.category}</span>
-                            <span className="text-sm font-medium">{formatCurrency(item.amount)}</span>
+                            <span className="text-sm font-medium">{formatCurrency(item.amount, i18n.language)}</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="w-full bg-muted rounded-full h-2">
                             <div
-                              className="bg-blue-600 h-2 rounded-full"
+                              className="bg-primary h-2 rounded-full"
                               style={{ width: `${item.percentage}%` }}
                             />
                           </div>
-                          <span className="text-xs text-gray-500">{item.percentage}%</span>
+                          <span className="text-xs text-muted-foreground">{item.percentage}%</span>
                         </div>
                       </div>
                     ))}
@@ -348,12 +353,12 @@ export function Reports() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5" />
-                  Income by Type
+                  {t('reports.charts.incomeByType')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {reportData.incomeByType.length === 0 ? (
-                  <EmptyState title="No income data" description="No income recorded for this period" />
+                  <EmptyState title={t('reports.charts.noIncomeData')} description={t('reports.charts.noIncomeDataDesc')} />
                 ) : (
                   <div className="space-y-3">
                     {reportData.incomeByType.map((item, index) => (
@@ -361,15 +366,15 @@ export function Reports() {
                         <div className="flex-1">
                           <div className="flex justify-between mb-1">
                             <span className="text-sm font-medium">{item.type}</span>
-                            <span className="text-sm font-medium">{formatCurrency(item.amount)}</span>
+                            <span className="text-sm font-medium">{formatCurrency(item.amount, i18n.language)}</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="w-full bg-muted rounded-full h-2">
                             <div
-                              className="bg-green-600 h-2 rounded-full"
+                              className="bg-green-600 dark:bg-green-400 h-2 rounded-full"
                               style={{ width: `${item.percentage}%` }}
                             />
                           </div>
-                          <span className="text-xs text-gray-500">{item.percentage}%</span>
+                          <span className="text-xs text-muted-foreground">{item.percentage}%</span>
                         </div>
                       </div>
                     ))}
@@ -384,34 +389,41 @@ export function Reports() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="w-5 h-5" />
-                Monthly Comparison
+                {t('reports.charts.monthlyComparison')}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-semibold">Month</th>
-                      <th className="text-right py-3 px-4 font-semibold">Income</th>
-                      <th className="text-right py-3 px-4 font-semibold">Expenses</th>
-                      <th className="text-right py-3 px-4 font-semibold">Difference</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {reportData.monthlyData.map((item, index) => (
-                      <tr key={index} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium">{item.month}</td>
-                        <td className="py-3 px-4 text-right text-green-600">{formatCurrency(item.income)}</td>
-                        <td className="py-3 px-4 text-right text-red-600">{formatCurrency(item.expenses)}</td>
-                        <td className={`py-3 px-4 text-right font-medium ${item.income - item.expenses >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {formatCurrency(item.income - item.expenses)}
-                        </td>
+              {reportData.monthlyData.length === 0 ? (
+                <EmptyState title={t('reports.charts.noMonthlyData')} description={t('reports.charts.noMonthlyDataDesc')} />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-4 font-semibold">{t('reports.monthlyTable.month')}</th>
+                        <th className="text-right py-3 px-4 font-semibold">{t('reports.monthlyTable.income')}</th>
+                        <th className="text-right py-3 px-4 font-semibold">{t('reports.monthlyTable.expenses')}</th>
+                        <th className="text-right py-3 px-4 font-semibold">{t('reports.monthlyTable.difference')}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {reportData.monthlyData.map((item, index) => {
+                        const diff = item.income - item.expenses;
+                        return (
+                          <tr key={index} className="border-b hover:bg-muted/50 transition-colors">
+                            <td className="py-3 px-4 font-medium">{item.month}</td>
+                            <td className="py-3 px-4 text-right text-green-600 dark:text-green-400">{formatCurrency(item.income, i18n.language)}</td>
+                            <td className="py-3 px-4 text-right text-red-600 dark:text-red-400">{formatCurrency(item.expenses, i18n.language)}</td>
+                            <td className={`py-3 px-4 text-right font-medium ${diff >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                              {formatCurrency(diff, i18n.language)}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </>

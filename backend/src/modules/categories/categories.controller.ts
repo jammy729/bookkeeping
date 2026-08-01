@@ -71,8 +71,14 @@ export class CategoriesController {
   }
 
   @Delete(":id")
-  @ApiOperation({ summary: "Delete category" })
+  @ApiOperation({ summary: "Soft delete category" })
   remove(@Request() req, @Param("id") id: string) {
     return this.categoriesService.delete(req.user.userId, id);
+  }
+
+  @Post(":id/restore")
+  @ApiOperation({ summary: "Restore soft-deleted category" })
+  restore(@Request() req, @Param("id") id: string) {
+    return this.categoriesService.restore(req.user.userId, id);
   }
 }

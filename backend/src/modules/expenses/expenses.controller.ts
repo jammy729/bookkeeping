@@ -38,11 +38,17 @@ export class ExpensesController {
     @Query("startDate") startDate?: Date,
     @Query("endDate") endDate?: Date,
     @Query("categoryId") categoryId?: string,
+    @Query("page") page?: number,
+    @Query("limit") limit?: number,
+    @Query("search") search?: string,
   ) {
     return this.expensesService.findAll(req.user.userId, {
       startDate,
       endDate,
       categoryId,
+      page,
+      limit,
+      search,
     });
   }
 
@@ -63,9 +69,15 @@ export class ExpensesController {
   }
 
   @Delete(":id")
-  @ApiOperation({ summary: "Delete expense" })
+  @ApiOperation({ summary: "Soft delete expense" })
   remove(@Request() req, @Param("id") id: string) {
     return this.expensesService.delete(req.user.userId, id);
+  }
+
+  @Post(":id/restore")
+  @ApiOperation({ summary: "Restore soft-deleted expense" })
+  restore(@Request() req, @Param("id") id: string) {
+    return this.expensesService.restore(req.user.userId, id);
   }
 
   @Get("summary/total")
@@ -108,5 +120,17 @@ export class ExpensesController {
       startDate,
       endDate,
     );
+  }
+
+  @Post("generate-recurring")
+  @ApiOperation({ summary: "Generate due recurring expenses" })
+  generateRecurring(@Request() req) {
+    return this.expensesService.generateRecurring(req.user.userId);
+  }
+
+  @Post("bulk-import")
+  @ApiOperation({ summary: "Bulk import expenses from CSV data" })
+  bulkImport(@Request() req, @Body() body: { rows: CreateExpenseDto[] }) {
+    return this.expensesService.bulkImport(req.user.userId, body.rows);
   }
 }

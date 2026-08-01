@@ -2,16 +2,14 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Attachment } from "../../entities/attachment.entity";
-import * as path from "path";
-import * as fs from "fs";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import * as crypto from "crypto";
-
-export interface UploadFileDto {
-  originalName: string;
-  mimeType: string;
-  size: number;
-  buffer: Buffer;
-}
 
 export interface CreateAttachmentDto {
   originalName: string;
@@ -20,32 +18,36 @@ export interface CreateAttachmentDto {
   description?: string;
   entityType?: string;
   entityId?: string;
-  userId: string;
 }
 
 @Injectable()
 export class UploadsService {
-  private readonly uploadsDir: string;
+  private readonly s3Client: S3Client;
+  private readonly bucket: string;
 
   constructor(
     @InjectRepository(Attachment)
     private attachmentRepository: Repository<Attachment>,
   ) {
-    this.uploadsDir = path.join(process.cwd(), "uploads");
-    this.ensureUploadsDir();
+    this.s3Client = new S3Client({
+      forcePathStyle: true,
+      region: process.env.SUPABASE_S3_REGION || "us-east-1",
+      endpoint: process.env.SUPABASE_S3_ENDPOINT,
+      credentials: {
+        accessKeyId: process.env.SUPABASE_S3_ACCESS_KEY || "",
+        secretAccessKey: process.env.SUPABASE_S3_SECRET_KEY || "",
+      },
+    });
+    this.bucket = process.env.SUPABASE_S3_BUCKET || "receipts";
   }
 
-  private ensureUploadsDir(): void {
-    if (!fs.existsSync(this.uploadsDir)) {
-      fs.mkdirSync(this.uploadsDir, { recursive: true });
-    }
-  }
-
-  private generateFileName(originalName: string): string {
-    const ext = path.extname(originalName);
+  private generateS3Key(userId: string, originalName: string): string {
+    const ext = originalName.includes(".")
+      ? originalName.substring(originalName.lastIndexOf("."))
+      : "";
     const uniqueId = crypto.randomBytes(16).toString("hex");
     const timestamp = Date.now();
-    return `${timestamp}-${uniqueId}${ext}`;
+    return `${userId}/${timestamp}-${uniqueId}${ext}`;
   }
 
   async uploadFile(
@@ -54,15 +56,24 @@ export class UploadsService {
     entityType?: string,
     entityId?: string,
   ): Promise<Attachment> {
-    const fileName = this.generateFileName(file.originalname);
-    const filePath = path.join(this.uploadsDir, fileName);
+    const s3Key = this.generateS3Key(userId, file.originalname);
 
-    // Write file to disk
-    fs.writeFileSync(filePath, file.buffer);
+    await this.s3Client.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: s3Key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        Metadata: {
+          originalName: file.originalname,
+          userId,
+        },
+      }),
+    );
 
     const attachment = this.attachmentRepository.create({
       originalName: file.originalname,
-      fileName,
+      fileName: s3Key,
       mimeType: file.mimetype,
       size: file.size,
       entityType,
@@ -78,7 +89,7 @@ export class UploadsService {
     entityType?: string,
     entityId?: string,
   ): Promise<Attachment[]> {
-    const where: any = { userId };
+    const where: Record<string, any> = { userId };
     if (entityType) {
       where.entityType = entityType;
     }
@@ -104,30 +115,45 @@ export class UploadsService {
     return attachment;
   }
 
-  async getFile(
-    id: string,
-    userId: string,
-  ): Promise<{ attachment: Attachment; filePath: string }> {
+  async getSignedUrl(id: string, userId: string): Promise<string> {
     const attachment = await this.findOne(id, userId);
-    const filePath = path.join(this.uploadsDir, attachment.fileName);
 
-    if (!fs.existsSync(filePath)) {
-      throw new NotFoundException("File not found on disk");
-    }
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: attachment.fileName,
+      ResponseContentType: attachment.mimeType,
+      ResponseContentDisposition: `inline; filename="${encodeURIComponent(attachment.originalName)}"`,
+    });
 
-    return { attachment, filePath };
+    return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
   }
 
   async remove(id: string, userId: string): Promise<void> {
     const attachment = await this.findOne(id, userId);
-    const filePath = path.join(this.uploadsDir, attachment.fileName);
 
-    // Delete file from disk
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    await this.s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: this.bucket,
+        Key: attachment.fileName,
+      }),
+    );
+
+    await this.attachmentRepository.softRemove(attachment);
+  }
+
+  async restore(id: string, userId: string): Promise<Attachment> {
+    const attachment = await this.attachmentRepository.findOne({
+      where: { id, userId },
+      withDeleted: true,
+    });
+    if (!attachment) {
+      throw new NotFoundException("Attachment not found");
     }
-
-    await this.attachmentRepository.remove(attachment);
+    if (!attachment.deletedAt) {
+      return attachment;
+    }
+    await this.attachmentRepository.restore({ id, userId });
+    return this.findOne(id, userId);
   }
 
   async updateDescription(
@@ -138,5 +164,41 @@ export class UploadsService {
     const attachment = await this.findOne(id, userId);
     attachment.description = description;
     return this.attachmentRepository.save(attachment);
+  }
+
+  async linkToEntity(
+    id: string,
+    userId: string,
+    entityType: string,
+    entityId: string,
+  ): Promise<Attachment> {
+    const attachment = await this.findOne(id, userId);
+    attachment.entityType = entityType;
+    attachment.entityId = entityId;
+    return this.attachmentRepository.save(attachment);
+  }
+
+  async unlinkFromEntity(id: string, userId: string): Promise<Attachment> {
+    const attachment = await this.findOne(id, userId);
+    attachment.entityType = "receipt";
+    attachment.entityId = null;
+    return this.attachmentRepository.save(attachment);
+  }
+
+  async findByEntity(
+    entityType: string,
+    entityId: string,
+  ): Promise<Attachment[]> {
+    return this.attachmentRepository.find({
+      where: { entityType, entityId },
+      order: { createdAt: "DESC" },
+    });
+  }
+
+  async findReceiptsForUser(userId: string): Promise<Attachment[]> {
+    return this.attachmentRepository.find({
+      where: { userId, entityType: "receipt" },
+      order: { createdAt: "DESC" },
+    });
   }
 }

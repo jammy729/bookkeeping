@@ -1,9 +1,13 @@
-import { NestFactory } from "@nestjs/core";
-import { ValidationPipe, Logger } from "@nestjs/common";
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { NestFactory } from "@nestjs/core";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import helmet from "helmet";
+import * as dns from "dns";
 import { AppModule } from "./app.module";
+import { IpRestrictionMiddleware } from "./common/middleware/ip-restriction.middleware";
+
+dns.setDefaultResultOrder("ipv4first");
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,10 +18,18 @@ async function bootstrap() {
   // Security: Helmet for security headers
   app.use(helmet());
 
+  // Security: IP restriction for staging (set ALLOWED_IPS to enable)
+  const allowedIps = configService.get<string>("ALLOWED_IPS", "");
+  if (allowedIps) {
+    const middleware = new IpRestrictionMiddleware();
+    app.use(middleware.use.bind(middleware));
+    logger.log(`IP restriction enabled for: ${allowedIps}`);
+  }
+
   // Security: Enable CORS with restricted origin
   const frontendUrl = configService.get<string>(
     "FRONTEND_URL",
-    "http://localhost:5173",
+    process.env.FRONTEND_URL || "http://localhost:3000",
   );
   app.enableCors({
     origin: frontendUrl,
@@ -59,7 +71,10 @@ async function bootstrap() {
     );
   }
 
-  const port = configService.get<number>("PORT", 3001);
+  const port = configService.get<number>(
+    "PORT",
+    configService.get<number>("BACKEND_PORT", 3001),
+  );
   await app.listen(port);
   logger.log(`Application running on: http://localhost:${port}`);
   logger.log(`Environment: ${configService.get("NODE_ENV", "development")}`);

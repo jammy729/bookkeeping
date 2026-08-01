@@ -34,10 +34,7 @@ export class BudgetsController {
   @ApiOperation({ summary: "Create a new budget" })
   @ApiResponse({ status: 201, description: "Budget created successfully" })
   async create(@Request() req, @Body() createBudgetDto: CreateBudgetDto) {
-    return this.budgetsService.create({
-      ...createBudgetDto,
-      userId: req.user.userId,
-    });
+    return this.budgetsService.create(req.user.userId, createBudgetDto);
   }
 
   @Get()
@@ -75,11 +72,17 @@ export class BudgetsController {
   }
 
   @Delete(":id")
-  @ApiOperation({ summary: "Delete budget" })
+  @ApiOperation({ summary: "Soft delete budget" })
   @ApiResponse({ status: 200, description: "Budget deleted" })
   @ApiResponse({ status: 404, description: "Budget not found" })
   async remove(@Request() req, @Param("id", ParseUUIDPipe) id: string) {
     await this.budgetsService.remove(id, req.user.userId);
     return { message: "Budget deleted successfully" };
+  }
+
+  @Post(":id/restore")
+  @ApiOperation({ summary: "Restore soft-deleted budget" })
+  async restore(@Request() req, @Param("id", ParseUUIDPipe) id: string) {
+    return this.budgetsService.restore(id, req.user.userId);
   }
 }

@@ -39,12 +39,18 @@ export class IncomeController {
     @Query("endDate") endDate?: Date,
     @Query("type") type?: string,
     @Query("isPaid") isPaid?: boolean,
+    @Query("page") page?: number,
+    @Query("limit") limit?: number,
+    @Query("search") search?: string,
   ) {
     return this.incomeService.findAll(req.user.userId, {
       startDate,
       endDate,
       type: type as any,
       isPaid,
+      page,
+      limit,
+      search,
     });
   }
 
@@ -65,9 +71,15 @@ export class IncomeController {
   }
 
   @Delete(":id")
-  @ApiOperation({ summary: "Delete income" })
+  @ApiOperation({ summary: "Soft delete income" })
   remove(@Request() req, @Param("id") id: string) {
     return this.incomeService.delete(req.user.userId, id);
+  }
+
+  @Post(":id/restore")
+  @ApiOperation({ summary: "Restore soft-deleted income" })
+  restore(@Request() req, @Param("id") id: string) {
+    return this.incomeService.restore(req.user.userId, id);
   }
 
   @Get("summary/total")
@@ -124,5 +136,11 @@ export class IncomeController {
       startDate,
       endDate,
     );
+  }
+
+  @Post("bulk-import")
+  @ApiOperation({ summary: "Bulk import income records from CSV data" })
+  bulkImport(@Request() req, @Body() body: { rows: CreateIncomeDto[] }) {
+    return this.incomeService.bulkImport(req.user.userId, body.rows);
   }
 }

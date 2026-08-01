@@ -7,6 +7,8 @@ export interface LoginRequest {
 
 export interface RegisterRequest {
   email: string;
+  firstName: string;
+  lastName: string;
   password: string;
 }
 
@@ -14,6 +16,8 @@ export interface AuthResponse {
   user: {
     id: string;
     email: string;
+    firstName: string;
+    lastName: string;
   };
   token: string;
 }
@@ -45,5 +49,10 @@ export const authService = {
 
   isAuthenticated() {
     return !!localStorage.getItem('token');
+  },
+
+  async deleteAccount(password: string): Promise<void> {
+    await api.delete('/auth/account', { data: { password } });
+    localStorage.removeItem('token');
   },
 };

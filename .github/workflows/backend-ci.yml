@@ -58,15 +58,19 @@ jobs:
         working-directory: ./backend
         run: npx tsc --noEmit
 
-      - name: Run tests
-        run: pnpm --filter bookkeeping-backend test
+      - name: Run tests with coverage
+        run: pnpm --filter bookkeeping-backend test:cov
         env:
-          DATABASE_HOST: localhost
-          DATABASE_PORT: 5432
-          DATABASE_USER: postgres
-          DATABASE_PASSWORD: postgres
-          DATABASE_NAME: bookkeeping_test
+          DB_URL: postgresql://postgres:postgres@localhost:5432/bookkeeping_test
           JWT_SECRET: test-secret-key
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ./coverage
+          flags: backend
+          name: backend-coverage
+          fail_ci_if_error: false
 
       - name: Build
         run: pnpm --filter bookkeeping-backend build

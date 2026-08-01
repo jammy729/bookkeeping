@@ -1,4 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from './ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface DateRangeFilterProps {
   fromYear: number;
@@ -10,22 +12,6 @@ interface DateRangeFilterProps {
   onToYearChange: (year: number) => void;
   onToMonthChange: (month: number) => void;
 }
-
-const MONTHS = [
-  { value: 0, label: 'All Months' },
-  { value: 1, label: 'January' },
-  { value: 2, label: 'February' },
-  { value: 3, label: 'March' },
-  { value: 4, label: 'April' },
-  { value: 5, label: 'May' },
-  { value: 6, label: 'June' },
-  { value: 7, label: 'July' },
-  { value: 8, label: 'August' },
-  { value: 9, label: 'September' },
-  { value: 10, label: 'October' },
-  { value: 11, label: 'November' },
-  { value: 12, label: 'December' },
-];
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 10 }, (_, i) => CURRENT_YEAR - 5 + i);
@@ -40,62 +26,84 @@ export function DateRangeFilter({
   onToYearChange,
   onToMonthChange,
 }: DateRangeFilterProps) {
+  const { t } = useTranslation();
+
+  const MONTHS = [
+    { value: 0, label: t('all') },
+    { value: 1, label: t('months.january') },
+    { value: 2, label: t('months.february') },
+    { value: 3, label: t('months.march') },
+    { value: 4, label: t('months.april') },
+    { value: 5, label: t('months.may') },
+    { value: 6, label: t('months.june') },
+    { value: 7, label: t('months.july') },
+    { value: 8, label: t('months.august') },
+    { value: 9, label: t('months.september') },
+    { value: 10, label: t('months.october') },
+    { value: 11, label: t('months.november') },
+    { value: 12, label: t('months.december') },
+  ];
+
   return (
     <Card>
       <CardContent className="pt-6">
         <div className="flex flex-wrap gap-6 items-end">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
+            <label className="block text-sm font-medium text-foreground mb-2">{t('from')}</label>
             <div className="flex gap-2">
-              <select
-                value={fromYear}
-                onChange={(e) => onFromYearChange(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 rounded-md bg-white"
-              >
-                {YEARS.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={fromMonth}
-                onChange={(e) => onFromMonthChange(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 rounded-md bg-white"
-              >
-                {MONTHS.map((month) => (
-                  <option key={month.value} value={month.value}>
-                    {month.label}
-                  </option>
-                ))}
-              </select>
+              <Select value={String(fromYear)} onValueChange={(v) => onFromYearChange(parseInt(v))}>
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {YEARS.map((year) => (
+                    <SelectItem key={year} value={String(year)}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={String(fromMonth)} onValueChange={(v) => onFromMonthChange(parseInt(v))}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {MONTHS.map((month) => (
+                    <SelectItem key={month.value} value={String(month.value)}>
+                      {month.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">To</label>
+            <label className="block text-sm font-medium text-foreground mb-2">{t('to')}</label>
             <div className="flex gap-2">
-              <select
-                value={toYear}
-                onChange={(e) => onToYearChange(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 rounded-md bg-white"
-              >
-                {YEARS.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={toMonth}
-                onChange={(e) => onToMonthChange(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 rounded-md bg-white"
-              >
-                {MONTHS.map((month) => (
-                  <option key={month.value} value={month.value}>
-                    {month.label}
-                  </option>
-                ))}
-              </select>
+              <Select value={String(toYear)} onValueChange={(v) => onToYearChange(parseInt(v))}>
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {YEARS.map((year) => (
+                    <SelectItem key={year} value={String(year)}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={String(toMonth)} onValueChange={(v) => onToMonthChange(parseInt(v))}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {MONTHS.map((month) => (
+                    <SelectItem key={month.value} value={String(month.value)}>
+                      {month.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>

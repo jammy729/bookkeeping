@@ -1,4 +1,5 @@
 import { api } from '../lib/api';
+import type { PaginatedResponse } from './expenses.service';
 
 export interface Income {
   id: string;
@@ -56,17 +57,23 @@ export interface IncomeFilters {
   endDate?: string;
   type?: string;
   isPaid?: boolean;
+  page?: number;
+  limit?: number;
+  search?: string;
 }
 
 export const incomeService = {
-  async getAll(filters?: IncomeFilters): Promise<Income[]> {
+  async getAll(filters?: IncomeFilters): Promise<Income[] | PaginatedResponse<Income>> {
     const params = new URLSearchParams();
     if (filters?.startDate) params.append('startDate', filters.startDate);
     if (filters?.endDate) params.append('endDate', filters.endDate);
     if (filters?.type) params.append('type', filters.type);
     if (filters?.isPaid !== undefined) params.append('isPaid', String(filters.isPaid));
-    
-    const response = await api.get<Income[]>(`/income?${params.toString()}`);
+    if (filters?.page) params.append('page', String(filters.page));
+    if (filters?.limit) params.append('limit', String(filters.limit));
+    if (filters?.search) params.append('search', filters.search);
+
+    const response = await api.get(`/income?${params.toString()}`);
     return response.data;
   },
 
@@ -98,6 +105,11 @@ export const incomeService = {
   async getByType(startDate: string, endDate: string): Promise<{ type: string; total: number }[]> {
     const params = new URLSearchParams({ startDate, endDate });
     const response = await api.get<{ type: string; total: number }[]>(`/income/summary/by-type?${params.toString()}`);
+    return response.data;
+  },
+
+  async bulkImport(rows: CreateIncomeDto[]): Promise<{ imported: number; errors: string[] }> {
+    const response = await api.post<{ imported: number; errors: string[] }>('/income/bulk-import', { rows });
     return response.data;
   },
 };

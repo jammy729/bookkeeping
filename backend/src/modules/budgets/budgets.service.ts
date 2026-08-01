@@ -3,6 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Between } from "typeorm";
 import { Budget } from "../../entities/budget.entity";
 import { Expense } from "../../entities/expense.entity";
+import { AuditService } from "../audit/audit.service";
+import { AuditAction } from "../audit/audit.entity";
 
 export interface CreateBudgetDto {
   amount: number;
@@ -11,7 +13,6 @@ export interface CreateBudgetDto {
   name?: string;
   period?: "daily" | "weekly" | "monthly" | "quarterly" | "yearly";
   categoryId?: string;
-  userId?: string;
 }
 
 export interface UpdateBudgetDto {
@@ -30,11 +31,16 @@ export class BudgetsService {
     private budgetRepository: Repository<Budget>,
     @InjectRepository(Expense)
     private expenseRepository: Repository<Expense>,
+    private auditService: AuditService,
   ) {}
 
-  async create(createBudgetDto: CreateBudgetDto): Promise<Budget> {
+  async create(
+    userId: string,
+    createBudgetDto: CreateBudgetDto,
+  ): Promise<Budget> {
     const budget = this.budgetRepository.create({
       ...createBudgetDto,
+      userId,
       startDate: new Date(createBudgetDto.startDate),
       endDate: new Date(createBudgetDto.endDate),
     });
@@ -47,7 +53,15 @@ export class BudgetsService {
       budget.endDate,
     );
 
-    return this.budgetRepository.save(budget);
+    const saved = await this.budgetRepository.save(budget);
+    await this.auditService.log({
+      userId: saved.userId,
+      entityType: "budget",
+      entityId: saved.id,
+      action: AuditAction.CREATE,
+      afterState: saved,
+    });
+    return saved;
   }
 
   async findAll(userId: string): Promise<Budget[]> {
@@ -105,12 +119,54 @@ export class BudgetsService {
       budget.endDate,
     );
 
-    return this.budgetRepository.save(budget);
+    const saved = await this.budgetRepository.save(budget);
+    await this.auditService.log({
+      userId: saved.userId,
+      entityType: "budget",
+      entityId: saved.id,
+      action: AuditAction.UPDATE,
+      beforeState: budget,
+      afterState: saved,
+    });
+    return saved;
   }
 
   async remove(id: string, userId: string): Promise<void> {
     const budget = await this.findOne(id, userId);
-    await this.budgetRepository.remove(budget);
+    const beforeState = { ...budget };
+    await this.budgetRepository.softRemove(budget);
+    await this.auditService.log({
+      userId,
+      entityType: "budget",
+      entityId: id,
+      action: AuditAction.DELETE,
+      beforeState,
+    });
+  }
+
+  async restore(id: string, userId: string): Promise<Budget> {
+    const budget = await this.budgetRepository.findOne({
+      where: { id, userId },
+      withDeleted: true,
+      relations: ["category"],
+    });
+    if (!budget) {
+      throw new NotFoundException("Budget not found");
+    }
+    if (!budget.deletedAt) {
+      return budget;
+    }
+    await this.budgetRepository.restore({ id, userId });
+    const restored = await this.findOne(id, userId);
+    await this.auditService.log({
+      userId,
+      entityType: "budget",
+      entityId: id,
+      action: AuditAction.RESTORE,
+      beforeState: { deletedAt: budget.deletedAt },
+      afterState: restored,
+    });
+    return restored;
   }
 
   private async calculateSpent(

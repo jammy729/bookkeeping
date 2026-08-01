@@ -1,32 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '../lib/api';
-
-interface Budget {
-  id: string;
-  name: string;
-  amount: number;
-  period: string;
-  categoryId?: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface CreateBudgetDto {
-  name: string;
-  amount: number;
-  period: 'monthly' | 'quarterly' | 'yearly';
-  categoryId?: string;
-  notes?: string;
-}
+import { budgetsService, type CreateBudgetDto, type UpdateBudgetDto } from '../services/budgets.service';
 
 export function useBudgets() {
   return useQuery({
     queryKey: ['budgets'],
-    queryFn: async () => {
-      const res = await api.get<Budget[]>('/budgets');
-      return res.data;
-    },
+    queryFn: () => budgetsService.getAll(),
+  });
+}
+
+export function useBudgetSummary() {
+  return useQuery({
+    queryKey: ['budgets', 'summary'],
+    queryFn: () => budgetsService.getSummary(),
   });
 }
 
@@ -38,19 +23,18 @@ export function useBudgetMutations() {
   };
 
   const create = useMutation({
-    mutationFn: (data: CreateBudgetDto) =>
-      api.post('/budgets', data).then((res) => res.data),
+    mutationFn: (data: CreateBudgetDto) => budgetsService.create(data),
     onSuccess: invalidateAll,
   });
 
   const update = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CreateBudgetDto> }) =>
-      api.put(`/budgets/${id}`, data).then((res) => res.data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateBudgetDto }) =>
+      budgetsService.update(id, data),
     onSuccess: invalidateAll,
   });
 
   const remove = useMutation({
-    mutationFn: (id: string) => api.delete(`/budgets/${id}`),
+    mutationFn: (id: string) => budgetsService.delete(id),
     onSuccess: invalidateAll,
   });
 

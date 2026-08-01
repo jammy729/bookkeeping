@@ -84,7 +84,80 @@ See [.specify/memory/constitution.md](./.specify/memory/constitution.md) for cor
 
 ## Deployment
 
-- **Frontend**: Vercel (auto-deploy from main)
-- **Backend**: Render (auto-deploy from main)
-- **Database**: Supabase (PostgreSQL)
-- Environment variables: `DATABASE_URL`, `JWT_SECRET`, `FRONTEND_URL`, `PORT`
+- **Frontend**: Vercel (auto-deploy)
+- **Backend**: Render (auto-deploy)
+- **Database**: Supabase (PostgreSQL) — separate projects for staging and production
+
+### Environments
+
+| Environment | Branch | Frontend | Backend | Database | Access |
+|---|---|---|---|---|---|
+| **Dev** | any | localhost:5173 | localhost:3001 | Supabase staging project | Local only |
+| **Staging** | `develop` | Vercel staging | Render staging | Supabase staging project | IP-restricted (`ALLOWED_IPS`) |
+| **Production** | `main` | Vercel prod | Render prod | Supabase production project | Public |
+
+### Environment Files
+
+All env templates are in `config/`:
+
+```
+backend/config/
+├── .env.local          # Copy to backend/.env for local dev
+├── .env.staging        # Set in Render staging dashboard
+└── .env.production     # Set in Render production dashboard
+
+frontend/config/
+├── .env.local          # Copy to frontend/.env for local dev
+├── .env.staging        # Set in Vercel staging dashboard
+└── .env.production     # Set in Vercel production dashboard
+```
+
+### Backend Environment Variables
+
+Set in Render dashboard (not committed to git):
+
+| Variable | Staging | Production | Description |
+|---|---|---|---|
+| `NODE_ENV` | `production` | `production` | Environment |
+| `PORT` | `3001` | `3001` | Listen port |
+| `DB_URL` | Supabase staging URL | Supabase production URL | Full PostgreSQL connection string |
+| `JWT_SECRET` | random value | random value | JWT signing key |
+| `FRONTEND_URL` | Vercel staging URL | Vercel production URL | CORS origin |
+| `ALLOWED_IPS` | `154.20.101.221` | *(not set)* | IP restriction (staging only) |
+
+### Frontend Environment Variables
+
+Set in Vercel dashboard (not committed to git):
+
+| Variable | Staging | Production | Description |
+|---|---|---|---|
+| `VITE_API_URL` | Render staging URL + `/api` | Render prod URL + `/api` | Backend API base URL |
+
+### Database Scripts
+
+```bash
+# Run migrations (uses data-source.ts → reads DB_URL from .env)
+pnpm run migration:run
+
+# Revert last migration
+pnpm run migration:revert
+
+# Generate migration (auto-detects entity changes)
+pnpm run migration:generate src/migrations/MigrationName
+
+# Seed test user (ts-node, reads DB_URL from .env)
+pnpm run seed
+
+# Seed via typeorm-extension (with tracking)
+pnpm run seed:run
+```
+
+### Manual Setup Steps
+
+1. **Create Supabase production project** at https://supabase.com/dashboard
+2. **Run migration**: `pnpm run migration:run` (with production `DB_URL` in `.env`)
+3. **Seed test user**: `pnpm run seed`
+4. **Create Vercel projects** (staging + prod) connected to `develop` and `main` branches
+5. **Create Render services** (staging + prod) connected to `develop` and `main` branches
+6. **Set env vars** in Vercel/Render dashboards per tables above
+7. **Add IP allowlist** on staging Supabase project (Settings → Database → Network Restrictions)

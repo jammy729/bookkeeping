@@ -14,16 +14,16 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 async function bootstrap() {
-  const url = process.env.DATABASE_URL;
+  const url = process.env.DB_URL;
   const dsOptions = url
     ? { type: "postgres" as const, url, ssl: { rejectUnauthorized: false } }
     : {
         type: "postgres" as const,
-        host: process.env.DATABASE_HOST || "localhost",
-        port: parseInt(process.env.DATABASE_PORT || "5432", 10),
-        username: process.env.DATABASE_USER || "postgres",
-        password: process.env.DATABASE_PASSWORD || "postgres",
-        database: process.env.DATABASE_NAME || "bookkeeping",
+        host: process.env.DB_HOST || "localhost",
+        port: parseInt(process.env.DB_PORT || "5432", 10),
+        username: process.env.DB_USERNAME || "postgres",
+        password: process.env.DB_PASSWORD || "postgres",
+        database: process.env.DB_DATABASE || "bookkeeping",
       };
 
   const dataSource = new DataSource({
@@ -39,7 +39,6 @@ async function bootstrap() {
       Attachment,
       Budget,
     ],
-    synchronize: true,
   });
 
   await dataSource.initialize();
@@ -60,6 +59,8 @@ async function bootstrap() {
     const hashedPassword = await bcrypt.hash(testPassword, 10);
     const user = userRepository.create({
       email: testEmail,
+      firstName: "Test",
+      lastName: "User",
       password: hashedPassword,
     });
     await userRepository.save(user);

@@ -47,6 +47,17 @@ jobs:
       - name: Run tests
         run: pnpm --filter bookkeeping-frontend test
 
+      - name: Run tests with coverage
+        run: pnpm --filter bookkeeping-frontend test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ./coverage
+          flags: frontend
+          name: frontend-coverage
+          fail_ci_if_error: false
+
       - name: Build
         run: pnpm --filter bookkeeping-frontend build
 

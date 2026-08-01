@@ -15,6 +15,28 @@ import { JwtAuthGuard } from "../../guards/jwt-auth.guard";
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
+  @Get("monthly-summary")
+  @ApiOperation({ summary: "Get aggregated monthly summary for a period" })
+  @ApiQuery({ name: "startDate", description: "Start date (YYYY-MM-DD)" })
+  @ApiQuery({ name: "endDate", description: "End date (YYYY-MM-DD)" })
+  async getMonthlySummary(
+    @Request() req,
+    @Query("startDate") startDate: string,
+    @Query("endDate") endDate: string,
+  ) {
+    return this.reportsService.getMonthlySummary(
+      req.user.userId,
+      startDate,
+      endDate,
+    );
+  }
+
+  @Get("action-items")
+  @ApiOperation({ summary: "Get counts of items needing attention" })
+  async getActionItems(@Request() req) {
+    return this.reportsService.getActionItems(req.user.userId);
+  }
+
   @Get("tax")
   @ApiOperation({ summary: "Get HST/GST tax report" })
   @ApiQuery({ name: "startDate", description: "Start date (YYYY-MM-DD)" })

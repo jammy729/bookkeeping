@@ -22,6 +22,8 @@ import { Invoice } from "./entities/invoice.entity";
 import { InvoiceItem } from "./entities/invoice-item.entity";
 import { Attachment } from "./entities/attachment.entity";
 import { Budget } from "./entities/budget.entity";
+import { AuditLog } from "./modules/audit/audit.entity";
+import { AuditModule } from "./modules/audit/audit.module";
 
 @Module({
   imports: [
@@ -49,8 +51,10 @@ import { Budget } from "./entities/budget.entity";
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const url = configService.get<string>("DATABASE_URL");
+        const url = configService.get<string>("DB_URL");
         if (url) {
+          const isLocal =
+            url.includes("localhost") || url.includes("127.0.0.1");
           return {
             type: "postgres" as const,
             url,
@@ -64,19 +68,20 @@ import { Budget } from "./entities/budget.entity";
               InvoiceItem,
               Attachment,
               Budget,
+              AuditLog,
             ],
             autoLoadEntities: true,
             synchronize: process.env.TYPEORM_SYNCHRONIZE === "true" || false,
-            ssl: { rejectUnauthorized: false },
+            ...(isLocal ? {} : { ssl: { rejectUnauthorized: false } }),
           };
         }
         return {
           type: "postgres" as const,
-          host: configService.get<string>("DATABASE_HOST", "localhost"),
-          port: configService.get<number>("DATABASE_PORT", 5432),
-          username: configService.get<string>("DATABASE_USER", "postgres"),
-          password: configService.get<string>("DATABASE_PASSWORD", "postgres"),
-          database: configService.get<string>("DATABASE_NAME", "bookkeeping"),
+          host: configService.get<string>("DB_HOST", "localhost"),
+          port: configService.get<number>("DB_PORT", 5432),
+          username: configService.get<string>("DB_USERNAME", "postgres"),
+          password: configService.get<string>("DB_PASSWORD", "postgres"),
+          database: configService.get<string>("DB_DATABASE", "bookkeeping"),
           entities: [
             User,
             Expense,
@@ -87,6 +92,7 @@ import { Budget } from "./entities/budget.entity";
             InvoiceItem,
             Attachment,
             Budget,
+            AuditLog,
           ],
           autoLoadEntities: true,
           synchronize: process.env.TYPEORM_SYNCHRONIZE === "true" || false,
@@ -96,6 +102,7 @@ import { Budget } from "./entities/budget.entity";
     }),
 
     // Feature modules
+    AuditModule,
     AuthModule,
     ExpensesModule,
     IncomeModule,

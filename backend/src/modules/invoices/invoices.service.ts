@@ -3,6 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Like, LessThan } from "typeorm";
 import { Invoice, InvoiceStatus } from "../../entities/invoice.entity";
 import { InvoiceItem } from "../../entities/invoice-item.entity";
+import { AuditService } from "../audit/audit.service";
+import { AuditAction } from "../audit/audit.entity";
 
 export interface CreateInvoiceDto {
   clientId: string;
@@ -16,7 +18,6 @@ export interface CreateInvoiceDto {
   terms?: string;
   taxRate?: number;
   discountAmount?: number;
-  userId: string;
 }
 
 export interface CreateInvoiceItemDto {
@@ -47,15 +48,19 @@ export class InvoicesService {
     private invoiceRepository: Repository<Invoice>,
     @InjectRepository(InvoiceItem)
     private invoiceItemRepository: Repository<InvoiceItem>,
+    private auditService: AuditService,
   ) {}
 
-  async generateInvoiceNumber(): Promise<string> {
+  async generateInvoiceNumber(userId: string): Promise<string> {
     const date = new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
 
     const lastInvoice = await this.invoiceRepository.findOne({
-      where: { invoiceNumber: Like(`INV-${year}${month}-%`) },
+      where: {
+        invoiceNumber: Like(`INV-${year}${month}-%`),
+        userId,
+      },
       order: { invoiceNumber: "DESC" },
     });
 
@@ -69,8 +74,11 @@ export class InvoicesService {
     return `INV-${year}${month}-${String(sequence).padStart(4, "0")}`;
   }
 
-  async create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
-    const invoiceNumber = await this.generateInvoiceNumber();
+  async create(
+    userId: string,
+    createInvoiceDto: CreateInvoiceDto,
+  ): Promise<Invoice> {
+    const invoiceNumber = await this.generateInvoiceNumber(userId);
 
     // Calculate totals
     const subtotal = createInvoiceDto.items.reduce(
@@ -98,7 +106,7 @@ export class InvoicesService {
         : null,
       notes: createInvoiceDto.notes,
       terms: createInvoiceDto.terms,
-      userId: createInvoiceDto.userId,
+      userId,
       items: createInvoiceDto.items.map((item) =>
         this.invoiceItemRepository.create({
           description: item.description,
@@ -109,7 +117,15 @@ export class InvoicesService {
       ),
     });
 
-    return this.invoiceRepository.save(invoice);
+    const saved = await this.invoiceRepository.save(invoice);
+    await this.auditService.log({
+      userId: saved.userId,
+      entityType: "invoice",
+      entityId: saved.id,
+      action: AuditAction.CREATE,
+      afterState: saved,
+    });
+    return saved;
   }
 
   async findAll(userId: string, status?: InvoiceStatus): Promise<Invoice[]> {
@@ -193,20 +209,49 @@ export class InvoicesService {
       );
     }
 
-    return this.invoiceRepository.save(invoice);
+    const saved = await this.invoiceRepository.save(invoice);
+    await this.auditService.log({
+      userId,
+      entityType: "invoice",
+      entityId: id,
+      action: AuditAction.UPDATE,
+      beforeState: invoice,
+      afterState: saved,
+    });
+    return saved;
   }
 
   async markAsSent(id: string, userId: string): Promise<Invoice> {
     const invoice = await this.findOne(id, userId);
+    const beforeState = { ...invoice };
     invoice.status = InvoiceStatus.SENT;
-    return this.invoiceRepository.save(invoice);
+    const saved = await this.invoiceRepository.save(invoice);
+    await this.auditService.log({
+      userId,
+      entityType: "invoice",
+      entityId: id,
+      action: AuditAction.UPDATE,
+      beforeState,
+      afterState: saved,
+    });
+    return saved;
   }
 
   async markAsPaid(id: string, userId: string): Promise<Invoice> {
     const invoice = await this.findOne(id, userId);
+    const beforeState = { ...invoice };
     invoice.status = InvoiceStatus.PAID;
     invoice.paidDate = new Date();
-    return this.invoiceRepository.save(invoice);
+    const saved = await this.invoiceRepository.save(invoice);
+    await this.auditService.log({
+      userId,
+      entityType: "invoice",
+      entityId: id,
+      action: AuditAction.UPDATE,
+      beforeState,
+      afterState: saved,
+    });
+    return saved;
   }
 
   async markAsOverdue(): Promise<void> {
@@ -222,7 +267,40 @@ export class InvoicesService {
 
   async remove(id: string, userId: string): Promise<void> {
     const invoice = await this.findOne(id, userId);
-    await this.invoiceRepository.remove(invoice);
+    const beforeState = { ...invoice };
+    await this.invoiceRepository.softRemove(invoice);
+    await this.auditService.log({
+      userId,
+      entityType: "invoice",
+      entityId: id,
+      action: AuditAction.DELETE,
+      beforeState,
+    });
+  }
+
+  async restore(id: string, userId: string): Promise<Invoice> {
+    const invoice = await this.invoiceRepository.findOne({
+      where: { id, userId },
+      withDeleted: true,
+      relations: ["items"],
+    });
+    if (!invoice) {
+      throw new NotFoundException("Invoice not found");
+    }
+    if (!invoice.deletedAt) {
+      return invoice;
+    }
+    await this.invoiceRepository.restore({ id, userId });
+    const restored = await this.findOne(id, userId);
+    await this.auditService.log({
+      userId,
+      entityType: "invoice",
+      entityId: id,
+      action: AuditAction.RESTORE,
+      beforeState: { deletedAt: invoice.deletedAt },
+      afterState: restored,
+    });
+    return restored;
   }
 
   async getSummary(userId: string): Promise<{

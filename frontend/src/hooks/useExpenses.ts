@@ -10,6 +10,7 @@ export function useExpenses(filters?: ExpensesFilters) {
   return useQuery({
     queryKey: ['expenses', filters],
     queryFn: () => expensesService.getAll(filters),
+    placeholderData: (prev) => prev,
   });
 }
 
@@ -50,5 +51,10 @@ export function useExpenseMutations() {
     onSuccess: invalidateAll,
   });
 
-  return { create, update, remove };
+  const generateRecurring = useMutation({
+    mutationFn: () => expensesService.generateRecurring(),
+    onSuccess: invalidateAll,
+  });
+
+  return { create, update, remove, generateRecurring };
 }
