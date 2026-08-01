@@ -98,19 +98,16 @@ See [.specify/memory/constitution.md](./.specify/memory/constitution.md) for cor
 
 ### Environment Files
 
-All env templates are in `config/`:
+All configuration lives in a single root `.env` (gitignored) used by BOTH backend and frontend for local development, plus a committed `.env.example` template:
 
 ```
-backend/config/
-├── .env.local          # Copy to backend/.env for local dev
-├── .env.staging        # Set in Render staging dashboard
-└── .env.production     # Set in Render production dashboard
-
-frontend/config/
-├── .env.local          # Copy to frontend/.env for local dev
-├── .env.staging        # Set in Vercel staging dashboard
-└── .env.production     # Set in Vercel production dashboard
+.env.example          # Committed template — copy to .env for local dev; also the reference for Vercel dashboard env vars
+.env                  # Gitignored — local dev values for backend AND frontend
 ```
+
+- Backend reads it via `ConfigModule` (`envFilePath: ["../.env", ".env"]`) and `dotenv` (`resolve(__dirname, "../../.env")`)
+- Frontend reads it via Vite `envDir: '..'` (only `VITE_*` vars are exposed to the browser — never prefix secrets with `VITE_`)
+- Staging/production values are set in the Vercel dashboards using the same keys from `.env.example`
 
 ### Backend Environment Variables
 

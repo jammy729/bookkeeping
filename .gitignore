@@ -11,10 +11,6 @@ node_modules
 .env.staging
 .env.production
 
-# Config folders — only .env.local is committed (staging/production set in dashboards)
-**/config/.env.staging
-**/config/.env.production
-
 # Build output
 **/dist
 **/build

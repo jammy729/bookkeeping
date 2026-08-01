@@ -30,7 +30,7 @@ import { AuditModule } from "./modules/audit/audit.module";
     // ConfigModule for environment variables
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ".env",
+      envFilePath: ["../.env", ".env"],
     }),
 
     // Rate limiting (Throttler)
@@ -52,36 +52,13 @@ import { AuditModule } from "./modules/audit/audit.module";
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const url = configService.get<string>("DB_URL");
-        if (url) {
-          const isLocal =
-            url.includes("localhost") || url.includes("127.0.0.1");
-          return {
-            type: "postgres" as const,
-            url,
-            entities: [
-              User,
-              Expense,
-              Income,
-              Category,
-              Client,
-              Invoice,
-              InvoiceItem,
-              Attachment,
-              Budget,
-              AuditLog,
-            ],
-            autoLoadEntities: true,
-            synchronize: process.env.TYPEORM_SYNCHRONIZE === "true" || false,
-            ...(isLocal ? {} : { ssl: { rejectUnauthorized: false } }),
-          };
+        if (!url) {
+          throw new Error("DB_URL is required (set it in the root .env file)");
         }
+        const isLocal = url.includes("localhost") || url.includes("127.0.0.1");
         return {
           type: "postgres" as const,
-          host: configService.get<string>("DB_HOST", "localhost"),
-          port: configService.get<number>("DB_PORT", 5432),
-          username: configService.get<string>("DB_USERNAME", "postgres"),
-          password: configService.get<string>("DB_PASSWORD", "postgres"),
-          database: configService.get<string>("DB_DATABASE", "bookkeeping"),
+          url,
           entities: [
             User,
             Expense,
@@ -96,6 +73,7 @@ import { AuditModule } from "./modules/audit/audit.module";
           ],
           autoLoadEntities: true,
           synchronize: process.env.TYPEORM_SYNCHRONIZE === "true" || false,
+          ...(isLocal ? {} : { ssl: { rejectUnauthorized: false } }),
         };
       },
       inject: [ConfigService],
