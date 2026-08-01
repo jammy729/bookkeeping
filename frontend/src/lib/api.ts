@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getLoginUrl } from './routes';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -22,9 +23,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // A 401 from an auth endpoint (e.g. a wrong password on /auth/login) must
+    // not trigger a full page reload to the login page — that would swallow
+    // the error toast. Only hard-redirect for 401s from other endpoints.
+    if (error.response?.status === 401 && !error.config?.url?.startsWith('/auth/')) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      window.location.href = getLoginUrl();
     }
     return Promise.reject(error);
   }

@@ -14,28 +14,17 @@ export class AppController {
   }
 
   @Get("health")
-  async getHealth(): Promise<{
-    status: string;
-    timestamp: string;
-    commit: string;
-    uptime: number;
-    database: { status: string; latencyMs: number };
-  }> {
-    const start = Date.now();
+  async getHealth(): Promise<{ status: string; timestamp: string }> {
     let dbStatus = "ok";
     try {
       await this.dataSource.query("SELECT 1");
     } catch {
-      dbStatus = "error";
+      dbStatus = "degraded";
     }
-    const latencyMs = Date.now() - start;
 
     return {
-      status: dbStatus === "ok" ? "ok" : "degraded",
+      status: dbStatus,
       timestamp: new Date().toISOString(),
-      commit: process.env.GIT_COMMIT || "unknown",
-      uptime: process.uptime(),
-      database: { status: dbStatus, latencyMs },
     };
   }
 }

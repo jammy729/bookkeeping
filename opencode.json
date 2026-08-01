@@ -1,5 +1,19 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "name": "Ollama",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "qwen3.6:latest": {
+          "name": "Qwen 3.6"
+        }
+      }
+    }
+  },
+  "model": "ollama/qwen3.6:latest",
   "default_agent": "conductor",
   "instructions": [
     "architecture.md",

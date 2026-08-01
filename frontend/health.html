@@ -119,18 +119,6 @@
             <span class="dot"></span> Checking...
           </span>
         </div>
-        <div class="detail">
-          <span class="detail-label">Commit</span>
-          <span class="detail-value" id="backend-commit">—</span>
-        </div>
-        <div class="detail">
-          <span class="detail-label">Uptime</span>
-          <span class="detail-value" id="backend-uptime">—</span>
-        </div>
-        <div class="detail">
-          <span class="detail-label">Server Time</span>
-          <span class="detail-value" id="backend-time">—</span>
-        </div>
       </div>
 
       <div class="card">
@@ -140,57 +128,45 @@
             <span class="dot"></span> Checking...
           </span>
         </div>
-        <div class="detail">
-          <span class="detail-label">Latency</span>
-          <span class="detail-value" id="db-latency">—</span>
-        </div>
       </div>
     </div>
 
     <script>
-      function formatUptime(seconds) {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = Math.floor(seconds % 60);
-        if (h > 0) return h + "h " + m + "m " + s + "s";
-        if (m > 0) return m + "m " + s + "s";
-        return s + "s";
-      }
-
-      function setBackendStatus(status, text) {
-        var el = document.getElementById("backend-status");
+      function setBadge(id, status, text) {
+        var el = document.getElementById(id);
         el.className = "badge " + status;
         el.innerHTML = '<span class="dot"></span> ' + text;
       }
 
-      fetch("/api/health")
+      // %VITE_API_URL% is replaced by Vite's HTML env replacement in dev and
+      // build (the file is now a root HTML entry; /api is handled by the
+      // dev proxy, and the production value comes from the VITE_API_URL env).
+      // If the placeholder was never replaced (e.g. a dev clone without a
+      // .env), fall back to /api so the health check still works.
+      var API_BASE = "%VITE_API_URL%";
+      if (!API_BASE || API_BASE.indexOf("%") !== -1) API_BASE = "/api";
+
+      fetch(API_BASE + "/health")
         .then(function (res) {
           if (!res.ok) throw new Error("HTTP " + res.status);
           return res.json();
         })
         .then(function (data) {
-          var overall = data.status === "ok" ? "ok" : "error";
-          setBackendStatus(overall, data.status === "ok" ? "Healthy" : "Degraded");
-          document.getElementById("backend-commit").textContent =
-            data.commit || "unknown";
-          document.getElementById("backend-uptime").textContent = formatUptime(
-            data.uptime || 0
+          var backendOk = data.status === "ok";
+          setBadge(
+            "backend-status",
+            backendOk ? "ok" : "error",
+            backendOk ? "Healthy" : "Degraded"
           );
-          document.getElementById("backend-time").textContent =
-            data.timestamp || "—";
-
-          var dbBadge = document.getElementById("db-status");
-          var dbOk = data.database && data.database.status === "ok";
-          dbBadge.className = "badge " + (dbOk ? "ok" : "error");
-          dbBadge.innerHTML =
-            '<span class="dot"></span> ' + (dbOk ? "Connected" : "Error");
-          document.getElementById("db-latency").textContent =
-            data.database ? data.database.latencyMs + "ms" : "—";
+          setBadge(
+            "db-status",
+            backendOk ? "ok" : "error",
+            backendOk ? "Connected" : "Error"
+          );
         })
-        .catch(function (err) {
-          setBackendStatus("error", "Unreachable");
-          document.getElementById("backend-commit").textContent =
-            "Error: " + err.message;
+        .catch(function () {
+          setBadge("backend-status", "error", "Unreachable");
+          setBadge("db-status", "error", "Error");
         });
     </script>
   </body>

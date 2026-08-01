@@ -43,3 +43,8 @@ coverage
 
 # Auto-generated type declarations
 *.d.ts
+
+# Tsc-generated config artifacts (Vite loads vite.config.ts natively;
+# tsconfig.node.json emits these during `tsc -b` — never commit them)
+vite.config.js
+vite.config.*.js

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/useAuth";
 import { useTheme } from "../hooks/useTheme";
+import { getAdminOrigin } from "../lib/routes";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -25,7 +26,6 @@ export function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
-  const navigate = useNavigate();
   const { setTheme } = useTheme();
   const { t } = useTranslation();
 
@@ -55,9 +55,11 @@ export function Register() {
     setLoading(true);
 
     try {
-      await register(email, firstName.trim(), lastName.trim(), password);
+      const response = await register(email, firstName.trim(), lastName.trim(), password);
       toast.success(t("auth.register.welcome"));
-      navigate("/onboarding");
+      // Hand the JWT to the admin zone via the URL hash fragment, landing on
+      // the onboarding flow. The apex origin never persists the token.
+      window.location.replace(getAdminOrigin() + '/onboarding#token=' + encodeURIComponent(response.token));
     } catch (error: unknown) {
       const message =
         error instanceof Error

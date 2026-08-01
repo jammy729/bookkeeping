@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/useAuth";
 import { useTheme } from "../hooks/useTheme";
+import { getAdminOrigin } from "../lib/routes";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -22,7 +23,6 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
-  const navigate = useNavigate();
   const { setTheme } = useTheme();
   const { t } = useTranslation();
 
@@ -31,9 +31,11 @@ export function Login() {
     setLoading(true);
 
     try {
-      await login(email, password);
+      const response = await login(email, password);
       toast.success(t("auth.login.welcomeBack"));
-      navigate("/");
+      // Hand the JWT to the admin zone via the URL hash fragment. The apex
+      // origin must never persist the token in localStorage (per-origin).
+      window.location.replace(getAdminOrigin() + '/#token=' + encodeURIComponent(response.token));
     } catch (error: unknown) {
       const message =
         error instanceof Error

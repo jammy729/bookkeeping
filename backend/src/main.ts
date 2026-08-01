@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import helmet from "helmet";
 import * as dns from "dns";
@@ -10,10 +11,13 @@ import { IpRestrictionMiddleware } from "./common/middleware/ip-restriction.midd
 dns.setDefaultResultOrder("ipv4first");
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger("Bootstrap");
 
   const configService = app.get(ConfigService);
+
+  // Trust the first proxy hop (Render) so req.ip reflects the real client IP
+  app.set("trust proxy", 1);
 
   // Security: Helmet for security headers
   app.use(helmet());
@@ -26,13 +30,17 @@ async function bootstrap() {
     logger.log(`IP restriction enabled for: ${allowedIps}`);
   }
 
-  // Security: Enable CORS with restricted origin
+  // Security: Enable CORS with restricted origin(s), comma-separated list
   const frontendUrl = configService.get<string>(
     "FRONTEND_URL",
-    process.env.FRONTEND_URL || "http://localhost:3000",
+    "http://localhost:3000",
   );
+  const frontendOrigins = frontendUrl
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   app.enableCors({
-    origin: frontendUrl,
+    origin: frontendOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],

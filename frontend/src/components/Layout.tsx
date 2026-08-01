@@ -51,6 +51,7 @@ import { Separator } from "./ui/separator";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { cn } from "../lib/utils";
 import { useTranslation } from "react-i18next";
+import { getLoginUrl } from "../lib/routes";
 
 interface NavItem {
   path: string;
@@ -96,7 +97,8 @@ export function Layout() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    // Login lives on the apex zone — a full page load clears admin-zone state.
+    window.location.href = getLoginUrl();
   };
 
   const userInitial =
