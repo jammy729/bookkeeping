@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   ADMIN_SUBDOMAIN_PREFIX,
   getAdminOrigin,
@@ -63,5 +63,39 @@ describe('routes zone helpers', () => {
 
   it('getLoginUrl targets the apex login page', () => {
     expect(getLoginUrl()).toBe(`${getApexOrigin()}/login`);
+  });
+});
+
+describe('routes zone helpers — single-zone mode (VITE_SINGLE_ZONE=true)', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  // The flag is read at module evaluation, so the module must be re-imported
+  // after stubbing the env var for the assertions to see it.
+  async function loadSingleZone() {
+    vi.stubEnv('VITE_SINGLE_ZONE', 'true');
+    vi.resetModules();
+    return await import('./routes');
+  }
+
+  it('isAdminZone treats every hostname as the admin zone', async () => {
+    const mod = await loadSingleZone();
+    expect(mod.isAdminZone('localhost')).toBe(true);
+    expect(mod.isAdminZone('bookkeeping-frontend-scey.onrender.com')).toBe(true);
+  });
+
+  it('origin helpers are no-ops (everything runs at the deployed origin)', async () => {
+    const mod = await loadSingleZone();
+    const origin = 'https://bookkeeping-frontend-scey.onrender.com';
+    expect(mod.getApexOrigin(origin)).toBe(origin);
+    expect(mod.getAdminOrigin(origin)).toBe(origin);
+    expect(mod.getAdminOrigin('http://localhost:5173')).toBe('http://localhost:5173');
+    expect(mod.getApexOrigin('http://admin.localhost:5173')).toBe('http://admin.localhost:5173');
+  });
+
+  it('getLoginUrl stays on the same origin', async () => {
+    const mod = await loadSingleZone();
+    expect(mod.getLoginUrl()).toBe(`${window.location.origin}/login`);
   });
 });

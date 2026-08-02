@@ -133,11 +133,14 @@ Set in Render dashboard (not committed to git):
 
 ### Frontend Environment Variables
 
-Set in Vercel dashboard (not committed to git):
+Set in the hosting dashboard (Vercel or Render — not committed to git):
 
-| Variable       | Staging                     | Production               | Description          |
-| -------------- | --------------------------- | ------------------------ | -------------------- |
-| `VITE_API_URL` | Render staging URL + `/api` | Render prod URL + `/api` | Backend API base URL |
+| Variable            | Local (config/.env)          | Production                         | Description                                                        |
+| ------------------- | ---------------------------- | ---------------------------------- | ------------------------------------------------------------------ |
+| `VITE_API_URL`      | `/api` (vite dev proxy)      | Backend prod URL + `/api`          | Backend API base URL                                                |
+| `VITE_SINGLE_ZONE`  | `false` (unset)              | `true` (free Render/Vercel URL)    | Runs the full app at the deployed origin instead of `admin.` subdomain — see below |
+
+> **Single-zone mode**: free hosting can't serve an `admin.<service>.onrender.com` subdomain (no TLS cert can exist for it). With `VITE_SINGLE_ZONE=true` the app collapses both zones onto the deployed origin (auth + protected pages all live at `/`), so a single free URL works end-to-end. When a real domain is added, unset the flag and the `admin.` subdomain architecture activates. Must be set in the hosting dashboard for deployed builds (gitignored `config/` files are not present at deploy time).
 
 ### Database Scripts
 
@@ -156,6 +159,22 @@ pnpm run seed
 
 # Seed via typeorm-extension (with tracking)
 pnpm run seed:run
+```
+
+Environment-specific variants (same guarded pattern as `start:qa`/`start:prod` — run from the repo root or `backend/`; each preloads its env file via `node --env-file`):
+
+```bash
+# Run migrations against the QA database (config/.env.qa)
+pnpm --filter bookkeeping-backend migration:run:qa
+
+# Run migrations against the PRODUCTION database (config/.env.prod)
+pnpm --filter bookkeeping-backend migration:run:prod
+
+# Seed the QA database (config/.env.qa)
+pnpm --filter bookkeeping-backend seed:qa
+
+# Seed the PRODUCTION database (config/.env.prod) — creates test@example.com / Test123!
+pnpm --filter bookkeeping-backend seed:prod
 ```
 
 ### Manual Setup Steps

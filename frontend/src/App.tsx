@@ -28,13 +28,33 @@ function App() {
   // below doesn't shadow the imported function into its own TDZ.
   const isAdminZone = isAdminZoneCheck();
 
+  // Single-zone deployments have no `admin.` subdomain (no free TLS cert can
+  // exist for it), so the full app — including the public auth pages — runs at
+  // the deployed origin. See VITE_SINGLE_ZONE in lib/routes.ts.
+  const singleZone = import.meta.env.VITE_SINGLE_ZONE === 'true';
+  const fullAppZone = singleZone || isAdminZone;
+
   return (
     <AuthProvider>
       <Toaster position="top-right" />
       <ErrorBoundary>
-      {isAdminZone ? (
-        /* Admin zone (admin.*): full authenticated app at root paths. */
+      {fullAppZone ? (
+        /* Full app zone (admin.* subdomain, or the single deployed origin
+           when VITE_SINGLE_ZONE=true): protected pages at root paths plus —
+           in single-zone mode only — the public auth pages, so unauthenticated
+           redirects (ProtectedRoute/api 401) stay on the same origin. */
         <Routes>
+          {singleZone && (
+            <>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/health" element={<Health />} />
+            </>
+          )}
+
           {/* Protected routes */}
           <Route
             path="/"

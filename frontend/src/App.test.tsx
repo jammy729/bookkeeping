@@ -80,6 +80,7 @@ describe('App zone routing', () => {
     window.location.hash = '';
     localStorage.clear();
     vi.clearAllMocks();
+    vi.unstubAllEnvs();
   });
 
   it('apex zone renders the login form at /login', async () => {
@@ -196,6 +197,32 @@ describe('App zone routing', () => {
   it('admin zone renders the dashboard for an authenticated user at /', async () => {
     mockZone(true);
     localStorage.setItem('token', FAKE_JWT);
+    renderApp(['/']);
+
+    expect(await screen.findByText('Recent Transactions')).toBeInTheDocument();
+    expect(screen.getByText(/Hello, A/)).toBeInTheDocument();
+  });
+
+  // ── Single-zone mode (VITE_SINGLE_ZONE=true) ────────────────────────────
+  // Free hosting (Render *.onrender.com) can't serve an `admin.` subdomain, so
+  // the full app runs at the deployed origin. App.tsx reads the flag at render
+  // time, so stubbing the env var is sufficient — no module re-import needed.
+
+  it('single-zone mode exposes /login inside the full app (no cross-origin redirect)', async () => {
+    vi.stubEnv('VITE_SINGLE_ZONE', 'true');
+    mockZone(true); // zone logic collapses onto the deployed origin
+
+    renderApp(['/login']);
+
+    expect(await screen.findByPlaceholderText('you@example.com')).toBeInTheDocument();
+    expect(replaceLocation).not.toHaveBeenCalled();
+  });
+
+  it('single-zone mode serves protected pages for an authenticated user', async () => {
+    vi.stubEnv('VITE_SINGLE_ZONE', 'true');
+    mockZone(true);
+    localStorage.setItem('token', FAKE_JWT);
+
     renderApp(['/']);
 
     expect(await screen.findByText('Recent Transactions')).toBeInTheDocument();
