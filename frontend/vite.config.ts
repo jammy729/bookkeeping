@@ -4,7 +4,9 @@ import path from 'path';
 import type { Plugin } from 'vite';
 
 // Injects the frontend build metadata placeholders used by health.html
-// (__GIT_COMMIT__, __BUILD_TIME__) at build time only.
+// (__GIT_COMMIT__, __BUILD_TIME__) at build time only. Vite does NOT run
+// transformIndexHtml for secondary HTML entries in dev, so health.html swaps
+// the raw tokens client-side when they are not replaced (see its <script>).
 function injectBuildMeta(): Plugin {
   return {
     name: 'inject-build-meta',

@@ -44,6 +44,8 @@ pnpm --filter bookkeeping-backend start:dev      # dev env (config/.env), watch 
 pnpm --filter bookkeeping-backend start:qa       # QA env (config/.env.qa), watch mode
 pnpm --filter bookkeeping-backend start:prod     # PROD env (config/.env.prod), watch mode — runs against the PRODUCTION database
 
+> Note: `start:qa` / `start:prod` load their env file via `node --env-file=../config/.env.*`, a path resolved relative to `backend/`. Always invoke them through pnpm (which runs the script with cwd = `backend/`): from the repo root use `pnpm --filter bookkeeping-backend start:qa` (or `start:prod`), or from `backend/` use `pnpm start:qa`. Running the raw `node` command from the repo root fails with `node: ../config/.env.prod: not found`. Both scripts also preflight-check that the env file exists and print a clear error otherwise.
+
 # Frontend
 pnpm --filter bookkeeping-frontend build
 pnpm --filter bookkeeping-frontend lint

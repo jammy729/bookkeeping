@@ -123,6 +123,14 @@
             <span class="dot"></span> Checking...
           </span>
         </div>
+        <div class="detail">
+          <span class="detail-label">URL</span>
+          <span class="detail-value" id="backend-url">—</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Environment</span>
+          <span class="detail-value" id="backend-env">—</span>
+        </div>
       </div>
 
       <div class="card">
@@ -132,10 +140,30 @@
             <span class="dot"></span> Checking...
           </span>
         </div>
+        <div class="detail">
+          <span class="detail-label">URL</span>
+          <span class="detail-value" id="db-url">—</span>
+        </div>
       </div>
     </div>
 
     <script>
+      // In dev, Vite does not run the __GIT_COMMIT__ / __BUILD_TIME__
+      // replacement for secondary HTML entries (only index.html is
+      // transformed), so the raw tokens arrive here. Swap them client-side;
+      // in production builds the tokens are already replaced, so this is a
+      // no-op (git SHAs never contain "__").
+      (function () {
+        var commitEl = document.getElementById("frontend-commit");
+        var buildEl = document.getElementById("frontend-build");
+        if (commitEl && commitEl.textContent.indexOf("__") !== -1) {
+          commitEl.textContent = "unknown";
+        }
+        if (buildEl && buildEl.textContent.indexOf("__") !== -1) {
+          buildEl.textContent = "dev build";
+        }
+      })();
+
       function setBadge(id, status, text) {
         var el = document.getElementById(id);
         el.className = "badge " + status;
@@ -167,10 +195,24 @@
             backendOk ? "ok" : "error",
             backendOk ? "Connected" : "Error"
           );
+
+          // Populate service URLs from the health payload. The backend
+          // redacts DB credentials, so only host/port/database name appear.
+          // textContent (never innerHTML) keeps values inert.
+          var urls = data.urls || {};
+          document.getElementById("backend-url").textContent =
+            urls.backend || "—";
+          document.getElementById("backend-env").textContent =
+            data.environment || "—";
+          document.getElementById("db-url").textContent =
+            urls.database || "—";
         })
         .catch(function () {
           setBadge("backend-status", "error", "Unreachable");
           setBadge("db-status", "error", "Error");
+          document.getElementById("backend-url").textContent = "Unavailable";
+          document.getElementById("backend-env").textContent = "—";
+          document.getElementById("db-url").textContent = "Unavailable";
         });
     </script>
   </body>
