@@ -6,6 +6,8 @@
   "packageManager": "pnpm@10.8.0",
   "scripts": {
     "dev": "vite",
+    "dev:prod": "vite --mode prod",
+    "dev:qa": "vite --mode qa",
     "build": "tsc -b && vite build",
     "lint": "eslint . --max-warnings 0",
     "preview": "vite preview",

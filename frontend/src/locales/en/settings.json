@@ -31,6 +31,7 @@
       "confirmPlaceholder": "Confirm new password",
       "updatePassword": "Update Password",
       "updated": "Password updated successfully",
+      "failed": "Failed to update password",
       "validation": {
         "mismatch": "Passwords do not match",
         "minLength": "Password must be at least 6 characters"

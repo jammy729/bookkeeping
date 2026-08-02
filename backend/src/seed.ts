@@ -12,12 +12,12 @@ import * as bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
 import { resolve } from "path";
 
-dotenv.config({ path: resolve(__dirname, "../../.env") });
+dotenv.config({ path: resolve(__dirname, "../../config/.env") });
 
 async function bootstrap() {
   const url = process.env.DB_URL;
   if (!url) {
-    throw new Error("DB_URL is required (set it in the root .env file)");
+    throw new Error("DB_URL is required (set it in the root config/.env file)");
   }
   const dsOptions = {
     type: "postgres" as const,

@@ -4,7 +4,8 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/useAuth";
 import { useTheme } from "../hooks/useTheme";
-import { getAdminOrigin } from "../lib/routes";
+import { getApexOrigin, replaceLocation } from "../lib/routes";
+import { Logo } from "../components/Logo";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -57,9 +58,11 @@ export function Register() {
     try {
       const response = await register(email, firstName.trim(), lastName.trim(), password);
       toast.success(t("auth.register.welcome"));
-      // Hand the JWT to the admin zone via the URL hash fragment, landing on
-      // the onboarding flow. The apex origin never persists the token.
-      window.location.replace(getAdminOrigin() + '/onboarding#token=' + encodeURIComponent(response.token));
+      // Registration happens on the apex zone. Stay on the apex to run the
+      // onboarding flow — the token travels via the URL hash fragment only
+      // (never persisted on the apex), and the business profile is saved to
+      // the backend before handing off to the admin zone.
+      replaceLocation(getApexOrigin() + '/onboarding#token=' + encodeURIComponent(response.token));
     } catch (error: unknown) {
       const message =
         error instanceof Error
@@ -100,9 +103,7 @@ export function Register() {
       <div className="w-full max-w-md space-y-6">
         {/* Brand */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground font-bold text-lg">
-            B
-          </div>
+          <Logo className="w-12 h-12 mx-auto" />
           <h1 className="text-2xl font-bold tracking-tight">{t("auth.register.title")}</h1>
           <p className="text-muted-foreground text-sm">
             {t("auth.register.description")}

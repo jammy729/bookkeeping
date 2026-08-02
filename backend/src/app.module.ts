@@ -30,7 +30,7 @@ import { AuditModule } from "./modules/audit/audit.module";
     // ConfigModule for environment variables
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ["../.env", ".env"],
+      envFilePath: ["../config/.env", ".env"],
     }),
 
     // Rate limiting (Throttler)
@@ -53,7 +53,9 @@ import { AuditModule } from "./modules/audit/audit.module";
       useFactory: (configService: ConfigService) => {
         const url = configService.get<string>("DB_URL");
         if (!url) {
-          throw new Error("DB_URL is required (set it in the root .env file)");
+          throw new Error(
+            "DB_URL is required (set it in the root config/.env file)",
+          );
         }
         const isLocal = url.includes("localhost") || url.includes("127.0.0.1");
         return {

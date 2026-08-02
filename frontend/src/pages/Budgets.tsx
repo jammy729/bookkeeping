@@ -230,7 +230,7 @@ export function Budgets() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('dialog.deleteTitle', { entity: 'budget' })}</AlertDialogTitle>
-            <AlertDialogDescription>{t('common.confirmDelete', { entity: 'budget' })}</AlertDialogDescription>
+            <AlertDialogDescription>{t('dialog.confirmDelete', { entity: 'budget' })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>

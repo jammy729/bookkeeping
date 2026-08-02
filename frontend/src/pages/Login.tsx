@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/useAuth";
 import { useTheme } from "../hooks/useTheme";
 import { getAdminOrigin } from "../lib/routes";
+import { Logo } from "../components/Logo";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -76,9 +77,7 @@ export function Login() {
       <div className="w-full max-w-md space-y-6">
         {/* Logo / Brand */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground font-bold text-lg">
-            B
-          </div>
+          <Logo className="w-12 h-12 mx-auto" />
           <h1 className="text-2xl font-bold tracking-tight">{t("auth.login.title")}</h1>
           <p className="text-muted-foreground text-sm">
             {t("auth.login.description")}

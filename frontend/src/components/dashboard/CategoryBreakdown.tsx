@@ -38,7 +38,7 @@ export function CategoryBreakdown({ data }: CategoryBreakdownProps) {
             ))}
           </Pie>
           <Tooltip
-            formatter={(value) => [formatCurrency(Number(value)), t('chart.amount')]}
+            formatter={(value) => [formatCurrency(Number(value)), t('dashboard.chart.amount')]}
           />
           <Legend />
         </PieChart>

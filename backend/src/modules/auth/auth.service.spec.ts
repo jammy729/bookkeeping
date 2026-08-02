@@ -49,6 +49,13 @@ describe("AuthService", () => {
     isEmailVerified: false,
     resetToken: null,
     resetTokenExpiresAt: null,
+    businessName: null,
+    businessType: null,
+    industry: null,
+    taxSettings: null,
+    currency: null,
+    fiscalYearStart: null,
+    onboardingCompleted: false,
     createdAt: new Date("2024-01-01"),
     updatedAt: new Date("2024-01-01"),
   } as User;
@@ -271,12 +278,86 @@ describe("AuthService", () => {
       expect(result.token).toBe("mock-jwt-token");
     });
 
+    it("should persist business profile fields and mark onboarding completed", async () => {
+      const updated = {
+        ...mockUser,
+        businessName: "Acme Studio",
+        businessType: "freelancer",
+        industry: "design",
+        taxSettings: { hstRegistered: true, hstRate: 13 },
+        currency: "CAD",
+        fiscalYearStart: 1,
+        onboardingCompleted: true,
+      };
+      userRepo.findOne.mockResolvedValue(mockUser);
+      userRepo.save.mockResolvedValue(updated);
+
+      const result = await service.updateProfile("user-1", {
+        businessName: "Acme Studio",
+        businessType: "freelancer",
+        industry: "design",
+        taxSettings: { hstRegistered: true, hstRate: 13 },
+        currency: "CAD",
+        fiscalYearStart: 1,
+        onboardingCompleted: true,
+      });
+
+      expect(result.user.businessName).toBe("Acme Studio");
+      expect(result.user.businessType).toBe("freelancer");
+      expect(result.user.industry).toBe("design");
+      expect(result.user.taxSettings).toEqual({
+        hstRegistered: true,
+        hstRate: 13,
+      });
+      expect(result.user.currency).toBe("CAD");
+      expect(result.user.fiscalYearStart).toBe(1);
+      expect(result.user.onboardingCompleted).toBe(true);
+      expect(userRepo.save).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not expose the password in the response", async () => {
+      const updated = { ...mockUser, businessName: "Acme Studio" };
+      userRepo.findOne.mockResolvedValue(mockUser);
+      userRepo.save.mockResolvedValue(updated);
+
+      const result = await service.updateProfile("user-1", {
+        businessName: "Acme Studio",
+      });
+
+      expect(result.user).not.toHaveProperty("password");
+    });
+
     it("should throw if user not found", async () => {
       userRepo.findOne.mockResolvedValue(null);
 
       await expect(
         service.updateProfile("nonexistent", { firstName: "Jane" }),
       ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe("getProfile", () => {
+    it("should return the user without the password", async () => {
+      userRepo.findOne.mockResolvedValue({
+        ...mockUser,
+        businessName: "Acme Studio",
+        onboardingCompleted: true,
+      });
+
+      const result = await service.getProfile("user-1");
+
+      expect(result.id).toBe("user-1");
+      expect(result.businessName).toBe("Acme Studio");
+      expect(result.onboardingCompleted).toBe(true);
+      expect(result).not.toHaveProperty("password");
+    });
+
+    it("should throw if user not found", async () => {
+      userRepo.findOne.mockResolvedValue(null);
+
+      await expect(service.getProfile("nonexistent")).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 

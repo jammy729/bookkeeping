@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../hooks/useTheme";
+import { Logo } from "../components/Logo";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -64,9 +65,7 @@ export function ForgotPassword() {
 
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground font-bold text-lg">
-            B
-          </div>
+          <Logo className="w-12 h-12 mx-auto" />
           <h1 className="text-2xl font-bold tracking-tight">{t("forgotPassword.title")}</h1>
           <p className="text-muted-foreground text-sm">
             {t("forgotPassword.description")}

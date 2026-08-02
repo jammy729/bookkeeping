@@ -62,7 +62,8 @@
       "discountLabel": "Descuento",
       "total": "Total",
       "notes": "Notas",
-      "notesPlaceholder": "Notas o instrucciones de pago opcionales"
+      "notesPlaceholder": "Notas o instrucciones de pago opcionales",
+      "paidDate": "Fecha de pago"
     },
     "empty": {
       "title": "No se encontraron facturas",

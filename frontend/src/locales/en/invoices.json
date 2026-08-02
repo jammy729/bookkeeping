@@ -62,7 +62,8 @@
       "discountLabel": "Discount",
       "total": "Total",
       "notes": "Notes",
-      "notesPlaceholder": "Optional notes or payment instructions"
+      "notesPlaceholder": "Optional notes or payment instructions",
+      "paidDate": "Paid Date"
     },
     "empty": {
       "title": "No invoices found",

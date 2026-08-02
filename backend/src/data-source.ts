@@ -3,12 +3,12 @@ import { resolve } from "path";
 import { DataSource, DataSourceOptions } from "typeorm";
 import { SeederOptions } from "typeorm-extension";
 
-config({ path: resolve(__dirname, "../../.env") });
+config({ path: resolve(__dirname, "../../config/.env") });
 
 const url = process.env.DB_DIRECT_URL || process.env.DB_URL;
 
 if (!url) {
-  throw new Error("DB_URL is required (set it in the root .env file)");
+  throw new Error("DB_URL is required (set it in the root config/.env file)");
 }
 
 const options: DataSourceOptions & SeederOptions = {

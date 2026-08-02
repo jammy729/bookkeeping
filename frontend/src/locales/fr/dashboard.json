@@ -33,6 +33,12 @@
       "income": "Revenu",
       "expenses": "Depenses",
       "amount": "Montant"
-    }
+    },
+    "vsPreviousPeriod": "par rapport à la période précédente",
+    "needsAttention": "Requiert votre attention",
+    "budgetAlerts": "Alertes de budget",
+    "pendingReceipts": "Reçus en attente",
+    "vsPrev": "vs période précédente",
+    "ownerDistributions": "Prélèvements du propriétaire"
   }
 }

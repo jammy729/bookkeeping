@@ -17,6 +17,7 @@ import {
   LoginDto,
   ForgotPasswordDto,
   ResetPasswordDto,
+  UpdateProfileData,
 } from "./auth.service";
 import { JwtAuthGuard } from "../../guards/jwt-auth.guard";
 import {
@@ -90,6 +91,19 @@ export class AuthController {
     return this.authService.resendVerificationEmail(body.email);
   }
 
+  @Get("me")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: "Get current user profile (including business profile)",
+  })
+  @ApiResponse({ status: 200, description: "Profile returned successfully" })
+  @ApiResponse({ status: 400, description: "User not found" })
+  async getProfile(@Request() req) {
+    return this.authService.getProfile(req.user.userId);
+  }
+
   @Put("update-profile")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -100,7 +114,7 @@ export class AuthController {
   async updateProfile(
     @Request() req,
     @Body()
-    updateData: { firstName?: string; lastName?: string; email?: string },
+    updateData: UpdateProfileData,
   ) {
     return this.authService.updateProfile(req.user.userId, updateData);
   }

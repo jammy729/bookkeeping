@@ -42,6 +42,31 @@ export class User {
   @Column({ nullable: true })
   resetTokenExpiresAt: Date;
 
+  // Business profile (populated during onboarding). Nullable until the
+  // user completes the onboarding flow; stored server-side so the profile
+  // survives the apex -> admin zone handoff (admin persists the JWT, not
+  // localStorage business data).
+  @Column({ nullable: true })
+  businessName: string;
+
+  @Column({ nullable: true })
+  businessType: string;
+
+  @Column({ nullable: true })
+  industry: string;
+
+  @Column({ type: "jsonb", nullable: true })
+  taxSettings: Record<string, unknown> | null;
+
+  @Column({ nullable: true })
+  currency: string;
+
+  @Column({ nullable: true })
+  fiscalYearStart: number;
+
+  @Column({ default: false })
+  onboardingCompleted: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

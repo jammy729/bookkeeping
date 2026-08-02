@@ -21,7 +21,10 @@ function injectBuildMeta(): Plugin {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), injectBuildMeta()],
-  envDir: '..',
+  // Env files live in the root config/ folder (.env, .env.qa, .env.prod).
+  // Mode-based loading: `vite --mode qa` loads config/.env.qa,
+  // `vite --mode prod` loads config/.env.prod.
+  envDir: '../config',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -29,7 +32,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    host: '127.0.0.1',
+    host: 'localhost',
     allowedHosts: ['admin.localhost'],
     proxy: {
       '/api': {

@@ -62,7 +62,8 @@
       "discountLabel": "할인",
       "total": "합계",
       "notes": "메모",
-      "notesPlaceholder": "선택적 메모 또는 결제 안내"
+      "notesPlaceholder": "선택적 메모 또는 결제 안내",
+      "paidDate": "결제일"
     },
     "empty": {
       "title": "청구서가 없습니다",

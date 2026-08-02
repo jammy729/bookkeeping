@@ -203,7 +203,7 @@ export function Categories() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('dialog.deleteTitle', { entity: 'category' })}</AlertDialogTitle>
-            <AlertDialogDescription>{t('common.confirmDelete', { entity: 'category' })}</AlertDialogDescription>
+            <AlertDialogDescription>{t('dialog.confirmDelete', { entity: 'category' })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>

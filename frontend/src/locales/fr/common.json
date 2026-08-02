@@ -32,7 +32,37 @@
   "edit": "Modifier",
   "view": "Voir",
   "export": "Exporter",
-  "import": "Importer",
+  "import": {
+    "titleExpenses": "Importer des depenses depuis CSV",
+    "titleIncome": "Importer des revenus depuis CSV",
+    "dropOrClick": "Deposez un fichier CSV ici ou cliquez pour parcourir",
+    "csvOnly": "Fichiers .csv pris en charge",
+    "changeFile": "Changer le fichier",
+    "rowsDetected": "lignes detectees",
+    "mapColumns": "Mapper les colonnes",
+    "dateColumn": "Colonne date",
+    "descriptionColumn": "Colonne description",
+    "amountColumn": "Colonne montant",
+    "selectColumn": "Selectionner une colonne",
+    "preview": "Apercu (5 premieres lignes)",
+    "andMore": "...et {{count}} lignes de plus",
+    "import": "Importer {{count}} lignes",
+    "importing": "Importation...",
+    "close": "Fermer",
+    "result": {
+      "success": "{{count}} transactions importees avec succes",
+      "errors": "{{count}} lignes ont echoue lors de l'importation"
+    },
+    "toast": {
+      "invalidFileType": "Veuillez selectionner un fichier CSV",
+      "emptyFile": "Le fichier CSV est vide",
+      "parseError": "Echec de l'analyse du fichier CSV",
+      "mappingRequired": "Veuillez mapper toutes les colonnes requises (Date, Description, Montant)",
+      "success": "{{count}} transactions importees avec succes",
+      "partialSuccess": "{{imported}} importees, {{failed}} echouees",
+      "importFailed": "Echec de l'importation des transactions"
+    }
+  },
   "download": "Telecharger",
   "upload": "Televerser",
   "open": "Ouvrir",
@@ -152,36 +182,5 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
-  },
-  "import": {
-    "titleExpenses": "Importer des depenses depuis CSV",
-    "titleIncome": "Importer des revenus depuis CSV",
-    "dropOrClick": "Deposez un fichier CSV ici ou cliquez pour parcourir",
-    "csvOnly": "Fichiers .csv pris en charge",
-    "changeFile": "Changer le fichier",
-    "rowsDetected": "lignes detectees",
-    "mapColumns": "Mapper les colonnes",
-    "dateColumn": "Colonne date",
-    "descriptionColumn": "Colonne description",
-    "amountColumn": "Colonne montant",
-    "selectColumn": "Selectionner une colonne",
-    "preview": "Apercu (5 premieres lignes)",
-    "andMore": "...et {{count}} lignes de plus",
-    "import": "Importer {{count}} lignes",
-    "importing": "Importation...",
-    "close": "Fermer",
-    "result": {
-      "success": "{{count}} transactions importees avec succes",
-      "errors": "{{count}} lignes ont echoue lors de l'importation"
-    },
-    "toast": {
-      "invalidFileType": "Veuillez selectionner un fichier CSV",
-      "emptyFile": "Le fichier CSV est vide",
-      "parseError": "Echec de l'analyse du fichier CSV",
-      "mappingRequired": "Veuillez mapper toutes les colonnes requises (Date, Description, Montant)",
-      "success": "{{count}} transactions importees avec succes",
-      "partialSuccess": "{{imported}} importees, {{failed}} echouees",
-      "importFailed": "Echec de l'importation des transactions"
-    }
   }
 }

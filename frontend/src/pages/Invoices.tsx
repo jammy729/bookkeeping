@@ -268,7 +268,7 @@ export function Invoices() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('dialog.deleteTitle', { entity: 'invoice' })}</AlertDialogTitle>
-            <AlertDialogDescription>{t('common.confirmDelete', { entity: 'invoice' })}</AlertDialogDescription>
+            <AlertDialogDescription>{t('dialog.confirmDelete', { entity: 'invoice' })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>

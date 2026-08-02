@@ -2,7 +2,12 @@
 node_modules
 **/node_modules
 
-# Environment variables
+# Environment variables (config/ folder)
+config/.env
+config/.env.*
+!config/.env.example
+
+# Legacy root-level env files
 .env
 .env.local
 .env.development.local
@@ -11,6 +16,7 @@ node_modules
 .env.staging
 .env.production
 .env.prod
+.env.qa
 
 # Build output
 **/dist

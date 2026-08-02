@@ -5,68 +5,33 @@
     "tabs": {
       "profile": "Perfil",
       "password": "Contraseña",
-      "preferences": "Preferencias",
-      "export": "Exportar datos",
-      "dangerZone": "Zona de peligro"
+      "preferences": "Preferencias"
     },
     "profile": {
       "title": "Información del perfil",
       "description": "Administre su información personal",
-      "avatar": "Foto de perfil",
-      "changeAvatar": "Cambiar foto",
-      "removeAvatar": "Eliminar foto",
-      "name": "Nombre completo",
-      "namePlaceholder": "Su nombre",
-      "email": "Correo electrónico",
-      "emailReadonly": "El correo electrónico no se puede cambiar",
-      "phone": "Teléfono",
-      "phonePlaceholder": "+52 (555) 123-4567",
-      "timezone": "Zona horaria",
-      "language": "Idioma",
-      "dateFormat": "Formato de fecha",
-      "numberFormat": "Formato de números",
-      "saveChanges": "Guardar cambios",
-      "saving": "Guardando...",
-      "saved": "Perfil actualizado exitosamente",
-      "error": "Error al actualizar el perfil",
       "firstName": "Nombre",
       "firstNamePlaceholder": "Nombre",
       "lastName": "Apellido",
       "lastNamePlaceholder": "Apellido",
+      "email": "Correo electrónico",
       "userId": "ID de usuario",
+      "saveChanges": "Guardar cambios",
+      "saved": "Perfil actualizado exitosamente",
       "failed": "Error al actualizar el perfil"
     },
     "password": {
       "title": "Cambiar contraseña",
       "description": "Actualice su contraseña regularmente para mantener su cuenta segura",
       "currentPassword": "Contraseña actual",
-      "currentPasswordPlaceholder": "Ingrese su contraseña actual",
-      "newPassword": "Nueva contraseña",
-      "newPasswordPlaceholder": "Ingrese su nueva contraseña",
-      "confirmPassword": "Confirmar contraseña",
-      "confirmPasswordPlaceholder": "Confirme su nueva contraseña",
-      "requirements": {
-        "label": "La contraseña debe contener:",
-        "minLength": "Al menos 8 caracteres",
-        "uppercase": "Una letra mayúscula",
-        "lowercase": "Una letra minúscula",
-        "number": "Un número",
-        "special": "Un carácter especial"
-      },
-      "updateButton": "Actualizar contraseña",
-      "updating": "Actualizando...",
-      "updated": "Contraseña actualizada exitosamente",
-      "error": {
-        "incorrectCurrent": "La contraseña actual es incorrecta",
-        "sameAsCurrent": "La nueva contraseña no puede ser igual a la actual",
-        "weakPassword": "La contraseña no cumple con los requisitos",
-        "passwordsMismatch": "Las contraseñas no coinciden",
-        "networkError": "Error de conexión. Intente de nuevo"
-      },
       "currentPlaceholder": "Ingrese la contraseña actual",
+      "newPassword": "Nueva contraseña",
       "newPlaceholder": "Ingrese la nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
       "confirmPlaceholder": "Confirme la nueva contraseña",
       "updatePassword": "Actualizar contraseña",
+      "updated": "Contraseña actualizada exitosamente",
+      "failed": "No se pudo actualizar la contraseña",
       "validation": {
         "mismatch": "Las contraseñas no coinciden",
         "minLength": "La contraseña debe tener al menos 6 caracteres"
@@ -75,45 +40,6 @@
     "preferences": {
       "title": "Preferencias",
       "description": "Personalice su experiencia en la aplicación",
-      "appearance": {
-        "title": "Apariencia",
-        "theme": "Tema",
-        "light": "Claro",
-        "dark": "Oscuro",
-        "system": "Sistema",
-        "compactMode": "Modo compacto",
-        "compactModeHelp": "Reduce el espaciado para mostrar más contenido"
-      },
-      "display": {
-        "title": "Visualización",
-        "currency": "Moneda",
-        "dateFormat": "Formato de fecha",
-        "timeFormat": "Formato de hora",
-        "firstDayOfWeek": "Primer día de la semana",
-        "locale": "Idioma de interfaz"
-      },
-      "notifications": {
-        "title": "Notificaciones",
-        "emailNotifications": "Notificaciones por correo",
-        "emailNotificationsHelp": "Reciba alertas importantes por correo electrónico",
-        "pushNotifications": "Notificaciones push",
-        "pushNotificationsHelp": "Reciba notificaciones en el navegador",
-        "billReminders": "Recordatorios de pago",
-        "billRemindersHelp": "Alertas antes de fechas de vencimiento",
-        "monthlyReports": "Reportes mensuales",
-        "monthlyReportsHelp": "Reciba un resumen mensual de sus finanzas",
-        "weeklyDigest": "Resumen semanal",
-        "weeklyDigestHelp": "Resumen de actividad cada lunes"
-      },
-      "privacy": {
-        "title": "Privacidad",
-        "showOnDashboard": "Mostrar en el panel",
-        "showOnDashboardHelp": "Mostrar su nombre en el panel de control",
-        "analyticsConsent": "Mejora de producto",
-        "analyticsConsentHelp": "Ayude a mejorar la aplicación compartiendo datos de uso anónimos"
-      },
-      "saveButton": "Guardar preferencias",
-      "saved": "Preferencias guardadas",
       "currency": "Moneda",
       "currencyValue": "CAD - Dólar canadiense",
       "currencyHelper": "La moneda está configurada en CAD (dólar canadiense) por defecto",
@@ -124,97 +50,9 @@
     "export": {
       "title": "Exportar datos",
       "description": "Descargue una copia de sus datos",
-      "formats": {
-        "csv": "CSV (valores separados por comas)",
-        "excel": "Excel (XLSX)",
-        "json": "JSON (formato completo)",
-        "pdf": "PDF (reportes)"
-      },
-      "sections": {
-        "all": "Todos los datos",
-        "expenses": "Gastos",
-        "income": "Ingresos",
-        "categories": "Categorías",
-        "clients": "Clientes",
-        "invoices": "Facturas",
-        "receipts": "Recibos",
-        "reports": "Reportes"
-      },
-      "dateRange": "Rango de fechas",
-      "allTime": "Todo el tiempo",
-      "customRange": "Rango personalizado",
-      "format": "Formato de archivo",
-      "include": "Incluir",
-      "exportButton": "Exportar datos",
-      "exporting": "Exportando...",
-      "exported": "Datos exportados exitosamente",
-      "downloadLink": "Su archivo está listo. La descarga comenzará automáticamente",
-      "error": "Error al exportar datos. Intente de nuevo",
       "descriptionDetail": "Exporte todos sus datos financieros incluyendo gastos, ingresos, distribuciones y categorías.",
-      "exportAll": "Exportar todos los datos"
-    },
-    "dangerZone": {
-      "title": "Zona de peligro",
-      "description": "Estas acciones son irreversibles. Proceda con precaución",
-      "deactivateAccount": {
-        "title": "Desactivar cuenta",
-        "description": "Su cuenta será desactivada pero no eliminada. Puede reactivarla en cualquier momento contactando al soporte.",
-        "button": "Desactivar cuenta",
-        "confirmTitle": "¿Desactivar su cuenta?",
-        "confirmMessage": "Su cuenta será desactivada. No podrá acceder a la aplicación hasta que la reactive. Todos sus datos se conservarán.",
-        "confirmButton": "Sí, desactivar mi cuenta",
-        "cancelled": "Desactivación cancelada"
-      },
-      "deleteAccount": {
-        "title": "Eliminar cuenta",
-        "description": "Elimine permanentemente su cuenta y todos sus datos. Esta acción no se puede deshacer.",
-        "button": "Eliminar cuenta",
-        "confirmTitle": "Eliminar su cuenta permanentemente",
-        "confirmMessage": "Esta acción eliminará permanentemente todos sus datos, incluyendo transacciones, facturas, clientes y recibos. Esta acción es irreversible.",
-        "confirmLabel": "Entiendo las consecuencias",
-        "typeConfirmation": "Escriba ELIMINAR para confirmar",
-        "typeConfirmationPlaceholder": "ELIMINAR",
-        "confirmButton": "Eliminar cuenta permanentemente",
-        "success": "Cuenta eliminada. Redirigiendo...",
-        "error": "Error al eliminar la cuenta"
-      },
-      "exportBeforeDelete": {
-        "title": "Antes de eliminar",
-        "description": "Le recomendamos exportar sus datos antes de eliminar su cuenta",
-        "exportButton": "Exportar datos primero"
-      }
-    },
-    "account": {
-      "title": "Cuenta",
-      "plan": "Plan actual",
-      "planFree": "Gratuito",
-      "planPro": "Profesional",
-      "planEnterprise": "Empresarial",
-      "storage": "Almacenamiento",
-      "storageUsed": "{{used}} de {{total}} utilizados",
-      "memberSince": "Miembro desde",
-      "lastLogin": "Último acceso"
-    },
-    "sessions": {
-      "title": "Sesiones activas",
-      "description": "Administre sus dispositivos con sesión activa",
-      "currentSession": "Sesión actual",
-      "revoke": "Revocar",
-      "revokeAll": "Revocar todas las demás sesiones",
-      "revoked": "Sesión revocada",
-      "lastActive": "Última actividad"
-    },
-    "billing": {
-      "title": "Facturación",
-      "currentPlan": "Plan actual",
-      "upgrade": "Mejorar plan",
-      "downgrade": "Cambiar a plan inferior",
-      "cancelSubscription": "Cancelar suscripción",
-      "paymentMethod": "Método de pago",
-      "addPaymentMethod": "Agregar método de pago",
-      "invoices": "Facturas de facturación",
-      "nextBillingDate": "Próxima fecha de facturación",
-      "billingHistory": "Historial de facturación"
+      "exportAll": "Exportar todos los datos",
+      "exported": "Datos exportados exitosamente"
     },
     "danger": {
       "title": "Zona de peligro",

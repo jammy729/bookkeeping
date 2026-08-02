@@ -231,7 +231,7 @@ export function Dashboard() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">{t("dashboard.uncategorized")}</span>
+                    <span className="text-sm text-muted-foreground">{t("uncategorized")}</span>
                     <span className="text-sm font-semibold">{actionItems?.uncategorizedCount || 0}</span>
                   </div>
                   <div className="flex items-center justify-between">

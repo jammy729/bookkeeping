@@ -19,6 +19,7 @@ import { Register } from './pages/Register';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
 import { Onboarding } from './pages/Onboarding';
+import { Health } from './pages/Health';
 import { isAdminZone as isAdminZoneCheck } from './lib/routes';
 
 function App() {
@@ -34,16 +35,6 @@ function App() {
       {isAdminZone ? (
         /* Admin zone (admin.*): full authenticated app at root paths. */
         <Routes>
-          {/* Onboarding (protected) */}
-          <Route
-            path="/onboarding"
-            element={
-              <ProtectedRoute>
-                <Onboarding />
-              </ProtectedRoute>
-            }
-          />
-
           {/* Protected routes */}
           <Route
             path="/"
@@ -75,6 +66,15 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          {/* Onboarding: public on the apex. The token arrives via the URL
+              hash fragment from /register and is never persisted here; the
+              business profile is saved to the backend before handing off to
+              the admin zone. */}
+          <Route path="/onboarding" element={<Onboarding />} />
+
+          {/* Public diagnostics page — no auth, shows service URLs from the
+              backend /api/health endpoint (DB credentials are redacted there). */}
+          <Route path="/health" element={<Health />} />
 
           <Route path="/" element={<Navigate to="/login" replace />} />
 

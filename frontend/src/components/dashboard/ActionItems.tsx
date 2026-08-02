@@ -47,8 +47,8 @@ export function ActionItems() {
     items.push({
       id: 'uncategorized',
       type: 'uncategorized',
-      title: t('uncategorizedTransactions', { count: uncategorizedCount }),
-      description: t('uncategorizedDescription'),
+      title: t('dashboard.uncategorizedTransactions', { count: uncategorizedCount }),
+      description: t('dashboard.uncategorizedDescription'),
       link: '/transactions',
       count: uncategorizedCount,
     });
@@ -58,8 +58,8 @@ export function ActionItems() {
     items.push({
       id: 'budget-alerts',
       type: 'budget_alert',
-      title: t('budgetsNearLimit', { count: alertBudgets }),
-      description: t('budgetsNearLimitDescription'),
+      title: t('dashboard.budgetsNearLimit', { count: alertBudgets }),
+      description: t('dashboard.budgetsNearLimitDescription'),
       link: '/budgets',
       count: alertBudgets,
     });
@@ -83,7 +83,7 @@ export function ActionItems() {
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           <AlertCircle className="h-4 w-4" />
-          {t('actionItems')}
+          {t('dashboard.actionItems')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">

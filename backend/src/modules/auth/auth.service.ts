@@ -40,6 +40,21 @@ export interface ResetPasswordDto {
   newPassword: string;
 }
 
+export interface UpdateProfileData {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  // Business profile fields — persisted server-side so the profile survives
+  // the apex -> admin zone handoff (admin persists the JWT only).
+  businessName?: string;
+  businessType?: string;
+  industry?: string;
+  taxSettings?: Record<string, unknown>;
+  currency?: string;
+  fiscalYearStart?: number;
+  onboardingCompleted?: boolean;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -206,9 +221,23 @@ export class AuthService {
     return { message: "Email verified successfully" };
   }
 
+  async getProfile(userId: string): Promise<Omit<User, "password">> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new BadRequestException("User not found");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...result } = user;
+    return result;
+  }
+
   async updateProfile(
     userId: string,
-    updateData: { firstName?: string; lastName?: string; email?: string },
+    updateData: UpdateProfileData,
   ): Promise<{ user: Omit<User, "password">; token: string }> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -218,16 +247,44 @@ export class AuthService {
       throw new BadRequestException("User not found");
     }
 
-    if (updateData.firstName) {
+    if (updateData.firstName !== undefined) {
       user.firstName = updateData.firstName;
     }
 
-    if (updateData.lastName) {
+    if (updateData.lastName !== undefined) {
       user.lastName = updateData.lastName;
     }
 
-    if (updateData.email) {
+    if (updateData.email !== undefined) {
       user.email = updateData.email;
+    }
+
+    if (updateData.businessName !== undefined) {
+      user.businessName = updateData.businessName;
+    }
+
+    if (updateData.businessType !== undefined) {
+      user.businessType = updateData.businessType;
+    }
+
+    if (updateData.industry !== undefined) {
+      user.industry = updateData.industry;
+    }
+
+    if (updateData.taxSettings !== undefined) {
+      user.taxSettings = updateData.taxSettings;
+    }
+
+    if (updateData.currency !== undefined) {
+      user.currency = updateData.currency;
+    }
+
+    if (updateData.fiscalYearStart !== undefined) {
+      user.fiscalYearStart = updateData.fiscalYearStart;
+    }
+
+    if (updateData.onboardingCompleted !== undefined) {
+      user.onboardingCompleted = updateData.onboardingCompleted;
     }
 
     await this.userRepository.save(user);

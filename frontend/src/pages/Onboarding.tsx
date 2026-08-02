@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../context/useAuth';
 import { useBusiness, type BusinessProfile } from '../context/business-context';
 import { useTheme } from '../hooks/useTheme';
+import { api } from '../lib/api';
+import { getAdminOrigin, replaceLocation } from '../lib/routes';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -62,12 +63,46 @@ const STEPS = [
   { id: 4, key: 'complete', icon: CheckCircle2 },
 ];
 
+const HASH_TOKEN_PREFIX = '#token=';
+
+/**
+ * Reads the JWT that /register handed over in the URL hash fragment.
+ * Captured synchronously (useState initializer) because AuthProvider strips
+ * the hash on mount — after that the token is gone from the URL.
+ */
+function readHandoffToken(): string | null {
+  const hash = window.location.hash;
+  if (!hash.startsWith(HASH_TOKEN_PREFIX)) return null;
+  try {
+    return decodeURIComponent(hash.slice(HASH_TOKEN_PREFIX.length));
+  } catch {
+    // Malformed percent-encoding — treat as "no token".
+    return null;
+  }
+}
+
+/** Best-effort name/email for the greeting, decoded from the handoff JWT. */
+function decodeHandoffName(token: string): string | undefined {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1])) as {
+      firstName?: string;
+      email?: string;
+    };
+    return payload.firstName || payload.email?.split('@')[0];
+  } catch {
+    return undefined;
+  }
+}
+
 export function Onboarding() {
   const [step, setStep] = useState(1);
-  const { user } = useAuth();
-  const { profile, updateProfile } = useBusiness();
+  // The apex zone never persists the JWT, so the token must be read straight
+  // from the URL hash. Capture it once at mount (before AuthProvider strips
+  // the hash) and carry it through to the admin-zone handoff.
+  const [handoffToken] = useState<string | null>(readHandoffToken);
+  const [saving, setSaving] = useState(false);
+  const { profile } = useBusiness();
   const { setTheme, resolvedTheme } = useTheme();
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   // Step 1: Profile
@@ -100,26 +135,49 @@ export function Onboarding() {
     if (step > 1) setStep(step - 1);
   };
 
-  const handleComplete = () => {
-    updateProfile({
-      businessName,
-      businessType,
-      industry,
-      taxSettings: {
-        gstRegistered,
-        hstRegistered,
-        pstRegistered: false,
-        gstRate: 5,
-        hstRate: 13,
-        pstRate: 0,
-      },
-      currency: 'CAD',
-      fiscalYearStart,
-      onboardingCompleted: true,
-    });
-    toast.success(t('auth.onboarding.completeToast'));
-    navigate('/');
+  const handleComplete = async () => {
+    if (!handoffToken) return;
+    setSaving(true);
+    try {
+      // Persist the business profile to the backend with the handoff token.
+      // The apex origin is stateless, so the explicit Authorization header
+      // is required here (the axios interceptor only injects a token that
+      // exists in apex localStorage, which AuthProvider purges on mount).
+      await api.put(
+        '/auth/update-profile',
+        {
+          businessName,
+          businessType,
+          industry,
+          taxSettings: {
+            gstRegistered,
+            hstRegistered,
+            pstRegistered: false,
+            gstRate: 5,
+            hstRate: 13,
+            pstRate: 0,
+          },
+          currency: 'CAD',
+          fiscalYearStart,
+          onboardingCompleted: true,
+        },
+        { headers: { Authorization: `Bearer ${handoffToken}` } },
+      );
+      toast.success(t('auth.onboarding.completeToast'));
+      // Hand the JWT to the admin zone — the only zone allowed to persist
+      // it. The profile is already saved server-side, so the admin zone
+      // hydrates it via GET /auth/me.
+      replaceLocation(`${getAdminOrigin()}/#token=${encodeURIComponent(handoffToken)}`);
+    } catch {
+      toast.error(t('auth.onboarding.failed'));
+      setSaving(false);
+    }
   };
+
+  // Visiting /onboarding directly (no handoff token) — send them to register.
+  if (!handoffToken) {
+    return <Navigate to="/register" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -194,7 +252,7 @@ export function Onboarding() {
               {step === 1 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
-                    <h2 className="text-xl font-bold">{t('auth.onboarding.profile.welcome', { name: user?.firstName || user?.email?.split('@')[0] })}</h2>
+                    <h2 className="text-xl font-bold">{t('auth.onboarding.profile.welcome', { name: decodeHandoffName(handoffToken) ?? t('auth.onboarding.profile.fallbackName') })}</h2>
                     <p className="text-muted-foreground text-sm">
                       {t('auth.onboarding.profile.description')}
                     </p>
@@ -428,9 +486,9 @@ export function Onboarding() {
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             ) : (
-              <Button onClick={handleComplete} className="bg-emerald-600 hover:bg-emerald-700">
-                {t('auth.onboarding.goToDashboard')}
-                <ArrowRight className="h-4 w-4 ml-2" />
+              <Button onClick={handleComplete} className="bg-emerald-600 hover:bg-emerald-700" disabled={saving}>
+                {saving ? t('auth.onboarding.saving') : t('auth.onboarding.goToDashboard')}
+                {!saving && <ArrowRight className="h-4 w-4 ml-2" />}
               </Button>
             )}
           </div>

@@ -2,41 +2,14 @@
   "receipts": {
     "title": "Recibos",
     "description": "Gestione los recibos de sus transacciones",
-    "upload": {
-      "title": "Subir recibos",
-      "dragAndDrop": "Arrastre y suelte sus recibos aquí",
-      "browseFiles": "Seleccionar archivos",
-      "or": "o",
-      "supportedFormats": "Formatos soportados: JPG, PNG, PDF",
-      "maxSize": "Tamaño máximo: 10 MB por archivo",
-      "uploading": "Subiendo...",
-      "uploadComplete": "Carga completada",
-      "uploadFailed": "Error al subir archivo",
-      "invalidFileType": "Tipo de archivo no válido. Use JPG, PNG o PDF",
-      "fileTooLarge": "El archivo excede el tamaño máximo de 10 MB",
-      "selectMultiple": "Puede seleccionar múltiples archivos",
-      "cancel": "Cancelar carga",
-      "retry": "Reintentar carga"
-    },
+    "uploadReceipt": "Subir recibo",
     "stats": {
-      "title": "Resumen de recibos",
-      "totalReceipts": "Total de recibos",
-      "linkedReceipts": "Vinculados a transacciones",
-      "unlinkedReceipts": "Sin vincular",
-      "totalStorage": "Almacenamiento utilizado",
-      "recentUploads": "Subidas recientes",
       "total": "Total de recibos",
       "linked": "Vinculados a gasto",
       "awaitingReview": "En espera de revisión"
     },
     "filters": {
       "search": "Buscar recibos...",
-      "dateRange": "Rango de fechas",
-      "status": "Estado",
-      "linked": "Vinculado",
-      "unlinked": "Sin vincular",
-      "all": "Todos",
-      "clear": "Limpiar filtros",
       "searchPlaceholder": "Buscar recibos...",
       "fileType": "Tipo de archivo",
       "allTypes": "Todos",
@@ -48,118 +21,8 @@
     "tabs": {
       "all": "Todos",
       "linked": "Vinculados",
-      "unlinked": "Sin vincular",
-      "recent": "Recientes",
       "awaitingReview": "En espera de revisión"
     },
-    "table": {
-      "filename": "Nombre del archivo",
-      "date": "Fecha",
-      "transaction": "Transacción",
-      "amount": "Monto",
-      "status": "Estado",
-      "size": "Tamaño",
-      "actions": "Acciones"
-    },
-    "badges": {
-      "linked": "Vinculado",
-      "unlinked": "Sin vincular",
-      "pending": "Pendiente",
-      "processed": "Procesado",
-      "failed": "Error"
-    },
-    "dialogs": {
-      "linkTransaction": {
-        "title": "Vincular a transacción",
-        "description": "Seleccione la transacción a la que desea vincular este recibo",
-        "search": "Buscar transacción...",
-        "noResults": "No se encontraron transacciones",
-        "confirm": "Vincular",
-        "cancel": "Cancelar"
-      },
-      "unlinkTransaction": {
-        "title": "Desvincular recibo",
-        "message": "¿Está seguro de que desea desvincular este recibo de la transacción?",
-        "confirm": "Desvincular",
-        "cancel": "Cancelar"
-      },
-      "deleteReceipt": {
-        "title": "Eliminar recibo",
-        "message": "¿Está seguro de que desea eliminar este recibo? Esta acción no se puede deshacer.",
-        "confirm": "Eliminar",
-        "cancel": "Cancelar"
-      },
-      "bulkDelete": {
-        "title": "Eliminar recibos",
-        "message": "¿Está seguro de que desea eliminar {{count}} recibos? Esta acción no se puede deshacer.",
-        "confirm": "Eliminar todos",
-        "cancel": "Cancelar"
-      },
-      "preview": {
-        "title": "Vista previa del recibo",
-        "close": "Cerrar vista previa",
-        "download": "Descargar",
-        "zoomIn": "Acercar",
-        "zoomOut": "Alejar"
-      }
-    },
-    "uploadDialog": {
-      "title": "Subir recibos",
-      "description": "Suba recibos para vincularlos a sus transacciones",
-      "dropzone": "Arrastre los archivos aquí o haga clic para seleccionar",
-      "filesSelected": "{{count}} archivos seleccionados",
-      "uploading": "Subiendo {{current}} de {{total}}...",
-      "uploadComplete": "{{count}} archivos subidos exitosamente",
-      "uploadErrors": "{{count}} archivos fallaron",
-      "retryFailed": "Reintentar archivos fallidos",
-      "done": "Listo",
-      "dragDrop": "Haga clic para subir o arrastre y suelte",
-      "formats": "JPEG, PNG, WebP, HEIC o PDF — máximo 10 MB",
-      "compressing": "Comprimiendo imagen...",
-      "compressed": "Comprimido {{from}} → {{to}}",
-      "savings": "{{percent}}% más pequeño",
-      "previewAlt": "Vista previa del recibo",
-      "linkToExpense": "Vincular a gasto (opcional)",
-      "skipLink": "Omitir — subir como recibo sin vincular",
-      "upload": "Subir",
-      "invalidFileType": "Tipo de archivo no permitido. Use JPEG, PNG, WebP, HEIC o PDF.",
-      "fileTooLarge": "El tamaño del archivo excede el límite de 10 MB.",
-      "compressionFailed": "Falló la compresión, subiendo el original",
-      "uploadSuccess": "Recibo subido exitosamente",
-      "uploadFailed": "Error al subir el recibo"
-    },
-    "empty": {
-      "noReceipts": "No hay recibos",
-      "noLinkedReceipts": "No hay recibos vinculados",
-      "noUnlinkedReceipts": "No hay recibos sin vincular",
-      "noResults": "No se encontraron recibos",
-      "uploadFirst": "Suba su primer recibo para comenzar",
-      "linkToTransaction": "Vincule este recibo a una transacción"
-    },
-    "toast": {
-      "uploaded": "{{count}} recibos subidos exitosamente",
-      "uploadFailed": "Error al subir recibos",
-      "deleted": "Recibo eliminado exitosamente",
-      "bulkDeleted": "{{count}} recibos eliminados",
-      "linked": "Recibo vinculado a la transacción",
-      "unlinked": "Recibo desvinculado de la transacción",
-      "downloadStarted": "Descarga iniciada",
-      "invalidFiles": "{{count}} archivos no son válidos",
-      "deleteFailed": "Error al eliminar el recibo",
-      "linkFailed": "Error al vincular el recibo",
-      "unlinkFailed": "Error al desvincular el recibo"
-    },
-    "ocr": {
-      "processing": "Procesando recibo con OCR...",
-      "detected": "Datos detectados del recibo",
-      "amount": "Monto detectado",
-      "date": "Fecha detectada",
-      "vendor": "Proveedor detectado",
-      "confidence": "Confianza: {{percent}}%",
-      "lowConfidence": "Confianza baja. Verifique los datos detectados",
-      "noDataDetected": "No se pudieron detectar datos del recibo"
-    },
-    "uploadReceipt": "Subir recibo",
     "emptyState": {
       "noMatch": "Ningún recibo coincide con sus filtros",
       "noMatchDesc": "Intente ajustar su búsqueda o filtros",
@@ -186,11 +49,37 @@
       "confirm": "Vincular recibo",
       "linking": "Vinculando..."
     },
+    "uploadDialog": {
+      "title": "Subir recibos",
+      "dragDrop": "Haga clic para subir o arrastre y suelte",
+      "formats": "JPEG, PNG, WebP, HEIC o PDF — máximo 10 MB",
+      "compressing": "Comprimiendo imagen...",
+      "compressed": "Comprimido {{from}} → {{to}}",
+      "savings": "{{percent}}% más pequeño",
+      "previewAlt": "Vista previa del recibo",
+      "linkToExpense": "Vincular a gasto (opcional)",
+      "skipLink": "Omitir — subir como recibo sin vincular",
+      "uploading": "Subiendo {{current}} de {{total}}...",
+      "upload": "Subir",
+      "invalidFileType": "Tipo de archivo no permitido. Use JPEG, PNG, WebP, HEIC o PDF.",
+      "fileTooLarge": "El tamaño del archivo excede el límite de 10 MB.",
+      "compressionFailed": "Falló la compresión, subiendo el original",
+      "uploadSuccess": "Recibo subido exitosamente",
+      "uploadFailed": "Error al subir el recibo"
+    },
     "preview": {
       "open": "Abrir",
       "download": "Descargar",
       "loadFailed": "Error al cargar la vista previa",
       "notAvailable": "Vista previa no disponible para este tipo de archivo"
+    },
+    "toast": {
+      "deleted": "Recibo eliminado exitosamente",
+      "deleteFailed": "Error al eliminar el recibo",
+      "linked": "Recibo vinculado a la transacción",
+      "linkFailed": "Error al vincular el recibo",
+      "unlinked": "Recibo desvinculado de la transacción",
+      "unlinkFailed": "Error al desvincular el recibo"
     }
   }
 }

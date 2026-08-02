@@ -21,8 +21,12 @@ export class IpRestrictionMiddleware implements NestMiddleware {
       return next();
     }
 
-    // Render's own health probes / monitoring must always be allowed through
-    if (this.exemptPaths.has(req.path.toLowerCase())) {
+    // Render's own health probes / monitoring must always be allowed through.
+    // Exempt-path matching is case-insensitive and tolerant of a trailing
+    // slash (e.g. /API/Health/ passes through).
+    const path = req.path.toLowerCase();
+    const normalized = path.endsWith("/") ? path.slice(0, -1) : path;
+    if (this.exemptPaths.has(path) || this.exemptPaths.has(normalized)) {
       return next();
     }
 

@@ -62,7 +62,8 @@
       "discountLabel": "Remise",
       "total": "Total",
       "notes": "Notes",
-      "notesPlaceholder": "Notes ou instructions de paiement facultatives"
+      "notesPlaceholder": "Notes ou instructions de paiement facultatives",
+      "paidDate": "Date de paiement"
     },
     "empty": {
       "title": "Aucune facture trouvée",

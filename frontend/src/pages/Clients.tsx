@@ -174,7 +174,7 @@ export function Clients() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('dialog.deleteTitle', { entity: 'client' })}</AlertDialogTitle>
-            <AlertDialogDescription>{t('common.confirmDelete', { entity: 'client' })}</AlertDialogDescription>
+            <AlertDialogDescription>{t('dialog.confirmDelete', { entity: 'client' })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>

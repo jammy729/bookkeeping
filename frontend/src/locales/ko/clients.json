@@ -1,44 +1,29 @@
 {
   "clients": {
     "title": "고객 관리",
-    "subtitle": "고객 정보를 관리하세요",
+    "description": "고객 정보를 관리하세요",
     "addClient": "고객 추가",
-    "editClient": "고객 수정",
     "stats": {
-      "totalClients": "전체 고객",
-      "activeClients": "활성 고객",
-      "totalRevenue": "총 매출",
-      "pendingInvoices": "미수금",
-      "paidInvoices": "수금 완료",
-      "overdueInvoices": "연체 청구서",
       "total": "전체 고객",
       "active": "활성 고객"
     },
     "list": "고객 목록",
-    "empty": {
-      "noClients": "등록된 고객이 없습니다",
-      "getStarted": "첫 번째 고객을 추가하여 시작하세요",
-      "noSearchResults": "검색 결과가 없습니다",
-      "tryDifferentSearch": "다른 검색어를 시도해 보세요"
-    },
+    "noClients": "등록된 고객이 없습니다",
+    "noClientsDesc": "첫 번째 고객을 추가하여 관계를 관리하세요",
     "table": {
       "name": "고객명",
-      "company": "회사명",
       "email": "이메일",
       "phone": "전화번호",
-      "totalRevenue": "총 매출",
-      "outstanding": "미수금",
-      "lastActivity": "최근 활동",
       "status": "상태",
-      "actions": "작업",
-      "invoices": "청구서",
-      "transactions": "거래"
+      "actions": "작업"
     },
+    "active": "활성",
+    "inactive": "비활성",
     "form": {
+      "titleEdit": "고객 수정",
+      "titleCreate": "고객 추가",
       "name": "고객명",
       "namePlaceholder": "고객 이름 입력",
-      "company": "회사명",
-      "companyPlaceholder": "회사명 입력",
       "email": "이메일",
       "emailPlaceholder": "이메일 입력",
       "phone": "전화번호",
@@ -47,55 +32,15 @@
       "addressPlaceholder": "주소 입력",
       "notes": "메모",
       "notesPlaceholder": "고객 관련 메모 (선택사항)",
-      "taxNumber": "세금 번호",
-      "taxNumberPlaceholder": "세금 번호 입력",
-      "save": "고객 저장",
-      "cancel": "취소",
-      "titleEdit": "고객 수정",
-      "titleCreate": "고객 추가",
       "active": "활성 고객"
     },
-    "detail": {
-      "title": "고객 상세",
-      "overview": "고객 정보",
-      "transactions": "거래 내역",
-      "invoices": "청구서",
-      "totalSpent": "총 거래액",
-      "averageTransaction": "평균 거래액",
-      "firstTransaction": "첫 거래일",
-      "lastTransaction": "최근 거래일",
-      "noTransactions": "이 고객과의 거래 내역이 없습니다",
-      "noInvoices": "이 고객의 청구서가 없습니다"
-    },
     "toast": {
-      "created": "고객이 추가되었습니다",
-      "updated": "고객 정보가 수정되었습니다",
       "deleted": "고객이 삭제되었습니다",
-      "deleteConfirm": "이 고객을 삭제하시겠습니까?",
-      "deleteWarning": "이 고객과 연결된 거래 및 청구서가 있습니다",
-      "emailExists": "이미 등록된 이메일입니다",
       "deleteFailed": "고객 삭제에 실패했습니다",
+      "updated": "고객 정보가 수정되었습니다",
+      "created": "고객이 추가되었습니다",
       "updateFailed": "고객 수정에 실패했습니다",
       "createFailed": "고객 생성에 실패했습니다"
-    },
-    "confirmDialog": {
-      "title": "고객 삭제",
-      "description": "이 고객을 정말 삭제하시겠습니까?",
-      "warning": "이 고객과 연결된 거래 {{transactions}}건, 청구서 {{invoices}}건이 있습니다.",
-      "confirm": "삭제",
-      "cancel": "취소"
-    },
-    "clientCard": {
-      "contactInfo": "연락처 정보",
-      "financialSummary": "재정 요약",
-      "recentActivity": "최근 활동",
-      "notes": "메모"
-    },
-    "description": "고객 정보를 관리하세요",
-    "noClients": "등록된 고객이 없습니다",
-    "noClientsDesc": "첫 번째 고객을 추가하여 관계를 관리하세요",
-    "active": "활성",
-    "inactive": "비활성"
-  },
-  "list": "고객 목록"
+    }
+  }
 }

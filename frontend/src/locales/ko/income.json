@@ -1,137 +1,60 @@
 {
   "income": {
     "title": "수입 관리",
-    "subtitle": "수입 내역을 관리하고 추적하세요",
     "addIncome": "수입 추가",
-    "editIncome": "수입 수정",
     "records": "수입 기록",
-    "empty": {
-      "noIncome": "등록된 수입이 없습니다",
-      "getStarted": "첫 번째 수입을 추가하여 시작하세요",
-      "noSearchResults": "검색 결과가 없습니다",
-      "tryDifferentSearch": "다른 검색어를 시도해 보세요"
-    },
+    "noRecords": "수입 기록이 없습니다",
+    "noRecordsDesc": "첫 번째 수입 기록을 추가하여 시작하세요",
     "table": {
       "date": "날짜",
       "description": "설명",
       "type": "수입 유형",
-      "clientName": "고객명",
-      "amount": "금액",
-      "invoiceNumber": "청구서 번호",
-      "isPaid": "지불 상태",
-      "includesHst": "HST 포함",
-      "hstAmount": "HST 금액",
-      "notes": "메모",
-      "actions": "작업",
+      "client": "고객",
       "status": "상태",
-      "client": "고객"
+      "amount": "금액",
+      "actions": "작업"
     },
+    "inclHst": "(HST 포함: {{amount}})",
+    "paid": "지불 완료",
+    "unpaid": "미지불",
     "types": {
-      "contractor": "도급",
+      "contractorPayment": "도급 대금",
       "freelance": "프리랜서",
       "consulting": "컨설팅",
-      "other": "기타",
-      "contractorPayment": "도급 대금"
+      "other": "기타"
     },
     "form": {
-      "title": "수입 추가",
-      "editTitle": "수입 수정",
-      "amount": "금액",
-      "amountPlaceholder": "0.00",
-      "description": "설명",
-      "descriptionPlaceholder": "수입 설명을 입력하세요",
-      "date": "날짜",
-      "datePlaceholder": "날짜 선택",
-      "type": "수입 유형",
-      "typePlaceholder": "수입 유형 선택",
-      "clientName": "고객명",
-      "clientNamePlaceholder": "고객명 입력",
-      "invoiceNumber": "청구서 번호",
-      "invoiceNumberPlaceholder": "청구서 번호 입력",
-      "isPaid": "지불 완료",
-      "isPaidDescription": "이 수입이 이미 지불되었음을 표시합니다",
-      "includesHst": "HST 포함",
-      "includesHstDescription": "이 수입에 HST가 포함되어 있음을 표시합니다",
-      "hstAmount": "HST 금액",
-      "hstAmountPlaceholder": "HST 금액 (자동 계산됨)",
-      "notes": "메모",
-      "notesPlaceholder": "추가 메모 (선택사항)",
-      "save": "수입 저장",
-      "cancel": "취소",
       "titleEdit": "수입 수정",
       "titleCreate": "수입 추가",
+      "amount": "금액",
+      "description": "설명",
+      "descriptionPlaceholder": "수입 설명을 입력하세요",
+      "type": "수입 유형",
+      "date": "날짜",
+      "clientName": "고객명",
       "selectClient": "고객 선택...",
       "addNewClient": "새 고객 추가",
       "manageClients": "고객 관리",
+      "invoiceNumber": "청구서 번호",
       "invoicePlaceholder": "예: INV-2024-001",
+      "includesHst": "HST 포함",
+      "hstAmount": "HST 금액",
       "autoCalculated": "자동 계산",
       "base": "기본:",
       "hst": "HST:",
       "total": "합계:",
       "markAsPaid": "지불 완료로 표시",
-      "paidDate": "지불 일자"
+      "paidDate": "지불 일자",
+      "notes": "메모"
     },
-    "hst": {
-      "included": "HST 포함",
-      "excluded": "HST 미포함",
-      "amount": "HST 금액",
-      "calculated": "자동 계산: {{amount}}"
-    },
-    "stats": {
-      "totalIncome": "총 수입",
-      "thisMonth": "이번 달 수입",
-      "thisYear": "올해 수입",
-      "averageMonthly": "월평균 수입",
-      "paid": "지불 완료",
-      "unpaid": "미지불",
-      "withHst": "HST 포함",
-      "hstTotal": "총 HST"
-    },
+    "confirmDelete": "이 수입 기록을 정말 삭제하시겠습니까?",
     "toast": {
-      "created": "수입이 추가되었습니다",
-      "updated": "수입이 수정되었습니다",
       "deleted": "수입이 삭제되었습니다",
-      "deleteConfirm": "이 수입 기록을 삭제하시겠습니까?",
-      "deleteWarning": "이 작업은 되돌릴 수 없습니다",
-      "amountRequired": "금액을 입력해 주세요",
-      "descriptionRequired": "설명을 입력해 주세요",
-      "dateRequired": "날짜를 선택해 주세요",
       "deleteFailed": "수입 기록 삭제에 실패했습니다",
+      "updated": "수입이 수정되었습니다",
+      "created": "수입이 추가되었습니다",
       "updateFailed": "수입 수정에 실패했습니다",
       "createFailed": "수입 생성에 실패했습니다"
-    },
-    "confirmDialog": {
-      "title": "수입 삭제",
-      "description": "이 수입 기록을 정말 삭제하시겠습니까?",
-      "warning": "이 작업은 되돌릴 수 없습니다.",
-      "confirm": "삭제",
-      "cancel": "취소"
-    },
-    "filters": {
-      "dateRange": "기간",
-      "type": "유형",
-      "client": "고객",
-      "paidStatus": "지불 상태",
-      "hstIncluded": "HST 포함",
-      "clear": "필터 초기화"
-    },
-    "sort": {
-      "dateAsc": "날짜 (오래된 순)",
-      "dateDesc": "날짜 (최신 순)",
-      "amountAsc": "금액 (적은 순)",
-      "amountDesc": "금액 (많은 순)"
-    },
-    "bulkActions": {
-      "selected": "{{count}}개 선택됨",
-      "delete": "선택 삭제",
-      "export": "선택 내보내기",
-      "markPaid": "지불 완료로 표시"
-    },
-    "noRecords": "수입 기록이 없습니다",
-    "noRecordsDesc": "첫 번째 수입 기록을 추가하여 시작하세요",
-    "inclHst": "(HST 포함: {{amount}})",
-    "paid": "지불 완료",
-    "unpaid": "미지불",
-    "confirmDelete": "이 수입 기록을 정말 삭제하시겠습니까?"
+    }
   }
 }

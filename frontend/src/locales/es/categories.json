@@ -2,140 +2,13 @@
   "categories": {
     "title": "Categorías",
     "description": "Organice sus ingresos y gastos en categorías",
-    "tabs": {
-      "all": "Todas",
-      "expense": "Gastos",
-      "income": "Ingresos",
-      "inactive": "Inactivas"
-    },
+    "expenseTab": "Gasto",
+    "incomeTab": "Ingreso",
     "stats": {
-      "totalCategories": "Total de categorías",
-      "activeCategories": "Activas",
-      "inactiveCategories": "Inactivas",
-      "expenseCategories": "De gastos",
-      "incomeCategories": "De ingresos",
       "total": "Total de categorías",
       "expense": "Categorías de gastos",
       "income": "Categorías de ingresos"
     },
-    "sections": {
-      "expenseCategories": "Categorías de gastos",
-      "incomeCategories": "Categorías de ingresos",
-      "systemCategories": "Categorías del sistema",
-      "customCategories": "Categorías personalizadas"
-    },
-    "list": {
-      "name": "Nombre",
-      "type": "Tipo",
-      "description": "Descripción",
-      "transactionCount": "Transacciones",
-      "status": "Estado",
-      "actions": "Acciones",
-      "noCategories": "No hay categorías disponibles",
-      "dragToReorder": "Arrastre para reordenar"
-    },
-    "form": {
-      "createTitle": "Crear categoría",
-      "editTitle": "Editar categoría",
-      "name": "Nombre",
-      "namePlaceholder": "Nombre de la categoría",
-      "type": "Tipo",
-      "selectType": "Seleccionar tipo",
-      "expenseType": "Gasto",
-      "incomeType": "Ingreso",
-      "description": "Descripción",
-      "descriptionPlaceholder": "Descripción opcional de la categoría",
-      "color": "Color",
-      "icon": "Icono",
-      "isActive": "Activa",
-      "isActiveHelp": "Las categorías inactivas no aparecen en los formularios",
-      "isSystem": "Categoría del sistema",
-      "isSystemHelp": "Las categorías del sistema no se pueden eliminar",
-      "parentCategory": "Categoría padre",
-      "noParentCategory": "Sin categoría padre",
-      "saveButton": "Guardar categoría",
-      "saving": "Guardando...",
-      "titleEdit": "Editar categoría",
-      "titleCreate": "Agregar categoría",
-      "typeExpense": "Gasto",
-      "typeIncome": "Ingreso",
-      "active": "Activa (mostrar en formularios)"
-    },
-    "empty": {
-      "noCategories": "No hay categorías creadas",
-      "noExpenseCategories": "No hay categorías de gastos",
-      "noIncomeCategories": "No hay categorías de ingresos",
-      "noInactiveCategories": "No hay categorías inactivas",
-      "createFirst": "Cree su primera categoría para organizar sus transacciones",
-      "tryFilters": "Intente ajustar los filtros"
-    },
-    "dialogs": {
-      "deleteCategory": {
-        "title": "Eliminar categoría",
-        "message": "¿Está seguro de que desea eliminar la categoría \"{{name}}\"? Las transacciones asociadas no se eliminarán, pero quedarán sin categoría.",
-        "confirmLabel": "Eliminar",
-        "cancelLabel": "Cancelar"
-      },
-      "deactivateCategory": {
-        "title": "Desactivar categoría",
-        "message": "La categoría \"{{name}}\" se marcará como inactiva. No aparecerá en los formularios, pero las transacciones existentes se conservarán.",
-        "confirmLabel": "Desactivar",
-        "cancelLabel": "Cancelar"
-      },
-      "activateCategory": {
-        "title": "Activar categoría",
-        "message": "La categoría \"{{name}}\" volverá a estar disponible en los formularios.",
-        "confirmLabel": "Activar",
-        "cancelLabel": "Cancelar"
-      },
-      "mergeCategories": {
-        "title": "Fusionar categorías",
-        "description": "Seleccione la categoría de destino. Todas las transacciones se moverán a la categoría seleccionada.",
-        "sourceCategory": "Categoría origen",
-        "targetCategory": "Categoría destino",
-        "confirmLabel": "Fusionar",
-        "cancelLabel": "Cancelar"
-      }
-    },
-    "toast": {
-      "created": "Categoría creada exitosamente",
-      "updated": "Categoría actualizada exitosamente",
-      "deleted": "Categoría eliminada exitosamente",
-      "activated": "Categoría activada",
-      "deactivated": "Categoría desactivada",
-      "merged": "Categorías fusionadas exitosamente",
-      "nameExists": "Ya existe una categoría con ese nombre",
-      "systemCategory": "No se pueden modificar las categorías del sistema",
-      "hasTransactions": "Esta categoría tiene transacciones asociadas",
-      "deleteError": "No se puede eliminar esta categoría porque tiene transacciones asociadas",
-      "deleteFailed": "Error al eliminar la categoría",
-      "updateFailed": "Error al actualizar la categoría",
-      "createFailed": "Error al crear la categoría"
-    },
-    "systemCategories": {
-      "ownerDistribution": "Distribución al propietario",
-      "officeSupplies": "Suministros de oficina",
-      "travel": "Viajes",
-      "meals": "Alimentos",
-      "utilities": "Servicios públicos",
-      "rent": "Renta",
-      "insurance": "Seguros",
-      "professionalServices": "Servicios profesionales",
-      "marketing": "Marketing",
-      "technology": "Tecnología",
-      "payroll": "Nómina",
-      "taxes": "Impuestos",
-      "bankFees": "Comisiones bancarias",
-      "equipment": "Equipo",
-      "depreciation": "Depreciación",
-      "otherIncome": "Otros ingresos",
-      "salesRevenue": "Ingresos por ventas",
-      "serviceRevenue": "Ingresos por servicios",
-      "interestIncome": "Ingresos por intereses",
-      "consultingIncome": "Ingresos por consultoría"
-    },
-    "expenseTab": "Gasto",
-    "incomeTab": "Ingreso",
     "expenseSection": "Categorías de gastos",
     "incomeSection": "Categorías de ingresos",
     "noExpenseCategories": "No hay categorías de gastos",
@@ -143,6 +16,26 @@
     "noIncomeCategories": "No hay categorías de ingresos",
     "noIncomeCategoriesDesc": "Agregue su primera categoría de ingresos",
     "active": "Activa",
-    "inactive": "Inactiva"
+    "inactive": "Inactiva",
+    "form": {
+      "titleEdit": "Editar categoría",
+      "titleCreate": "Agregar categoría",
+      "type": "Tipo",
+      "typeExpense": "Gasto",
+      "typeIncome": "Ingreso",
+      "name": "Nombre",
+      "namePlaceholder": "Nombre de la categoría",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Descripción opcional de la categoría",
+      "active": "Activa (mostrar en formularios)"
+    },
+    "toast": {
+      "deleted": "Categoría eliminada exitosamente",
+      "deleteFailed": "Error al eliminar la categoría",
+      "updated": "Categoría actualizada exitosamente",
+      "created": "Categoría creada exitosamente",
+      "updateFailed": "Error al actualizar la categoría",
+      "createFailed": "Error al crear la categoría"
+    }
   }
 }

@@ -29,9 +29,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Strip the hash regardless of zone — never leave a token in the URL.
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
 
-      if (tokenFromHash && isAdminZone() && !authService.getToken()) {
-        authService.setToken(tokenFromHash);
+      if (tokenFromHash) {
+        if (isAdminZone()) {
+          // A fresh cross-origin handoff token always wins, even when
+          // localStorage already holds an older (possibly expired) token.
+          authService.setToken(tokenFromHash);
+        }
+        // On the apex zone the hash token is deliberately NOT persisted —
+        // the apex origin is strictly stateless (prevents cross-origin
+        // session loops).
       }
+    }
+
+    if (!isAdminZone()) {
+      // The apex zone is strictly stateless: any token left over from a
+      // previous admin-zone visit is actively purged on mount so the public
+      // pages never expose a session.
+      authService.logout();
+      setLoading(false);
+      return;
     }
 
     const token = authService.getToken();
